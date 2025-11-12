@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { SparklesIcon } from './icons/SparklesIcon';
 import { DownloadIcon } from './icons/DownloadIcon';
 
@@ -9,25 +9,30 @@ interface ResultDisplayProps {
 }
 
 const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, generatedImage, isLoading }) => {
+  const [showGenerated, setShowGenerated] = useState(true);
+
+  useEffect(() => {
+    // When a new image is generated, always show it.
+    if (generatedImage) {
+      setShowGenerated(true);
+    }
+  }, [generatedImage]);
+  
   const handleDownload = () => {
     if (!generatedImage) return;
-
-    // Extract MIME type from data URL, e.g., "image/png"
     const mimeTypeMatch = generatedImage.match(/^data:(image\/[a-z]+);base64,/);
     const mimeType = mimeTypeMatch ? mimeTypeMatch[1] : 'image/png';
-    
-    // Determine file extension
     const extension = mimeType.split('/')[1] || 'png';
-
     const link = document.createElement('a');
     link.href = generatedImage;
-    link.download = `african-bespoke-look.${extension}`;
+    link.download = `ai-bespoke-styler-look.${extension}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  const imageToShow = generatedImage || originalImage;
+  const imageToShow = showGenerated ? generatedImage : originalImage;
+  const hasBothImages = originalImage && generatedImage;
 
   return (
     <div className="w-full">
@@ -39,15 +44,41 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, generatedI
           </div>
         )}
         {imageToShow ? (
-          <img src={imageToShow} alt="Styled result" className="object-cover w-full h-full" />
+          <img src={imageToShow} alt={showGenerated ? "Styled result" : "Original upload"} className="object-cover w-full h-full" />
         ) : (
-          !isLoading && (
-            <div className="text-center p-4">
-              <SparklesIcon className="w-12 h-12 mx-auto mb-2 text-zinc-700" />
-              <p className="font-semibold text-gray-500">Your styled image will appear here</p>
-            </div>
+          !isLoading && originalImage ? (
+            <img src={originalImage} alt="Original upload" className="object-cover w-full h-full" />
+          ) : (
+            !isLoading && (
+                <div className="text-center p-4">
+                  <SparklesIcon className="w-12 h-12 mx-auto mb-2 text-zinc-700" />
+                  <p className="font-semibold text-gray-500">Your styled image will appear here</p>
+                </div>
+            )
           )
         )}
+        
+        {hasBothImages && !isLoading && (
+          <div className="absolute bottom-4 left-4">
+            <div className="flex items-center bg-black/60 backdrop-blur-sm rounded-full p-1">
+              <button 
+                onClick={() => setShowGenerated(false)} 
+                className={`px-3 py-1 text-sm rounded-full transition-colors ${!showGenerated ? 'bg-amber-500 text-black font-semibold' : 'text-white'}`}
+                aria-pressed={!showGenerated}
+              >
+                Before
+              </button>
+              <button 
+                onClick={() => setShowGenerated(true)} 
+                className={`px-3 py-1 text-sm rounded-full transition-colors ${showGenerated ? 'bg-amber-500 text-black font-semibold' : 'text-white'}`}
+                aria-pressed={showGenerated}
+              >
+                After
+              </button>
+            </div>
+          </div>
+        )}
+
         {generatedImage && !isLoading && (
           <button
             onClick={handleDownload}
