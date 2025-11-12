@@ -11,9 +11,17 @@ interface ResultDisplayProps {
 const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, generatedImage, isLoading }) => {
   const handleDownload = () => {
     if (!generatedImage) return;
+
+    // Extract MIME type from data URL, e.g., "image/png"
+    const mimeTypeMatch = generatedImage.match(/^data:(image\/[a-z]+);base64,/);
+    const mimeType = mimeTypeMatch ? mimeTypeMatch[1] : 'image/png';
+    
+    // Determine file extension
+    const extension = mimeType.split('/')[1] || 'png';
+
     const link = document.createElement('a');
     link.href = generatedImage;
-    link.download = 'african-bespoke-look.png';
+    link.download = `african-bespoke-look.${extension}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

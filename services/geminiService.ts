@@ -13,6 +13,8 @@ export async function editImageWithGemini(
   imageFile: File,
   stylePrompt: string,
   backgroundPrompt: string,
+  lightingPrompt: string,
+  shoePrompt: string,
   isFaceLockEnabled: boolean,
   quality: string
 ): Promise<string> {
@@ -20,10 +22,21 @@ export async function editImageWithGemini(
   
   const promptParts: string[] = [];
   if (stylePrompt) {
-    promptParts.push(`- **Clothing Change:** Modify the person's suit to be ${stylePrompt}.`);
+    promptParts.push(`- **Clothing Change:** Modify the person's suit to be ${stylePrompt}. Also, ensure any visible inner clothing (like a shirt, waistcoat, or tie) is appropriately adjusted to complement the new suit style and color for a complete, cohesive look.`);
   }
   if (backgroundPrompt) {
     promptParts.push(`- **Background Change:** Place the person in the following setting: ${backgroundPrompt}.`);
+  }
+  if (lightingPrompt) {
+    promptParts.push(`- **Lighting Change:** Adjust the overall lighting of the scene to create the following mood: ${lightingPrompt}. This new lighting must affect both the person and the background consistently for a seamless, realistic integration.`);
+  }
+  if (shoePrompt) {
+    promptParts.push(`- **Footwear Change:** If shoes are visible, change them to be ${shoePrompt}.
+    **Crucial Details for Footwear:**
+    - **Visibility:** The new shoes must be fully and clearly visible. Do not crop the feet or shoes unnaturally.
+    - **Realism:** Render the shoe material (e.g., leather, suede) with hyper-realistic texture, reflections, and sheen.
+    - **Style Accuracy:** The style must be an accurate depiction of the prompt (e.g., Oxford, Loafer).
+    - **Integration:** The shoes must be stylistically appropriate and perfectly match the color palette and formality of the suit.`);
   }
 
 
@@ -39,10 +52,11 @@ export async function editImageWithGemini(
   let prompt: string;
 
   if (isFaceLockEnabled) {
-    const highQualityReqs = `- The final image must be hyper-realistic and high-resolution, suitable for professional use.
-- The lighting on the person's original head and body must be adjusted to blend seamlessly and photorealistically with the new clothing and background.
-- Pay extreme attention to detail in textures, fabrics, and lighting.
-- Avoid any digital artifacts, blurriness, or distortions. The edit must be absolutely undetectable.`;
+    const highQualityReqs = `- **Quality Matching:** The output image's resolution, sharpness, and overall fidelity MUST match or exceed the quality of the original uploaded photo. There should be no perceivable degradation.
+- **Hyper-Realism:** The final image must be hyper-realistic and high-resolution, suitable for professional use.
+- **Seamless Integration:** The lighting on the person's original head and body must be adjusted to blend seamlessly and photorealistically with the new clothing and background.
+- **Detail Fidelity:** Pay extreme attention to detail in textures, fabrics, and lighting, ensuring they are rendered with utmost clarity.
+- **Artifact-Free:** Avoid any digital artifacts, compression noise, blurriness, or distortions. The edit must be absolutely undetectable.`;
 
     const standardQualityReqs = `- The final image must be realistic and clear.
 - The lighting on the person's original head and body must be adjusted to blend seamlessly with the new clothing and background.

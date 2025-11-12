@@ -5,14 +5,26 @@ interface DropdownOption {
   value: string;
 }
 
+// Interfaces to describe the shape of categorized data without importing from constants
+interface StyleOption {
+    name: string;
+    prompt: string;
+}
+
+interface OptionGroup {
+    category: string;
+    styles: StyleOption[];
+}
+
 interface DropdownSelectorProps {
   label: string;
-  options: DropdownOption[];
+  options?: DropdownOption[];
+  optionGroups?: OptionGroup[];
   selectedValue: string;
   onSelect: (value: string) => void;
 }
 
-const DropdownSelector: React.FC<DropdownSelectorProps> = ({ label, options, selectedValue, onSelect }) => {
+const DropdownSelector: React.FC<DropdownSelectorProps> = ({ label, options, optionGroups, selectedValue, onSelect }) => {
   const selectId = `dropdown-${label.toLowerCase().replace(/\s+/g, '-')}`;
   return (
     <div>
@@ -27,10 +39,19 @@ const DropdownSelector: React.FC<DropdownSelectorProps> = ({ label, options, sel
           className="appearance-none w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200"
           aria-label={`Select ${label}`}
         >
-          {options.map((option) => (
+          {options && options.map((option) => (
             <option key={option.label} value={option.value}>
               {option.label}
             </option>
+          ))}
+          {optionGroups && optionGroups.map((group) => (
+            <optgroup key={group.category} label={group.category}>
+              {group.styles.map((style) => (
+                <option key={style.name} value={style.prompt}>
+                  {style.name}
+                </option>
+              ))}
+            </optgroup>
           ))}
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">

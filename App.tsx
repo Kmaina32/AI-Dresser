@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import Header from './components/Header';
 import ImageUploader from './components/ImageUploader';
 import ResultDisplay from './components/ResultDisplay';
-import { SUIT_STYLES, BACKGROUND_OPTIONS, QUALITY_OPTIONS } from './constants';
+import { CATEGORIZED_SUIT_STYLES, BACKGROUND_OPTIONS, CATEGORIZED_SHOE_STYLES, DEFAULT_SHOE_OPTION, QUALITY_OPTIONS, LIGHTING_OPTIONS } from './constants';
 import { editImageWithGemini } from './services/geminiService';
 import { SparklesIcon } from './components/icons/SparklesIcon';
 import FaceLockToggle from './components/FaceLockToggle';
@@ -13,8 +13,10 @@ const App: React.FC = () => {
   const [originalImageFile, setOriginalImageFile] = useState<File | null>(null);
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
-  const [selectedStyle, setSelectedStyle] = useState<string>(SUIT_STYLES[0].prompt);
+  const [selectedStyle, setSelectedStyle] = useState<string>(CATEGORIZED_SUIT_STYLES[0].styles[0].prompt);
   const [selectedBackground, setSelectedBackground] = useState<string>(BACKGROUND_OPTIONS[0].prompt);
+  const [selectedLighting, setSelectedLighting] = useState<string>(LIGHTING_OPTIONS[0].prompt);
+  const [selectedShoe, setSelectedShoe] = useState<string>(DEFAULT_SHOE_OPTION.prompt);
   const [selectedQuality, setSelectedQuality] = useState<string>(QUALITY_OPTIONS[0].value);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +40,7 @@ const App: React.FC = () => {
     setError(null);
 
     try {
-      const result = await editImageWithGemini(originalImageFile, selectedStyle, selectedBackground, isFaceLockEnabled, selectedQuality);
+      const result = await editImageWithGemini(originalImageFile, selectedStyle, selectedBackground, selectedLighting, selectedShoe, isFaceLockEnabled, selectedQuality);
       setGeneratedImage(result);
     } catch (e) {
       console.error(e);
@@ -46,10 +48,11 @@ const App: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [originalImageFile, selectedStyle, selectedBackground, isFaceLockEnabled, selectedQuality]);
+  }, [originalImageFile, selectedStyle, selectedBackground, selectedLighting, selectedShoe, isFaceLockEnabled, selectedQuality]);
 
-  const suitStyleOptions = SUIT_STYLES.map(style => ({ label: style.name, value: style.prompt }));
   const backgroundOptions = BACKGROUND_OPTIONS.map(option => ({ label: option.name, value: option.prompt }));
+  const lightingOptions = LIGHTING_OPTIONS.map(option => ({ label: option.name, value: option.prompt }));
+  const shoeOptions = [{ label: DEFAULT_SHOE_OPTION.name, value: DEFAULT_SHOE_OPTION.prompt }];
 
   return (
     <div className="min-h-screen bg-black text-white font-sans">
@@ -82,7 +85,7 @@ const App: React.FC = () => {
                   />
                   <DropdownSelector
                     label="Suit Style"
-                    options={suitStyleOptions}
+                    optionGroups={CATEGORIZED_SUIT_STYLES}
                     selectedValue={selectedStyle}
                     onSelect={setSelectedStyle}
                   />
@@ -91,6 +94,19 @@ const App: React.FC = () => {
                     options={backgroundOptions}
                     selectedValue={selectedBackground}
                     onSelect={setSelectedBackground}
+                  />
+                  <DropdownSelector
+                    label="Lighting"
+                    options={lightingOptions}
+                    selectedValue={selectedLighting}
+                    onSelect={setSelectedLighting}
+                  />
+                  <DropdownSelector
+                    label="Shoes"
+                    options={shoeOptions}
+                    optionGroups={CATEGORIZED_SHOE_STYLES}
+                    selectedValue={selectedShoe}
+                    onSelect={setSelectedShoe}
                   />
                 </div>
               </div>
