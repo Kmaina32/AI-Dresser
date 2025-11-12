@@ -1,0 +1,5 @@
+{
+  "name": "AI Suit Styler",
+  "description": "Upload a photo of a person in a suit and use AI to instantly try on different suit designs. See yourself in a classic tuxedo, a modern business suit, and more with a single click.",
+  "requestFramePermissions": []
+}
