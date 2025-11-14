@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { generateVideoWithVeo } from '../services/geminiService';
 import ImageUploader from '../components/ImageUploader';
@@ -204,7 +205,9 @@ const AnimatePage: React.FC = () => {
                     <div className="flex flex-col gap-8">
                         <div className="space-y-4">
                             <h3 className="text-xl font-semibold text-gray-300">1. Upload Main Image</h3>
-                            <ImageUploader onImageUpload={handleImageUpload} originalImage={imageUrl} />
+                            {/* FIX: Pass required props to ImageUploader. isLoading is false and generatedImage is null
+                                because this page handles its own video loading state and doesn't generate a new image. */}
+                            <ImageUploader onImageUpload={handleImageUpload} originalImage={imageUrl} generatedImage={null} isLoading={false} />
                         </div>
                         <div className="space-y-6">
                             <h3 className="text-xl font-semibold text-gray-300">2. Configure Animation</h3>

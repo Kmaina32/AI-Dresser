@@ -159,19 +159,19 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({
         {filteredCategories.map((category) => (
           <div key={category.category}>
             <h3 className="text-lg font-semibold text-gray-300 mb-3">{category.category}</h3>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {category.styles.map((style) => (
-                <button 
-                    key={style.id}
-                    onClick={() => onSelectStyle(style.id)}
-                    className={`text-left rounded-lg overflow-hidden transition-all border-2 ${selectedStyleId === style.id ? 'border-amber-500' : 'border-transparent hover:border-zinc-700'}`}
+                <button
+                  key={style.id}
+                  onClick={() => onSelectStyle(style.id)}
+                  className={`p-4 text-left rounded-lg transition-all border-2 w-full h-full flex flex-col justify-center ${
+                    selectedStyleId === style.id
+                      ? 'border-amber-500 bg-zinc-700'
+                      : 'bg-zinc-800 border-zinc-800 hover:border-zinc-700'
+                  }`}
                 >
-                  <div className="aspect-w-4 aspect-h-5 bg-zinc-800">
-                    {style.previewImage && <img src={style.previewImage} alt={style.name} className="w-full h-full object-cover" />}
-                  </div>
-                  <div className="p-2 bg-zinc-800">
-                    <p className="text-sm font-medium text-gray-200 truncate">{style.name}</p>
-                  </div>
+                  <p className="font-semibold text-gray-200 whitespace-normal text-sm">{style.name}</p>
+                  <p className="text-xs text-gray-400 mt-1 capitalize whitespace-normal">{style.tags.join(' • ')}</p>
                 </button>
               ))}
             </div>

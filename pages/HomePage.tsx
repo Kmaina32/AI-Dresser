@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import ImageUploader from '../components/ImageUploader';
-import ResultDisplay from '../components/ResultDisplay';
+import CreatorDisplay from '../components/ImageUploader';
 import { 
   CATEGORIZED_SUIT_STYLES, 
   CATEGORIZED_WOMENS_STYLES,
@@ -12,15 +11,14 @@ import {
   LIGHTING_OPTIONS,
   SHIRT_OPTIONS,
   DEFAULT_SHIRT_OPTION,
-  TIE_OPTIONS,
+  CATEGORIZED_TIE_STYLES,
   DEFAULT_TIE_OPTION,
   CATEGORIZED_HANDBAG_STYLES,
   DEFAULT_HANDBAG_OPTION,
   POSTURE_OPTIONS,
-  // Fix: Corrected typo from DEFAULT_POSTROW_OPTION to DEFAULT_POSTURE_OPTION.
   DEFAULT_POSTURE_OPTION,
   DEFAULT_EYEWEAR_OPTION,
-  EYEWEAR_OPTIONS,
+  CATEGORIZED_EYEWEAR_STYLES,
   DEFAULT_HEADWEAR_OPTION,
   CATEGORIZED_HEADWEAR_STYLES,
   StyleOption
@@ -235,9 +233,7 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
   const lightingOptions = LIGHTING_OPTIONS.map(option => ({ label: option.name, value: option.prompt }));
   const shoeOptions = [{ label: DEFAULT_SHOE_OPTION.name, value: DEFAULT_SHOE_OPTION.prompt }];
   const shirtOptionsList = [DEFAULT_SHIRT_OPTION, ...SHIRT_OPTIONS].map(o => ({ label: o.name, value: o.prompt }));
-  const tieOptionsList = [DEFAULT_TIE_OPTION, ...TIE_OPTIONS].map(o => ({ label: o.name, value: o.prompt }));
   const postureOptionsList = [DEFAULT_POSTURE_OPTION, ...POSTURE_OPTIONS].map(o => ({ label: o.name, value: o.prompt }));
-  const eyewearOptionsList = [DEFAULT_EYEWEAR_OPTION, ...EYEWEAR_OPTIONS].map(o => ({ label: o.name, value: o.prompt }));
   const currentShoeStyles = attireType === 'menswear' ? CATEGORIZED_SHOE_STYLES : CATEGORIZED_WOMENS_SHOE_STYLES;
   
   const renderPanelContent = () => {
@@ -269,13 +265,13 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
                 {attireType === 'menswear' && (
                   <>
                     <DropdownSelector label="Shirt Style" options={shirtOptionsList} selectedValue={selectedShirt} onSelect={setSelectedShirt} isCentered={false} />
-                    <DropdownSelector label="Tie Style" options={tieOptionsList} selectedValue={selectedTie} onSelect={setSelectedTie} isCentered={false} />
+                    <DropdownSelector label="Tie Style" options={[{ label: DEFAULT_TIE_OPTION.name, value: DEFAULT_TIE_OPTION.prompt }]} optionGroups={CATEGORIZED_TIE_STYLES} selectedValue={selectedTie} onSelect={setSelectedTie} valueProp="prompt" isCentered={false} />
                   </>
                 )}
                 {attireType === 'womenswear' && (
                     <DropdownSelector label="Handbag" options={[{ label: DEFAULT_HANDBAG_OPTION.name, value: DEFAULT_HANDBAG_OPTION.prompt }]} optionGroups={CATEGORIZED_HANDBAG_STYLES} selectedValue={selectedHandbag} onSelect={setSelectedHandbag} valueProp="prompt" isCentered={false} />
                 )}
-                <DropdownSelector label="Eyewear (Optional)" options={eyewearOptionsList} selectedValue={selectedEyewear} onSelect={setSelectedEyewear} isCentered={false} />
+                <DropdownSelector label="Eyewear (Optional)" options={[{ label: DEFAULT_EYEWEAR_OPTION.name, value: DEFAULT_EYEWEAR_OPTION.prompt }]} optionGroups={CATEGORIZED_EYEWEAR_STYLES} selectedValue={selectedEyewear} onSelect={setSelectedEyewear} valueProp="prompt" isCentered={false} />
                 <DropdownSelector label="Headwear (Optional)" options={[{ label: DEFAULT_HEADWEAR_OPTION.name, value: DEFAULT_HEADWEAR_OPTION.prompt }]} optionGroups={CATEGORIZED_HEADWEAR_STYLES} selectedValue={selectedHeadwear} onSelect={setSelectedHeadwear} valueProp="prompt" isCentered={false} />
             </div>;
         case 'refine':
@@ -389,9 +385,9 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
 
         {/* --- Main Content Area --- */}
         <div className="flex-grow h-full bg-zinc-950 p-4 md:p-8 overflow-y-auto custom-scrollbar">
-            <div className="max-w-5xl mx-auto">
+            <div className="max-w-5xl mx-auto flex flex-col items-center justify-center h-full">
                  {/* Mobile Controls Header */}
-                 <div className="lg:hidden flex justify-end items-center mb-4">
+                 <div className="lg:hidden flex justify-end items-center mb-4 w-full max-w-lg">
                      <button 
                         onClick={() => setIsSidebarOpen(true)}
                         className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 text-white rounded-lg border border-zinc-700"
@@ -400,18 +396,14 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
                          Controls
                      </button>
                  </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                    <ImageUploader onImageUpload={handleImageUpload} originalImage={originalImage} />
-                    <ResultDisplay originalImage={originalImage} generatedImage={generatedImage} isLoading={isLoading} />
+                <div className="w-full max-w-lg">
+                    <CreatorDisplay
+                        onImageUpload={handleImageUpload}
+                        originalImage={originalImage}
+                        generatedImage={generatedImage}
+                        isLoading={isLoading}
+                    />
                 </div>
-                 {!originalImage && (
-                    <div className="text-center mt-12">
-                         <h1 className="text-4xl font-bold font-playfair mb-4 text-white">Welcome to the Creator</h1>
-                         <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-                           Get started by uploading a photo. Then, use the panel on the left to customize your perfect look.
-                         </p>
-                    </div>
-                 )}
             </div>
         </div>
         
