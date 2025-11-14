@@ -1,6 +1,6 @@
 import React from 'react';
-import { LockClosedIcon } from './icons/LockClosedIcon';
-import { LockOpenIcon } from './icons/LockOpenIcon';
+import { LockClosedIcon } from './icons/LockClosedIcon.tsx';
+import { LockOpenIcon } from './icons/LockOpenIcon.tsx';
 
 interface FaceLockToggleProps {
   isEnabled: boolean;

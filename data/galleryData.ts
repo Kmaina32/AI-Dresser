@@ -1,4 +1,4 @@
-import { BACKGROUND_OPTIONS, CATEGORIZED_SUIT_STYLES, CATEGORIZED_WOMENS_STYLES, LIGHTING_OPTIONS } from "../constants";
+import { BACKGROUND_OPTIONS, CATEGORIZED_SUIT_STYLES, CATEGORIZED_WOMENS_STYLES, LIGHTING_OPTIONS } from "../constants.ts";
 
 export interface GalleryItem {
     image: string;

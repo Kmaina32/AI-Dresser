@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { WandIcon } from './icons/WandIcon';
+import { WandIcon } from './icons/WandIcon.tsx';
 
 interface ColorSelectorProps {
   palette: string[];

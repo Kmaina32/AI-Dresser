@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { UploadIcon } from './icons/UploadIcon';
-import { DownloadIcon } from './icons/DownloadIcon';
-import { LionLogo, getLogoSvgDataUrl } from './logo';
-import { downloadResource } from '../utils/fileUtils';
+import { UploadIcon } from './icons/UploadIcon.tsx';
+import { DownloadIcon } from './icons/DownloadIcon.tsx';
+import { LionLogo, getLogoSvgDataUrl } from './logo.tsx';
+import { downloadResource } from '../utils/fileUtils.ts';
 
 interface CreatorDisplayProps {
   originalImage: string | null;

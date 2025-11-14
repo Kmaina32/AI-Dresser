@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleCategory, StyleOption } from '../constants';
-import ColorSelector from './ColorSelector';
-import { SearchIcon } from './icons/SearchIcon';
-import { CloseIcon } from './icons/CloseIcon';
+import { StyleCategory, StyleOption } from '../constants.ts';
+import ColorSelector from './ColorSelector.tsx';
+import { SearchIcon } from './icons/SearchIcon.tsx';
+import { CloseIcon } from './icons/CloseIcon.tsx';
 
 const FILTER_TAGS = [
   { label: 'Formal', value: 'formal' },

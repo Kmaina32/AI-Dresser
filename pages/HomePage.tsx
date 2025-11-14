@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import CreatorDisplay from '../components/ImageUploader';
+import CreatorDisplay from '../components/ImageUploader.tsx';
 import { 
   CATEGORIZED_SUIT_STYLES, 
   CATEGORIZED_WOMENS_STYLES,
@@ -22,22 +22,22 @@ import {
   DEFAULT_HEADWEAR_OPTION,
   CATEGORIZED_HEADWEAR_STYLES,
   StyleOption
-} from '../constants';
-import { editImageWithGemini } from '../services/geminiService';
-import { SparklesIcon } from '../components/icons/SparklesIcon';
-import FaceLockToggle from '../components/FaceLockToggle';
-import QualitySelector from '../components/QualitySelector';
-import DropdownSelector from '../components/DropdownSelector';
-import { RemixConfig } from '../App';
-import { WandIcon } from '../components/icons/WandIcon';
-import StyleSelector from '../components/StyleSelector';
-import CollapsibleSection from '../components/CollapsibleSection';
-import { CloseIcon } from '../components/icons/CloseIcon';
+} from '../constants.ts';
+import { editImageWithGemini } from '../services/geminiService.ts';
+import { SparklesIcon } from '../components/icons/SparklesIcon.tsx';
+import FaceLockToggle from '../components/FaceLockToggle.tsx';
+import QualitySelector from '../components/QualitySelector.tsx';
+import DropdownSelector from '../components/DropdownSelector.tsx';
+import { RemixConfig } from '../App.tsx';
+import { WandIcon } from '../components/icons/WandIcon.tsx';
+import StyleSelector from '../components/StyleSelector.tsx';
+import CollapsibleSection from '../components/CollapsibleSection.tsx';
+import { CloseIcon } from '../components/icons/CloseIcon.tsx';
 
-import { ShirtIcon } from '../components/icons/ShirtIcon';
-import { LandscapeIcon } from '../components/icons/LandscapeIcon';
-import { AccessoriesIcon } from '../components/icons/AccessoriesIcon';
-import { SlidersIcon } from '../components/icons/SlidersIcon';
+import { ShirtIcon } from '../components/icons/ShirtIcon.tsx';
+import { LandscapeIcon } from '../components/icons/LandscapeIcon.tsx';
+import { AccessoriesIcon } from '../components/icons/AccessoriesIcon.tsx';
+import { SlidersIcon } from '../components/icons/SlidersIcon.tsx';
 
 type AttireType = 'menswear' | 'womenswear';
 

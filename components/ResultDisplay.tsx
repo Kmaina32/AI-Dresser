@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { SparklesIcon } from './icons/SparklesIcon';
-import { DownloadIcon } from './icons/DownloadIcon';
-import { getLogoSvgDataUrl } from './logo';
-import { downloadResource } from '../utils/fileUtils';
+import { SparklesIcon } from './icons/SparklesIcon.tsx';
+import { DownloadIcon } from './icons/DownloadIcon.tsx';
+import { getLogoSvgDataUrl } from './logo.tsx';
+import { downloadResource } from '../utils/fileUtils.ts';
 
 interface ResultDisplayProps {
   originalImage: string | null;

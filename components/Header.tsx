@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { MenuIcon } from './icons/MenuIcon';
-import { CloseIcon } from './icons/CloseIcon';
-import { MovieIcon } from './icons/MovieIcon';
-import { DnaIcon } from './icons/DnaIcon';
-import { LionLogo } from './logo';
+import { MenuIcon } from './icons/MenuIcon.tsx';
+import { CloseIcon } from './icons/CloseIcon.tsx';
+import { MovieIcon } from './icons/MovieIcon.tsx';
+import { DnaIcon } from './icons/DnaIcon.tsx';
+import { LionLogo } from './logo.tsx';
 
 interface HeaderProps {
     onNavigate: (page: string) => void;

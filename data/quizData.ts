@@ -1,4 +1,4 @@
-import { CATEGORIZED_SUIT_STYLES, CATEGORIZED_WOMENS_STYLES, StyleOption } from '../constants';
+import { CATEGORIZED_SUIT_STYLES, CATEGORIZED_WOMENS_STYLES, StyleOption } from '../constants.ts';
 
 type AttireType = 'menswear' | 'womenswear';
 

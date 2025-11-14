@@ -1,16 +1,16 @@
 
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { generateVideoWithVeo } from '../services/geminiService';
-import ImageUploader from '../components/ImageUploader';
-import VideoResultDisplay from '../components/VideoResultDisplay';
-import { MovieIcon } from '../components/icons/MovieIcon';
-import { LandscapeIcon } from '../components/icons/LandscapeIcon';
-import { PortraitIcon } from '../components/icons/PortraitIcon';
-import { DownloadIcon } from '../components/icons/DownloadIcon';
-import { UserPlusIcon } from '../components/icons/UserPlusIcon';
-import { CloseIcon } from '../components/icons/CloseIcon';
-import { downloadResource } from '../utils/fileUtils';
+import { generateVideoWithVeo } from '../services/geminiService.ts';
+import ImageUploader from '../components/ImageUploader.tsx';
+import VideoResultDisplay from '../components/VideoResultDisplay.tsx';
+import { MovieIcon } from '../components/icons/MovieIcon.tsx';
+import { LandscapeIcon } from '../components/icons/LandscapeIcon.tsx';
+import { PortraitIcon } from '../components/icons/PortraitIcon.tsx';
+import { DownloadIcon } from '../components/icons/DownloadIcon.tsx';
+import { UserPlusIcon } from '../components/icons/UserPlusIcon.tsx';
+import { CloseIcon } from '../components/icons/CloseIcon.tsx';
+import { downloadResource } from '../utils/fileUtils.ts';
 
 declare global {
     interface AIStudio {

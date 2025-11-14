@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Header from './components/Header';
-import HomePage from './pages/HomePage';
-import GalleryPage from './pages/GalleryPage';
-import AboutPage from './pages/AboutPage';
-import AnimatePage from './pages/AnimatePage';
-import StyleQuizPage from './pages/StyleQuizPage';
-import { GalleryItem } from './data/galleryData';
+import Header from './components/Header.tsx';
+import HomePage from './pages/HomePage.tsx';
+import GalleryPage from './pages/GalleryPage.tsx';
+import AboutPage from './pages/AboutPage.tsx';
+import AnimatePage from './pages/AnimatePage.tsx';
+import StyleQuizPage from './pages/StyleQuizPage.tsx';
+import { GalleryItem } from './data/galleryData.ts';
 
 export interface RemixConfig extends Omit<GalleryItem, 'image' | 'title' | 'description'> {}
 

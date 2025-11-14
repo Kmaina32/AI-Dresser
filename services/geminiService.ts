@@ -1,7 +1,7 @@
 
 
 import { GoogleGenAI, Modality, VideoGenerationReferenceImage, VideoGenerationReferenceType } from "@google/genai";
-import { fileToBase64 } from "../utils/fileUtils";
+import { fileToBase64 } from "../utils/fileUtils.ts";
 
 const API_KEY = process.env.API_KEY;
 

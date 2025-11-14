@@ -1,7 +1,7 @@
 import React from 'react';
-import { GALLERY_ITEMS, GalleryItem } from '../data/galleryData';
-import { RemixConfig } from '../App';
-import { SparklesIcon } from '../components/icons/SparklesIcon';
+import { GALLERY_ITEMS, GalleryItem } from '../data/galleryData.ts';
+import { RemixConfig } from '../App.tsx';
+import { SparklesIcon } from '../components/icons/SparklesIcon.tsx';
 
 interface GalleryPageProps {
   onRemix: (config: RemixConfig) => void;

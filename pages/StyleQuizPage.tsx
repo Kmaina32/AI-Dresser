@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { QUIZ_QUESTIONS, getStyleRecommendations } from '../data/quizData';
-import { RemixConfig } from '../App';
-import { SparklesIcon } from '../components/icons/SparklesIcon';
-import { StyleOption } from '../constants';
-import { DnaIcon } from '../components/icons/DnaIcon';
+import { QUIZ_QUESTIONS, getStyleRecommendations } from '../data/quizData.ts';
+import { RemixConfig } from '../App.tsx';
+import { SparklesIcon } from '../components/icons/SparklesIcon.tsx';
+import { StyleOption } from '../constants.ts';
+import { DnaIcon } from '../components/icons/DnaIcon.tsx';
 
 interface StyleQuizPageProps {
   onRemix: (config: RemixConfig) => void;

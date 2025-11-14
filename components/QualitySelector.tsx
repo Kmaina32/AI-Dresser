@@ -1,5 +1,5 @@
 import React from 'react';
-import { QualityOption } from '../constants';
+import { QualityOption } from '../constants.ts';
 
 interface QualitySelectorProps {
   options: QualityOption[];
