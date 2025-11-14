@@ -211,6 +211,35 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
     styles: [
         { id: 'knight-armor', name: 'Knight in Shining Armor', prompt: 'a full suit of polished steel plate armor, looking valiant and heroic', tags: ['themed', 'historical', 'fantasy'] },
     ]
+  },
+  {
+    category: 'Modern Casual',
+    styles: [
+        {
+            id: 'linen-shirt-shorts',
+            name: 'Linen Shirt & Shorts',
+            prompt: 'a relaxed-fit, open-collar white linen shirt with comfortable beige chino shorts',
+            tags: ['casual', 'summer', 'everyday', 'modern'],
+        },
+        {
+            id: 'denim-on-denim',
+            name: 'Denim Jacket & Jeans',
+            prompt: 'a classic blue denim jacket layered over a plain white t-shirt with slim-fit black jeans',
+            tags: ['casual', 'modern', 'everyday', 'streetwear'],
+        },
+        {
+            id: 'smart-hoodie-joggers',
+            name: 'Athleisure Hoodie & Joggers',
+            prompt: 'a high-quality, well-fitted charcoal grey hoodie with matching tapered joggers and clean sneakers, for a smart athleisure look',
+            tags: ['casual', 'modern', 'everyday', 'sporty'],
+        },
+        {
+            id: 'henley-chinos',
+            name: 'Henley & Chinos',
+            prompt: 'a comfortable long-sleeve henley shirt in olive green paired with classic khaki chino trousers',
+            tags: ['casual', 'everyday', 'classic'],
+        },
+    ]
   }
 ];
 
@@ -342,6 +371,36 @@ export const CATEGORIZED_WOMENS_STYLES: StyleCategory[] = [
         category: 'East Asian',
         styles: [
             { id: 'silk-cheongsam', name: 'Silk Cheongsam (Qipao)', prompt: 'an elegant, form-fitting silk Cheongsam (Qipao) with a high collar and traditional patterns', tags: ['cultural', 'formal', 'classic', 'modern'] },
+        ]
+    },
+    {
+        category: 'Modern Casual',
+        styles: [
+            {
+                id: 'flowy-maxi-dress',
+                name: 'Flowy Maxi Dress',
+                prompt: 'a comfortable and stylish flowy floral print maxi dress with spaghetti straps, perfect for a sunny day',
+                tags: ['casual', 'summer', 'everyday', 'modern'],
+                isColorCustomizable: false,
+            },
+            {
+                id: 'leather-jacket-jeans',
+                name: 'Leather Jacket & Jeans',
+                prompt: 'a chic black leather moto jacket over a simple white top with light-wash, high-waisted skinny jeans',
+                tags: ['casual', 'modern', 'everyday', 'edgy'],
+            },
+            {
+                id: 'knit-sweater-midi-skirt',
+                name: 'Knit Sweater & Midi Skirt',
+                prompt: 'a cozy, oversized cream-colored knit sweater, partially tucked into a satin-finish pleated midi skirt in a champagne color',
+                tags: ['casual', 'modern', 'everyday', 'chic'],
+            },
+            {
+                id: 'utility-jumpsuit',
+                name: 'Utility Jumpsuit',
+                prompt: 'a stylish and comfortable long-sleeve utility-style jumpsuit in olive green, cinched at the waist with a matching fabric belt',
+                tags: ['casual', 'modern', 'everyday', 'utilitarian'],
+            },
         ]
     }
 ];

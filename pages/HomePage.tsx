@@ -31,37 +31,20 @@ import DropdownSelector from '../components/DropdownSelector';
 import { RemixConfig } from '../App';
 import { WandIcon } from '../components/icons/WandIcon';
 import StyleSelector from '../components/StyleSelector';
+import CollapsibleSection from '../components/CollapsibleSection';
+import { CloseIcon } from '../components/icons/CloseIcon';
 
 import { ShirtIcon } from '../components/icons/ShirtIcon';
 import { LandscapeIcon } from '../components/icons/LandscapeIcon';
 import { AccessoriesIcon } from '../components/icons/AccessoriesIcon';
 import { SlidersIcon } from '../components/icons/SlidersIcon';
-import { ArrowLeftIcon } from '../components/icons/ArrowLeftIcon';
 
 type AttireType = 'menswear' | 'womenswear';
-type ActivePanel = 'styles' | 'scene' | 'accessories' | 'refine' | null;
 
 interface HomePageProps {
   initialRemixConfig: RemixConfig | null;
   clearRemixConfig: () => void;
 }
-
-const SidebarNavButton: React.FC<{
-  label: string;
-  isActive: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}> = ({ label, isActive, onClick, children }) => (
-    <button
-        onClick={onClick}
-        className={`flex flex-col items-center justify-center gap-1 w-full p-2 rounded-lg transition-colors text-xs ${isActive ? 'bg-amber-500 text-black' : 'text-gray-300 hover:bg-zinc-700'}`}
-        aria-label={`Open ${label} panel`}
-    >
-        {children}
-        <span>{label}</span>
-    </button>
-);
-
 
 const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfig }) => {
   const [originalImageFile, setOriginalImageFile] = useState<File | null>(null);
@@ -89,7 +72,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
   const [error, setError] = useState<string | null>(null);
   const [isFaceLockEnabled, setIsFaceLockEnabled] = useState<boolean>(true);
   
-  const [activePanel, setActivePanel] = useState<ActivePanel>('styles');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // For mobile sidebar
@@ -142,7 +124,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
         setSelectedShoe(initialRemixConfig.shoePrompt ?? DEFAULT_SHOE_OPTION.prompt);
         setSelectedShirt(initialRemixConfig.shirtPrompt ?? DEFAULT_SHIRT_OPTION.prompt);
         setSelectedTie(initialRemixConfig.tiePrompt ?? DEFAULT_TIE_OPTION.prompt);
-        setActivePanel('styles');
         setIsSidebarOpen(true); // Open sidebar on mobile when remixing
       }
       clearRemixConfig();
@@ -225,7 +206,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
     setTargetPerson('');
     setSelectedPosture(DEFAULT_POSTURE_OPTION.prompt);
     setSelectedColor('automatic');
-    setActivePanel('styles');
     setIsSidebarOpen(true);
   };
 
@@ -236,66 +216,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
   const postureOptionsList = [DEFAULT_POSTURE_OPTION, ...POSTURE_OPTIONS].map(o => ({ label: o.name, value: o.prompt }));
   const currentShoeStyles = attireType === 'menswear' ? CATEGORIZED_SHOE_STYLES : CATEGORIZED_WOMENS_SHOE_STYLES;
   
-  const renderPanelContent = () => {
-    switch(activePanel) {
-        case 'styles':
-            return <StyleSelector 
-                        attireType={attireType}
-                        onAttireTypeChange={handleAttireTypeChange}
-                        categories={currentStylesSource}
-                        selectedStyleId={selectedStyleId}
-                        onSelectStyle={updateStyleSelection}
-                        selectedColor={selectedColor}
-                        onSelectColor={setSelectedColor}
-                        selectedStyleObject={selectedStyleObject}
-                        searchQuery={searchQuery}
-                        onSearchChange={setSearchQuery}
-                        activeFilters={activeFilters}
-                        onFilterToggle={(tag) => setActiveFilters(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])}
-                        onClearFilters={() => setActiveFilters([])}
-                    />;
-        case 'scene':
-            return <div className="p-4 space-y-6">
-                <DropdownSelector label="Background" options={backgroundOptions} selectedValue={selectedBackground} onSelect={setSelectedBackground} isCentered={false} />
-                <DropdownSelector label="Lighting" options={lightingOptions} selectedValue={selectedLighting} onSelect={setSelectedLighting} isCentered={false} />
-            </div>;
-        case 'accessories':
-            return <div className="p-4 space-y-6">
-                <DropdownSelector label="Shoes" options={shoeOptions} optionGroups={currentShoeStyles} selectedValue={selectedShoe} onSelect={setSelectedShoe} valueProp="prompt" isCentered={false} />
-                {attireType === 'menswear' && (
-                  <>
-                    <DropdownSelector label="Shirt Style" options={shirtOptionsList} selectedValue={selectedShirt} onSelect={setSelectedShirt} isCentered={false} />
-                    <DropdownSelector label="Tie Style" options={[{ label: DEFAULT_TIE_OPTION.name, value: DEFAULT_TIE_OPTION.prompt }]} optionGroups={CATEGORIZED_TIE_STYLES} selectedValue={selectedTie} onSelect={setSelectedTie} valueProp="prompt" isCentered={false} />
-                  </>
-                )}
-                {attireType === 'womenswear' && (
-                    <DropdownSelector label="Handbag" options={[{ label: DEFAULT_HANDBAG_OPTION.name, value: DEFAULT_HANDBAG_OPTION.prompt }]} optionGroups={CATEGORIZED_HANDBAG_STYLES} selectedValue={selectedHandbag} onSelect={setSelectedHandbag} valueProp="prompt" isCentered={false} />
-                )}
-                <DropdownSelector label="Eyewear (Optional)" options={[{ label: DEFAULT_EYEWEAR_OPTION.name, value: DEFAULT_EYEWEAR_OPTION.prompt }]} optionGroups={CATEGORIZED_EYEWEAR_STYLES} selectedValue={selectedEyewear} onSelect={setSelectedEyewear} valueProp="prompt" isCentered={false} />
-                <DropdownSelector label="Headwear (Optional)" options={[{ label: DEFAULT_HEADWEAR_OPTION.name, value: DEFAULT_HEADWEAR_OPTION.prompt }]} optionGroups={CATEGORIZED_HEADWEAR_STYLES} selectedValue={selectedHeadwear} onSelect={setSelectedHeadwear} valueProp="prompt" isCentered={false} />
-            </div>;
-        case 'refine':
-            return <div className="p-4 space-y-6">
-                <FaceLockToggle isEnabled={isFaceLockEnabled} onToggle={setIsFaceLockEnabled} />
-                <QualitySelector options={QUALITY_OPTIONS} selectedQuality={selectedQuality} onSelectQuality={setSelectedQuality} />
-                 <div>
-                    <label htmlFor="target-person" className="block text-lg font-semibold mb-2 text-gray-300">Target Person (Optional)</label>
-                    <input id="target-person" type="text" value={targetPerson} onChange={(e) => setTargetPerson(e.target.value)} placeholder="e.g., 'person on the left'" className="appearance-none w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200" aria-label="Target person for styling" />
-                </div>
-                <DropdownSelector label="Posture (Optional)" options={postureOptionsList} selectedValue={selectedPosture} onSelect={setSelectedPosture} isCentered={false} />
-            </div>;
-        default:
-            return null;
-    }
-  }
-
-  const panelTitles: Record<string, string> = {
-    styles: 'Styles',
-    scene: 'Scene',
-    accessories: 'Accessories',
-    refine: 'Refine & Finalize',
-  };
-
   const generateButton = (
     <>
       <button
@@ -319,73 +239,105 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
         <div className={`
             fixed lg:relative
             inset-y-0 left-0 
-            h-full lg:h-auto 
-            flex z-40
+            h-full
+            w-screen sm:w-96
+            bg-zinc-900
+            flex flex-col
+            z-40
             transition-transform duration-300 ease-in-out
             ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
             lg:translate-x-0
+            lg:w-96
+            border-r border-zinc-800
         `}>
-            {/* Primary Nav */}
-            <div className={`
-                w-24 bg-black flex-shrink-0 
-                flex flex-col items-center p-2 gap-2 border-r border-zinc-800
-                ${activePanel ? 'hidden lg:flex' : 'flex'}
-            `}>
-                <SidebarNavButton label="Styles" isActive={activePanel === 'styles'} onClick={() => setActivePanel('styles')}>
-                    <ShirtIcon className="w-6 h-6" />
-                </SidebarNavButton>
-                <SidebarNavButton label="Scene" isActive={activePanel === 'scene'} onClick={() => setActivePanel('scene')}>
-                    <LandscapeIcon className="w-6 h-6" />
-                </SidebarNavButton>
-                <SidebarNavButton label="Accessories" isActive={activePanel === 'accessories'} onClick={() => setActivePanel('accessories')}>
-                    <AccessoriesIcon className="w-6 h-6" />
-                </SidebarNavButton>
-                <SidebarNavButton label="Refine" isActive={activePanel === 'refine'} onClick={() => setActivePanel('refine')}>
-                    <SlidersIcon className="w-6 h-6" />
-                </SidebarNavButton>
-
-                <div className="mt-auto w-full">
-                     <button 
-                      onClick={handleSurpriseMe}
-                      className="flex flex-col items-center justify-center gap-1 w-full p-2 rounded-lg transition-colors text-xs text-amber-400 hover:bg-zinc-700"
-                      title="Generate a random style combination"
-                    >
-                      <WandIcon className="w-6 h-6" />
-                      Surprise Me
-                    </button>
-                </div>
+            {/* Header */}
+            <div className="flex items-center p-4 border-b border-zinc-800 flex-shrink-0">
+                <h2 className="text-xl font-semibold text-white">Creator Controls</h2>
+                <button 
+                    onClick={handleSurpriseMe}
+                    className="ml-4 text-amber-400 p-2 rounded-full hover:bg-zinc-800 transition-colors"
+                    title="Surprise Me"
+                >
+                    <WandIcon className="w-5 h-5" />
+                </button>
+                <button onClick={() => setIsSidebarOpen(false)} className="text-gray-400 hover:text-white ml-auto lg:hidden">
+                    <CloseIcon className="w-6 h-6" />
+                </button>
             </div>
 
-            {/* Secondary Panel */}
-            <div className={`
-                w-screen sm:w-96 bg-zinc-900 h-full flex flex-col 
-                transition-all duration-300
-                ${activePanel ? 'translate-x-0' : '-translate-x-full'}
-                ${activePanel && 'lg:w-96'}
+            {/* Scrollable content with Accordion */}
+            <div className="flex-grow overflow-y-auto custom-scrollbar">
+                <div className="p-4 border-b border-zinc-800">
+                    <h3 className="text-lg font-semibold mb-3 text-gray-300">Attire Type</h3>
+                    <div className="flex justify-center gap-2">
+                        <button onClick={() => handleAttireTypeChange('menswear')} className={`px-4 py-2 w-full text-center text-sm font-semibold rounded-md transition-colors ${attireType === 'menswear' ? 'bg-amber-500 text-black' : 'bg-zinc-800 text-gray-300 hover:bg-zinc-700'}`}>Menswear</button>
+                        <button onClick={() => handleAttireTypeChange('womenswear')} className={`px-4 py-2 w-full text-center text-sm font-semibold rounded-md transition-colors ${attireType === 'womenswear' ? 'bg-amber-500 text-black' : 'bg-zinc-800 text-gray-300 hover:bg-zinc-700'}`}>Womenswear</button>
+                    </div>
+                </div>
+
+                <CollapsibleSection title="Styles" isOpen={true} icon={<ShirtIcon className="w-5 h-5 text-gray-400" />}>
+                    <StyleSelector 
+                        categories={currentStylesSource}
+                        selectedStyleId={selectedStyleId}
+                        onSelectStyle={updateStyleSelection}
+                        selectedColor={selectedColor}
+                        onSelectColor={setSelectedColor}
+                        selectedStyleObject={selectedStyleObject}
+                        searchQuery={searchQuery}
+                        onSearchChange={setSearchQuery}
+                        activeFilters={activeFilters}
+                        onFilterToggle={(tag) => setActiveFilters(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])}
+                        onClearFilters={() => setActiveFilters([])}
+                    />
+                </CollapsibleSection>
+
+                <CollapsibleSection title="Scene" icon={<LandscapeIcon className="w-5 h-5 text-gray-400" />}>
+                    <div className="space-y-6">
+                        <DropdownSelector label="Background" options={backgroundOptions} selectedValue={selectedBackground} onSelect={setSelectedBackground} isCentered={false} />
+                        <DropdownSelector label="Lighting" options={lightingOptions} selectedValue={selectedLighting} onSelect={setSelectedLighting} isCentered={false} />
+                    </div>
+                </CollapsibleSection>
                 
-            `}>
-                {activePanel && (
-                    <>
-                        <div className="flex items-center p-4 border-b border-zinc-800 flex-shrink-0">
-                           <button onClick={() => setActivePanel(null)} className="text-gray-400 hover:text-white mr-3 lg:hidden">
-                                <ArrowLeftIcon className="w-5 h-5" />
-                            </button>
-                            <h2 className="text-xl font-semibold text-white">{panelTitles[activePanel]}</h2>
+                <CollapsibleSection title="Accessories" icon={<AccessoriesIcon className="w-5 h-5 text-gray-400" />}>
+                    <div className="space-y-6">
+                        <DropdownSelector label="Shoes" options={shoeOptions} optionGroups={currentShoeStyles} selectedValue={selectedShoe} onSelect={setSelectedShoe} valueProp="prompt" isCentered={false} />
+                        {attireType === 'menswear' && (
+                        <>
+                            <DropdownSelector label="Shirt Style" options={shirtOptionsList} selectedValue={selectedShirt} onSelect={setSelectedShirt} isCentered={false} />
+                            <DropdownSelector label="Tie Style" options={[{ label: DEFAULT_TIE_OPTION.name, value: DEFAULT_TIE_OPTION.prompt }]} optionGroups={CATEGORIZED_TIE_STYLES} selectedValue={selectedTie} onSelect={setSelectedTie} valueProp="prompt" isCentered={false} />
+                        </>
+                        )}
+                        {attireType === 'womenswear' && (
+                            <DropdownSelector label="Handbag" options={[{ label: DEFAULT_HANDBAG_OPTION.name, value: DEFAULT_HANDBAG_OPTION.prompt }]} optionGroups={CATEGORIZED_HANDBAG_STYLES} selectedValue={selectedHandbag} onSelect={setSelectedHandbag} valueProp="prompt" isCentered={false} />
+                        )}
+                        <DropdownSelector label="Eyewear (Optional)" options={[{ label: DEFAULT_EYEWEAR_OPTION.name, value: DEFAULT_EYEWEAR_OPTION.prompt }]} optionGroups={CATEGORIZED_EYEWEAR_STYLES} selectedValue={selectedEyewear} onSelect={setSelectedEyewear} valueProp="prompt" isCentered={false} />
+                        <DropdownSelector label="Headwear (Optional)" options={[{ label: DEFAULT_HEADWEAR_OPTION.name, value: DEFAULT_HEADWEAR_OPTION.prompt }]} optionGroups={CATEGORIZED_HEADWEAR_STYLES} selectedValue={selectedHeadwear} onSelect={setSelectedHeadwear} valueProp="prompt" isCentered={false} />
+                    </div>
+                </CollapsibleSection>
+
+                <CollapsibleSection title="Refine & Finalize" icon={<SlidersIcon className="w-5 h-5 text-gray-400" />}>
+                   <div className="space-y-6">
+                        <FaceLockToggle isEnabled={isFaceLockEnabled} onToggle={setIsFaceLockEnabled} />
+                        <QualitySelector options={QUALITY_OPTIONS} selectedQuality={selectedQuality} onSelectQuality={setSelectedQuality} />
+                        <div>
+                            <label htmlFor="target-person" className="block text-lg font-semibold mb-2 text-gray-300">Target Person (Optional)</label>
+                            <input id="target-person" type="text" value={targetPerson} onChange={(e) => setTargetPerson(e.target.value)} placeholder="e.g., 'person on the left'" className="appearance-none w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200" aria-label="Target person for styling" />
                         </div>
-                        <div className="flex-grow overflow-y-auto custom-scrollbar">
-                            {renderPanelContent()}
-                        </div>
-                        <div className="p-4 border-t border-zinc-800 hidden lg:block flex-shrink-0">
-                             {generateButton}
-                        </div>
-                    </>
-                )}
+                        <DropdownSelector label="Posture (Optional)" options={postureOptionsList} selectedValue={selectedPosture} onSelect={setSelectedPosture} isCentered={false} />
+                    </div>
+                </CollapsibleSection>
+            </div>
+            
+            {/* Footer with button for desktop */}
+            <div className="p-4 border-t border-zinc-800 flex-shrink-0 hidden lg:block">
+                 {generateButton}
             </div>
         </div>
 
+
         {/* --- Main Content Area --- */}
         <div className="flex-grow h-full bg-zinc-950 p-4 md:p-8 overflow-y-auto custom-scrollbar">
-            <div className="max-w-5xl mx-auto flex flex-col items-center justify-center h-full">
+            <div className="max-w-5xl mx-auto flex flex-col items-center">
                  {/* Mobile Controls Header */}
                  <div className="lg:hidden flex justify-end items-center mb-4 w-full max-w-lg">
                      <button 

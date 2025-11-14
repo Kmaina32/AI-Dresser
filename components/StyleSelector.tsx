@@ -4,8 +4,6 @@ import ColorSelector from './ColorSelector';
 import { SearchIcon } from './icons/SearchIcon';
 import { CloseIcon } from './icons/CloseIcon';
 
-type AttireType = 'menswear' | 'womenswear';
-
 const FILTER_TAGS = [
   { label: 'Formal', value: 'formal' },
   { label: 'Business', value: 'business' },
@@ -17,8 +15,6 @@ const FILTER_TAGS = [
 ];
 
 interface StyleSelectorProps {
-    attireType: AttireType;
-    onAttireTypeChange: (type: AttireType) => void;
     categories: StyleCategory[];
     selectedStyleId: string;
     onSelectStyle: (id: string) => void;
@@ -32,21 +28,8 @@ interface StyleSelectorProps {
     onClearFilters: () => void;
 }
 
-const AttireTypeButton: React.FC<{type: AttireType; label: string; currentType: AttireType; onClick: (type: AttireType) => void}> = ({ type, label, currentType, onClick }) => (
-    <button
-      onClick={() => onClick(type)}
-      className={`px-4 py-2 w-full text-center text-sm font-semibold rounded-md transition-colors ${
-        currentType === type
-          ? 'bg-amber-500 text-black'
-          : 'bg-zinc-800 text-gray-300 hover:bg-zinc-700'
-      }`}
-    >
-      {label}
-    </button>
-);
-
 const StyleSelector: React.FC<StyleSelectorProps> = ({
-    attireType, onAttireTypeChange, categories, selectedStyleId, onSelectStyle,
+    categories, selectedStyleId, onSelectStyle,
     selectedColor, onSelectColor, selectedStyleObject, searchQuery, onSearchChange,
     activeFilters, onFilterToggle, onClearFilters
 }) => {
@@ -88,15 +71,7 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({
   }, [filteredCategories, selectedStyleId, onSelectStyle]);
 
   return (
-    <div className="p-4 space-y-6">
-        <div>
-            <h3 className="text-lg font-semibold mb-3 text-gray-300">Attire Type</h3>
-            <div className="flex justify-center gap-2">
-                <AttireTypeButton type="menswear" label="Menswear" currentType={attireType} onClick={onAttireTypeChange} />
-                <AttireTypeButton type="womenswear" label="Womenswear" currentType={attireType} onClick={onAttireTypeChange} />
-            </div>
-        </div>
-        
+    <div className="space-y-6">
         <div className="space-y-2">
             <label htmlFor="style-search" className="text-lg font-semibold text-gray-300">Search Styles</label>
             <div className="relative">
@@ -178,7 +153,7 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({
           </div>
         ))}
          {filteredCategories.length === 0 && (
-            <div className="text-center p-4 bg-zinc-800 rounded-lg">
+            <div className="text-center py-4 bg-zinc-800/50 rounded-lg">
                 <p className="font-semibold text-gray-400">No styles match.</p>
                 <p className="text-sm text-gray-500 mt-1">Try a different search or filter.</p>
             </div>
