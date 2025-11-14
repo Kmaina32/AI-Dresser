@@ -3,6 +3,7 @@ import { MenuIcon } from './icons/MenuIcon';
 import { CloseIcon } from './icons/CloseIcon';
 import { MovieIcon } from './icons/MovieIcon';
 import { DnaIcon } from './icons/DnaIcon';
+import { LionLogo } from './logo';
 
 interface HeaderProps {
     onNavigate: (page: string) => void;
@@ -19,9 +20,9 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
     return (
         <header className="bg-black/50 backdrop-blur-sm border-b border-zinc-800 sticky top-0 z-50">
             <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-                <h1 className="text-2xl md:text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500 font-playfair cursor-pointer" onClick={() => handleNavClick('home')}>
-                    AI Bespoke Styler
-                </h1>
+                <div onClick={() => handleNavClick('home')} className="cursor-pointer">
+                    <LionLogo />
+                </div>
 
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center gap-6">
@@ -47,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
             {/* Mobile Menu Overlay */}
             {isMenuOpen && (
                 <div className="md:hidden fixed inset-0 bg-black bg-opacity-90 backdrop-blur-md z-40 flex flex-col items-center justify-center">
-                    <nav className="flex flex-col items-center gap-8 text-2xl">
+                    <nav className="flex flex-col items-center gap-10 text-3xl">
                         <button onClick={() => handleNavClick('home')} className="text-gray-200 hover:text-amber-400 transition-colors">Creator</button>
                         <button onClick={() => handleNavClick('quiz')} className="text-gray-200 hover:text-amber-400 transition-colors">Style Quiz</button>
                         <button onClick={() => handleNavClick('animate')} className="text-gray-200 hover:text-amber-400 transition-colors">Animate</button>

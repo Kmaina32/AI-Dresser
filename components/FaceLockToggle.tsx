@@ -9,7 +9,7 @@ interface FaceLockToggleProps {
 
 const FaceLockToggle: React.FC<FaceLockToggleProps> = ({ isEnabled, onToggle }) => {
   return (
-    <div className="mb-8 p-4 bg-black/50 rounded-lg border border-zinc-800 flex items-center justify-between">
+    <div className="p-4 bg-black/50 rounded-lg border border-zinc-800 flex items-center justify-between">
         <div>
             <h3 className="text-lg font-semibold text-white flex items-center">
                 {isEnabled ? <LockClosedIcon className="w-5 h-5 mr-2 text-amber-400" /> : <LockOpenIcon className="w-5 h-5 mr-2 text-gray-400" />}

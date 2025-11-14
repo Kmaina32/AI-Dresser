@@ -4,11 +4,11 @@ const AboutPage: React.FC = () => {
   return (
     <main className="container mx-auto px-4 py-8">
       <div className="max-w-3xl mx-auto text-gray-300">
-        <h2 className="text-4xl font-bold font-playfair mb-6 text-center text-white">About AI Bespoke Styler</h2>
+        <h2 className="text-4xl font-bold font-playfair mb-6 text-center text-white">About Lion's Apparel</h2>
         
         <div className="p-8 bg-zinc-900 border border-zinc-800 rounded-xl space-y-6 text-lg leading-relaxed">
             <p>
-                Welcome to AI Bespoke Styler, a revolutionary application that brings the tailor's shop to your fingertips.
+                Welcome to Lion's Apparel, a revolutionary application that brings the tailor's shop to your fingertips.
                 Powered by Google's advanced Gemini AI, our tool allows you to visualize yourself in a vast collection of
                 exquisite attire from around the world without ever leaving your home.
             </p>

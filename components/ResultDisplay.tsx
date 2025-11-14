@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { SparklesIcon } from './icons/SparklesIcon';
 import { DownloadIcon } from './icons/DownloadIcon';
+import { getLogoSvgDataUrl } from './logo';
+import { downloadResource } from '../utils/fileUtils';
 
 interface ResultDisplayProps {
   originalImage: string | null;
@@ -10,6 +12,7 @@ interface ResultDisplayProps {
 
 const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, generatedImage, isLoading }) => {
   const [showGenerated, setShowGenerated] = useState(true);
+  const [addLogo, setAddLogo] = useState(false);
 
   useEffect(() => {
     // When a new image is generated, always show it.
@@ -18,17 +21,61 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, generatedI
     }
   }, [generatedImage]);
   
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!generatedImage) return;
+
     const mimeTypeMatch = generatedImage.match(/^data:(image\/[a-z]+);base64,/);
     const mimeType = mimeTypeMatch ? mimeTypeMatch[1] : 'image/png';
     const extension = mimeType.split('/')[1] || 'png';
-    const link = document.createElement('a');
-    link.href = generatedImage;
-    link.download = `ai-bespoke-styler-look.${extension}`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+
+    if (!addLogo) {
+      await downloadResource(generatedImage, `lion-apparel-look.${extension}`);
+      return;
+    }
+
+    // Canvas logic for adding logo
+    try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const mainImage = await new Promise<HTMLImageElement>((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = () => resolve(img);
+            img.onerror = (err) => reject(err);
+            img.src = generatedImage;
+        });
+
+        canvas.width = mainImage.naturalWidth;
+        canvas.height = mainImage.naturalHeight;
+        ctx.drawImage(mainImage, 0, 0);
+
+        const logoImage = await new Promise<HTMLImageElement>((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = (err) => reject(err);
+            img.src = getLogoSvgDataUrl(mainImage.naturalWidth);
+        });
+        
+        const padding = mainImage.naturalWidth * 0.025; // 2.5% padding
+        const logoWidth = logoImage.width;
+        const logoHeight = logoImage.height;
+        const x = mainImage.naturalWidth - logoWidth - padding;
+        const y = mainImage.naturalHeight - logoHeight - padding;
+
+        ctx.globalAlpha = 0.85; // Make logo slightly transparent
+        ctx.drawImage(logoImage, x, y, logoWidth, logoHeight);
+        ctx.globalAlpha = 1.0;
+
+        const dataUrlWithLogo = canvas.toDataURL(mimeType);
+        await downloadResource(dataUrlWithLogo, `lion-apparel-look-watermarked.${extension}`);
+
+    } catch (err) {
+        console.error("Failed to load logo for watermarking.", err);
+        // Fallback to downloading original image
+        await downloadResource(generatedImage, `lion-apparel-look.${extension}`);
+    }
   };
 
   const imageToShow = showGenerated ? generatedImage : originalImage;
@@ -80,13 +127,26 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, generatedI
         )}
 
         {generatedImage && !isLoading && (
-          <button
-            onClick={handleDownload}
-            className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white p-3 rounded-full hover:bg-amber-500/80 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-black"
-            aria-label="Download image"
-          >
-            <DownloadIcon className="w-6 h-6" />
-          </button>
+          <div className="absolute bottom-4 right-4 flex items-center gap-3">
+            <div className="flex items-center gap-2 bg-black/60 backdrop-blur-sm rounded-full py-2 pl-2 pr-3">
+              <input 
+                type="checkbox" 
+                id="addLogoToggle" 
+                checked={addLogo} 
+                onChange={(e) => setAddLogo(e.target.checked)}
+                className="h-4 w-4 rounded bg-zinc-700 border-zinc-600 text-amber-500 focus:ring-amber-500 cursor-pointer"
+              />
+              <label htmlFor="addLogoToggle" className="text-white text-sm cursor-pointer select-none">Add Logo</label>
+            </div>
+            
+            <button
+              onClick={handleDownload}
+              className="bg-black/60 backdrop-blur-sm text-white p-3 rounded-full hover:bg-amber-500/80 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-black"
+              aria-label="Download image"
+            >
+              <DownloadIcon className="w-6 h-6" />
+            </button>
+          </div>
         )}
       </div>
     </div>

@@ -1,10 +1,10 @@
-# AI Bespoke Styler ✨
+# Lion's Apparel ✨
 
 **Experience bespoke tailoring like never before. Upload a photo, select your desired style, and let our AI create your perfect look in seconds.**
 
-![AI Bespoke Styler Screenshot](https://storage.googleapis.com/aistudio-project-files/assets/screenshot.png) <!--- This is a placeholder for a real screenshot of the app --->
+![Lion's Apparel Screenshot](https://storage.googleapis.com/aistudio-project-files/assets/screenshot.png) <!--- This is a placeholder for a real screenshot of the app --->
 
-Welcome to AI Bespoke Styler, a revolutionary application that brings the tailor's shop to your fingertips. Powered by Google's advanced Gemini AI, our tool allows you to visualize yourself in a vast collection of exquisite attire from around the world without ever leaving your home.
+Welcome to Lion's Apparel, a revolutionary application that brings the tailor's shop to your fingertips. Powered by Google's advanced Gemini AI, our tool allows you to visualize yourself in a vast collection of exquisite attire from around the world without ever leaving your home.
 
 ---
 
@@ -22,6 +22,7 @@ Welcome to AI Bespoke Styler, a revolutionary application that brings the tailor
     -   **Footwear:** Complete your outfit with the perfect pair of shoes, from classic Oxfords to suede loafers.
 -   **🔒 Face Lock Technology:** Our unique "Face Lock" feature ensures your facial features, expression, and identity are preserved with 100% accuracy, providing a realistic and believable result.
 -   **💎 High-Quality Renders:** Choose between Standard and High quality to generate stunning, photorealistic images suitable for professional use.
+-   **✒️ Optional Watermark:** Choose to add the stylish "Lion's Apparel" logo to your downloaded images.
 -   **⬇️ Instant Download:** Download your final creation with a single click and share it with the world.
 -   **📱 Fully Responsive:** A sleek, modern, and responsive UI that works beautifully on both desktop and mobile devices.
 
@@ -39,12 +40,13 @@ This project is built with a modern frontend stack, leveraging the power of gene
 
 ## ⚙️ How It Works
 
-AI Bespoke Styler uses the multimodal capabilities of the **Google Gemini API**.
+Lion's Apparel uses the multimodal capabilities of the **Google Gemini API**.
 
 1.  When you upload an image and select your customization options (suit, background, lighting, etc.), the application constructs a detailed text prompt.
 2.  The original image and the detailed prompt are sent to the Gemini API (`gemini-2.5-flash-image` model).
 3.  The model processes this request, performing an image-to-image edit based on the instructions. The "Face Lock" feature is a key part of the prompt, instructing the AI to isolate and protect the user's head and face from any alteration.
-4.  The API returns a new, high-quality image, which is then displayed in the app for you to view and download.
+4.  The API returns a new, high-quality image, which is then displayed in the app.
+5.  If the "Add Logo" option is selected, the app uses a client-side Canvas to composite the logo onto the final image before downloading.
 
 ---
 
@@ -75,7 +77,7 @@ The project is organized into a clear and modular structure:
 
 ```
 /
-├── components/         # Reusable React components (Uploader, Selectors, Icons, etc.)
+├── components/         # Reusable React components (Uploader, Selectors, Icons, Logo etc.)
 ├── pages/              # Page components (HomePage, GalleryPage, AboutPage)
 ├── services/           # Service files for API calls (geminiService.ts)
 ├── utils/              # Utility functions (fileUtils.ts)

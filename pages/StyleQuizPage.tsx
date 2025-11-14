@@ -60,10 +60,10 @@ const StyleQuizPage: React.FC<StyleQuizPageProps> = ({ onRemix }) => {
           <h2 className="text-3xl font-bold mb-6 text-white">Let's find your style.</h2>
           <p className="text-lg text-gray-400 mb-8">Which style collection would you like to explore?</p>
           <div className="flex flex-col sm:flex-row justify-center gap-6 max-w-md mx-auto">
-            <button onClick={() => handleAttireSelect('menswear')} className="w-full px-6 py-4 text-lg text-center font-semibold rounded-lg transition-all duration-300 bg-zinc-800 text-gray-200 hover:bg-amber-500 hover:text-black hover:scale-105 focus:outline-none focus:ring-4 focus:ring-amber-500/50">
+            <button onClick={() => handleAttireSelect('menswear')} className="w-full px-6 py-5 text-lg text-center font-semibold rounded-lg transition-all duration-300 bg-zinc-800 text-gray-200 hover:bg-amber-500 hover:text-black hover:scale-105 focus:outline-none focus:ring-4 focus:ring-amber-500/50">
               Menswear
             </button>
-            <button onClick={() => handleAttireSelect('womenswear')} className="w-full px-6 py-4 text-lg text-center font-semibold rounded-lg transition-all duration-300 bg-zinc-800 text-gray-200 hover:bg-amber-500 hover:text-black hover:scale-105 focus:outline-none focus:ring-4 focus:ring-amber-500/50">
+            <button onClick={() => handleAttireSelect('womenswear')} className="w-full px-6 py-5 text-lg text-center font-semibold rounded-lg transition-all duration-300 bg-zinc-800 text-gray-200 hover:bg-amber-500 hover:text-black hover:scale-105 focus:outline-none focus:ring-4 focus:ring-amber-500/50">
               Womenswear
             </button>
           </div>
@@ -83,7 +83,7 @@ const StyleQuizPage: React.FC<StyleQuizPageProps> = ({ onRemix }) => {
               <button
                 key={option.value}
                 onClick={() => handleAnswer(currentQuestion.key, option.value)}
-                className="p-6 text-lg font-semibold bg-zinc-900 border-2 border-zinc-800 rounded-xl hover:border-amber-500 hover:bg-zinc-800 transition-all duration-200"
+                className="p-6 md:p-8 text-lg font-semibold bg-zinc-900 border-2 border-zinc-800 rounded-xl hover:border-amber-500 hover:bg-zinc-800 transition-all duration-200"
               >
                 {option.label}
               </button>
@@ -131,9 +131,7 @@ const StyleQuizPage: React.FC<StyleQuizPageProps> = ({ onRemix }) => {
   return (
     <main className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
-        <div className="p-4 sm:p-8 bg-black/30 border border-zinc-800 rounded-2xl">
-            {renderContent()}
-        </div>
+        {renderContent()}
       </div>
     </main>
   );

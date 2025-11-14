@@ -1,4 +1,6 @@
-import { GoogleGenAI, Modality } from "@google/genai";
+
+
+import { GoogleGenAI, Modality, VideoGenerationReferenceImage, VideoGenerationReferenceType } from "@google/genai";
 import { fileToBase64 } from "../utils/fileUtils";
 
 const API_KEY = process.env.API_KEY;
@@ -7,17 +9,21 @@ if (!API_KEY) {
   throw new Error("API_KEY environment variable not set");
 }
 
+// NOTE: A single, global instance is fine for non-VEO calls.
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 export async function editImageWithGemini(
   imageFile: File,
   stylePrompt: string,
+  color: string,
   backgroundPrompt: string,
   lightingPrompt: string,
   shoePrompt: string,
   shirtPrompt: string,
   tiePrompt: string,
   handbagPrompt: string,
+  eyewearPrompt: string,
+  headwearPrompt: string,
   targetPersonPrompt: string,
   posturePrompt: string,
   isFaceLockEnabled: boolean,
@@ -29,7 +35,12 @@ export async function editImageWithGemini(
   const targetPrefix = targetPersonPrompt ? `For the ${targetPersonPrompt}, ` : `For the main person, `;
   
   if (stylePrompt) {
-    promptParts.push(`- **Main Attire:** ${targetPrefix}change their main attire to be ${stylePrompt}.`);
+    let attirePrompt = stylePrompt;
+    if (color && color !== 'automatic') {
+      // Instruct the model to use the specific hex color for the attire.
+      attirePrompt = `${stylePrompt}. The primary color of this attire MUST be the hex color ${color}.`;
+    }
+    promptParts.push(`- **Main Attire:** ${targetPrefix}change their main attire to be ${attirePrompt}.`);
   }
   if (posturePrompt) {
     promptParts.push(`- **Posture Change:** ${targetPrefix}change their posture to be '${posturePrompt}'. The new pose should look natural and appropriate for the chosen attire and background. This may involve significant changes to the body's position, but the person's identity and facial features should be preserved as much as possible.`);
@@ -46,12 +57,16 @@ export async function editImageWithGemini(
   if (handbagPrompt) {
     promptParts.push(`- **Accessory:** ${targetPrefix}add a handbag. It should be ${handbagPrompt}. The handbag should be held naturally or placed appropriately in the scene.`);
   }
+  if (eyewearPrompt) {
+    promptParts.push(`- **Eyewear:** ${targetPrefix}add eyewear. They should be wearing ${eyewearPrompt}. The eyewear must look realistic, fit their face naturally, and not obscure their eyes too much unless they are dark sunglasses.`);
+  }
+  if (headwearPrompt) {
+    promptParts.push(`- **Headwear:** ${targetPrefix}add headwear. They should be wearing ${headwearPrompt}. The headwear must look realistic, fit their head naturally, cast appropriate shadows, and be styled correctly with their hair.`);
+  }
   if (backgroundPrompt) {
     promptParts.push(`- **Background Change:** Place the person/people in the following setting: ${backgroundPrompt}.`);
-  } else {
-    // Add an explicit instruction to keep the original background if no new one is selected.
-    promptParts.push(`- **Background Preservation:** The background of the image MUST NOT be changed. Keep the original background exactly as it is, maintaining all original details, objects, and composition.`);
   }
+  // NOTE: Background preservation is now handled directly in the main prompt templates below.
   if (lightingPrompt) {
     promptParts.push(`- **Lighting Change:** Adjust the overall lighting of the scene to create the following mood: ${lightingPrompt}. This new lighting must affect both the person/people and the background consistently for a seamless, realistic integration.`);
   }
@@ -75,16 +90,27 @@ export async function editImageWithGemini(
   const finalEdits = promptParts.join('\n');
 
   let prompt: string;
+  
+  const backgroundPreservationDirective = `
+**CRITICAL RULE: PRESERVE ORIGINAL BACKGROUND (UNBREAKABLE RULE)**
+This is a non-negotiable instruction.
+- The background of the image MUST remain 100% IDENTICAL to the original photo.
+- DO NOT generate a new background.
+- DO NOT alter, blur, add to, or remove anything from the original background scenery.
+- Every object, detail, and element of the original background must be perfectly preserved. Any change is a failure.
+`;
 
   if (isFaceLockEnabled) {
     const highQualityReqs = `- **Quality Matching:** The output image's resolution, sharpness, and overall fidelity MUST match or exceed the quality of the original uploaded photo. There should be no perceivable degradation.
 - **Hyper-Realism:** The final image must be hyper-realistic and high-resolution, suitable for professional use.
+- **Realistic Shadows:** Generate physically accurate and realistic shadows cast by the person onto the background and onto their own body/clothing. These shadows MUST be consistent with the specified lighting conditions (e.g., 'Golden Hour' should produce long, soft shadows; 'Studio Lighting' should produce defined, clean shadows). The shadow's direction, softness, and intensity must be believable.
 - **Seamless Integration:** The lighting on the person's original head and body must be adjusted to blend seamlessly and photorealistically with the new clothing and background.
 - **Detail Fidelity:** Pay extreme attention to detail in textures, fabrics, and lighting, ensuring they are rendered with utmost clarity.
 - **Artifact-Free:** Avoid any digital artifacts, compression noise, blurriness, or distortions. The edit must be absolutely undetectable.`;
 
     const standardQualityReqs = `- The final image must be realistic and clear.
 - The lighting on the person's original head and body must be adjusted to blend seamlessly with the new clothing and background.
+- **Consistent Shadows:** Add shadows to ground the person in the scene, ensuring they are consistent with the overall lighting.
 - Avoid any obvious digital artifacts, blurriness, or distortions.`;
     
     const qualityRequirements = quality === 'high' ? highQualityReqs : standardQualityReqs;
@@ -95,10 +121,10 @@ export async function editImageWithGemini(
 This is not a guideline, it is a strict, unbreakable rule. Failure to adhere to this means the entire task is a failure.
 - **Targeted Person:** The following rules apply ONLY to the person targeted by the user's edits.
 - **Face, Head, and Hair:** The person's entire head, including their face, facial features (eyes, nose, mouth, etc.), skin tone, texture, facial expression, and hairstyle MUST remain absolutely UNCHANGED. Do not 'enhance' or 'retouch' them. It must be a pixel-perfect replication from the original photo.
-- **Body and Pose:** Do NOT alter the person's body shape, proportions, height, weight, pose, or position within the frame UNLESS a specific posture change is requested. Even with a posture change, the head and face must remain identical.
+- **Body and Pose:** Do NOT alter the person's body shape, proportions, height, weight, pose, or position within the frame UNLESS a specific posture change is requested. Even with a posture change, the head and face must be identical.
 - **Proportional Integrity:** The person's height and body proportions MUST remain consistent with the original image and its environment. For example, if a person is standing next to a door in the original, their height relative to that door must be maintained. Do not artificially increase their height.
 - **Recognizability:** The person in the final image must be instantly and perfectly recognizable as the same person from the original photo. Any change that makes them look even slightly different is a critical failure.
-
+${!backgroundPrompt ? backgroundPreservationDirective : ''}
 **NEGATIVE CONSTRAINTS (WHAT NOT TO DO on the targeted person):**
 - DO NOT generate a new face.
 - DO NOT alter facial structure.
@@ -117,14 +143,16 @@ ${qualityRequirements}
 Remember: Your primary goal is identity preservation for the specified person. The edit is secondary. If you cannot perform the edit without changing the person, prioritize keeping the person identical to the original.`;
   } else {
     const highQualityCreativeReqs = `- The final image should be of the highest artistic quality, with rich detail and professional-grade finish.
+- **Artistic Shadows:** Integrate deep, realistic shadows that enhance the mood and dimensionality of the image. Shadows should be consistent with the lighting source and add a sense of realism and depth.
 - Blend the new elements seamlessly with the original image's subject, creating a cohesive masterpiece.`;
     const standardQualityCreativeReqs = `- The final image should be high-quality, artistic, and visually appealing.
+- **Believable Shadows:** Include believable shadows to ground the subject in the scene and enhance realism.
 - Blend the new elements seamlessly with the original image's subject.`;
     
     const creativeQualityReqs = quality === 'high' ? highQualityCreativeReqs : standardQualityCreativeReqs;
 
     prompt = `You are a creative and skilled digital artist. Your task is to reimagine the person in the photo with a new style.
-  
+  ${!backgroundPrompt ? backgroundPreservationDirective : ''}
   **EDITING TASK:**
   Apply the following creative modifications to the image:
   ${finalEdits}
@@ -170,42 +198,96 @@ Remember: Your primary goal is identity preservation for the specified person. T
 }
 
 export async function generateVideoWithVeo(
-  imageFile: File,
+  imageFile: File | null,
   prompt: string,
-  aspectRatio: '16:9' | '9:16'
+  aspectRatio: '16:9' | '9:16',
+  isExtendedLength: boolean,
+  referenceImages: File[],
 ): Promise<string> {
   // Create a new instance to ensure it uses the latest key from the selection dialog
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  const base64Data = await fileToBase64(imageFile);
 
   const finalPrompt = `Your most important instruction is to preserve the person's face, identity, and features from the original image with 100% accuracy. Do not change their facial expression unless specifically asked. The person in the video must be perfectly recognizable as the same person in the photo. With that strict rule in mind, animate the image based on the following description: "${prompt}"`;
 
-  let operation = await ai.models.generateVideos({
-    model: 'veo-3.1-fast-generate-preview',
+  const useAdvancedModel = isExtendedLength || referenceImages.length > 0;
+  const model = useAdvancedModel ? 'veo-3.1-generate-preview' : 'veo-3.1-fast-generate-preview';
+  const finalAspectRatio = referenceImages.length > 0 ? '16:9' : aspectRatio;
+  const resolution = '720p'; // Extension and reference images require 720p
+
+  // --- Build Initial Payload ---
+  const initialPayload: any = {
+    model: model,
     prompt: finalPrompt,
-    image: {
-      imageBytes: base64Data,
-      mimeType: imageFile.type,
-    },
     config: {
       numberOfVideos: 1,
-      resolution: '720p',
-      aspectRatio: aspectRatio
+      resolution: resolution,
+      aspectRatio: finalAspectRatio
     }
-  });
+  };
+
+  if (referenceImages.length > 0) {
+    const referenceImagesPayload: VideoGenerationReferenceImage[] = [];
+    for (const img of referenceImages) {
+        referenceImagesPayload.push({
+            image: {
+                imageBytes: await fileToBase64(img),
+                mimeType: img.type,
+            },
+            referenceType: VideoGenerationReferenceType.ASSET,
+        });
+    }
+    initialPayload.config.referenceImages = referenceImagesPayload;
+  } else if (imageFile) {
+    initialPayload.image = {
+      imageBytes: await fileToBase64(imageFile),
+      mimeType: imageFile.type,
+    };
+  }
+  
+  // --- Initial Generation Call ---
+  let operation = await ai.models.generateVideos(initialPayload);
 
   while (!operation.done) {
     await new Promise(resolve => setTimeout(resolve, 10000));
     operation = await ai.operations.getVideosOperation({operation: operation});
   }
 
+  // --- Looping Extension for 30s Video ---
+  if (isExtendedLength) {
+    const extensionsNeeded = 4; // Approx 4s initial + 4 * 7s extension = ~32s
+    for (let i = 0; i < extensionsNeeded; i++) {
+      const previousVideo = operation.response?.generatedVideos?.[0]?.video;
+      if (!previousVideo) {
+        throw new Error("Failed to get video from previous step for extension.");
+      }
+      
+      const extensionPrompt = `Continue the previous scene naturally. ${prompt}`;
+
+      operation = await ai.models.generateVideos({
+        model: 'veo-3.1-generate-preview', // Extension requires the preview model
+        prompt: extensionPrompt,
+        video: previousVideo,
+        config: {
+          numberOfVideos: 1,
+          resolution: '720p',
+          aspectRatio: finalAspectRatio,
+        }
+      });
+      
+      // Polling loop for the extension operation
+      while (!operation.done) {
+        await new Promise(resolve => setTimeout(resolve, 10000));
+        operation = await ai.operations.getVideosOperation({operation: operation});
+      }
+    }
+  }
+
+  // --- Finalize and Return ---
   const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
   if (!downloadLink) {
     throw new Error("Video generation succeeded but no download link was provided.");
   }
   
-  // The response.body contains the MP4 bytes. You must append an API key when fetching from the download link.
-  // FIX: Robustly append the API key query parameter with '?' or '&' as needed.
   const separator = downloadLink.includes('?') ? '&' : '?';
   const response = await fetch(`${downloadLink}${separator}key=${process.env.API_KEY}`);
   if (!response.ok) {

@@ -7,8 +7,9 @@ interface DropdownOption {
 
 // Interfaces to describe the shape of categorized data without importing from constants
 interface StyleOption {
+    id: string;
     name: string;
-    prompt: string;
+    prompt?: string;
 }
 
 interface OptionGroup {
@@ -22,13 +23,15 @@ interface DropdownSelectorProps {
   optionGroups?: OptionGroup[];
   selectedValue: string;
   onSelect: (value: string) => void;
+  valueProp?: 'id' | 'prompt';
+  isCentered?: boolean;
 }
 
-const DropdownSelector: React.FC<DropdownSelectorProps> = ({ label, options, optionGroups, selectedValue, onSelect }) => {
+const DropdownSelector: React.FC<DropdownSelectorProps> = ({ label, options, optionGroups, selectedValue, onSelect, valueProp = 'id', isCentered = true }) => {
   const selectId = `dropdown-${label.toLowerCase().replace(/\s+/g, '-')}`;
   return (
     <div>
-      <label htmlFor={selectId} className="block text-lg font-semibold mb-3 text-center text-gray-300">
+      <label htmlFor={selectId} className={`block text-lg font-semibold mb-2 text-gray-300 ${isCentered ? 'text-center' : ''}`}>
         {label}
       </label>
       <div className="relative">
@@ -47,7 +50,7 @@ const DropdownSelector: React.FC<DropdownSelectorProps> = ({ label, options, opt
           {optionGroups && optionGroups.map((group) => (
             <optgroup key={group.category} label={group.category}>
               {group.styles.map((style) => (
-                <option key={style.name} value={style.prompt}>
+                <option key={style.id} value={valueProp === 'prompt' && style.prompt ? style.prompt : style.id}>
                   {style.name}
                 </option>
               ))}
