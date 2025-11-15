@@ -12,6 +12,8 @@ const FILTER_TAGS = [
   { label: 'Modern', value: 'modern' },
   { label: 'Classic', value: 'classic' },
   { label: 'Themed', value: 'themed' },
+  { label: 'Artistic', value: 'artistic' },
+  { label: 'Streetwear', value: 'streetwear' },
 ];
 
 interface StyleSelectorProps {
@@ -134,19 +136,18 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({
         {filteredCategories.map((category) => (
           <div key={category.category}>
             <h3 className="text-lg font-semibold text-gray-300 mb-3">{category.category}</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-2">
               {category.styles.map((style) => (
                 <button
                   key={style.id}
                   onClick={() => onSelectStyle(style.id)}
-                  className={`p-4 text-left rounded-lg transition-all border-2 w-full h-full flex flex-col justify-center ${
+                  className={`w-full text-left p-3 rounded-md transition-colors duration-200 ${
                     selectedStyleId === style.id
-                      ? 'border-amber-500 bg-zinc-700'
-                      : 'bg-zinc-800 border-zinc-800 hover:border-zinc-700'
+                      ? 'bg-amber-500/10 text-amber-400 font-semibold'
+                      : 'text-gray-300 hover:bg-zinc-700/50'
                   }`}
                 >
-                  <p className="font-semibold text-gray-200 whitespace-normal text-sm">{style.name}</p>
-                  <p className="text-xs text-gray-400 mt-1 capitalize whitespace-normal">{style.tags.join(' • ')}</p>
+                  <span className="text-sm">{style.name}</span>
                 </button>
               ))}
             </div>

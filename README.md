@@ -11,6 +11,7 @@ Welcome to Lion's Apparel, a revolutionary application that brings the tailor's 
 ## 🚀 Key Features
 
 -   **📸 Easy Photo Upload:** Simply upload a photo or drag and drop an image to get started.
+-   **🔐 User Accounts:** Sign up and log in to manage your creations.
 -   **🌍 Diverse Style Catalog:** Explore a rich collection of styles across various categories:
     -   **African Bespoke:** From Nigerian Senator styles to Maasai Shuka patterns.
     -   **Indian Regal:** Classic Sherwanis, Jodhpuri suits, and more.
@@ -34,19 +35,20 @@ This project is built with a modern frontend stack, leveraging the power of gene
 
 -   **Frontend:** [React](https://react.dev/) & [TypeScript](https://www.typescriptlang.org/)
 -   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+-   **Backend & Database:** [Supabase](https://supabase.com/)
 -   **Generative AI:** [Google Gemini API](https://ai.google.dev/gemini-api) (`gemini-2.5-flash-image` model)
 
 ---
 
 ## ⚙️ How It Works
 
-Lion's Apparel uses the multimodal capabilities of the **Google Gemini API**.
+Lion's Apparel uses the multimodal capabilities of the **Google Gemini API** and **Supabase** for backend services.
 
 1.  When you upload an image and select your customization options (suit, background, lighting, etc.), the application constructs a detailed text prompt.
 2.  The original image and the detailed prompt are sent to the Gemini API (`gemini-2.5-flash-image` model).
 3.  The model processes this request, performing an image-to-image edit based on the instructions. The "Face Lock" feature is a key part of the prompt, instructing the AI to isolate and protect the user's head and face from any alteration.
 4.  The API returns a new, high-quality image, which is then displayed in the app.
-5.  If the "Add Logo" option is selected, the app uses a client-side Canvas to composite the logo onto the final image before downloading.
+5.  User authentication is handled by Supabase Auth. User data and generated images can be stored in the Supabase database.
 
 ---
 
@@ -58,13 +60,26 @@ To run this project, you'll need to set up your environment.
 
 -   A modern web browser.
 -   A Google Gemini API key.
+-   A Supabase account.
 
 ### Setup
 
 1.  **Download the project files.**
 
-2.  **Set up your API Key:**
-    The application requires a Google Gemini API key to function. You must set this key as an environment variable named `API_KEY`. How you set this variable will depend on your operating system and development environment.
+2.  **Set up your API Keys & Environment Variables:**
+    The application requires API keys to function. You must make these keys available as environment variables. How you do this depends on your development environment. For many local setups, you can create a `.env` file in the root of your project.
+
+    -   **Google Gemini API Key:**
+        -   Get your key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+        -   Set the variable: `API_KEY=your_gemini_api_key`
+
+    -   **Supabase Backend:**
+        -   Create a new project on [Supabase](https://supabase.com/).
+        -   Go to your project's "Settings" > "API".
+        -   Find your Project URL and the `anon` public key.
+        -   Set the variables:
+            -   `SUPABASE_URL=your_supabase_project_url`
+            -   `SUPABASE_ANON_KEY=your_supabase_anon_public_key`
 
 3.  **Open the App:**
     Simply open the `index.html` file in your web browser to launch the application.
@@ -77,9 +92,10 @@ The project is organized into a clear and modular structure:
 
 ```
 /
-├── components/         # Reusable React components (Uploader, Selectors, Icons, Logo etc.)
-├── pages/              # Page components (HomePage, GalleryPage, AboutPage)
-├── services/           # Service files for API calls (geminiService.ts)
+├── components/         # Reusable React components (Uploader, Selectors, Icons, etc.)
+├── contexts/           # React Context providers (e.g., AuthContext)
+├── pages/              # Page components (HomePage, GalleryPage, AuthPage, etc.)
+├── services/           # Service files for API calls (geminiService, supabaseClient)
 ├── utils/              # Utility functions (fileUtils.ts)
 ├── constants.ts        # All constant data (style options, prompts, etc.)
 ├── App.tsx             # Main app component with routing logic

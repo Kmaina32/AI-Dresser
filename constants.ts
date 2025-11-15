@@ -30,6 +30,22 @@ export interface SimpleOption {
     prompt: string;
 }
 
+export interface PosterPose {
+    name: string;
+    prompt: string;
+}
+
+export interface PosterAspectRatio {
+    name: string;
+    value: string;
+}
+
+export interface PosterElementOption {
+    name: string;
+    prompt: string;
+}
+
+
 export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
   {
     category: 'African Bespoke',
@@ -240,6 +256,51 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             tags: ['casual', 'everyday', 'classic'],
         },
     ]
+  },
+  {
+    category: 'Artists & Creatives',
+    styles: [
+        { id: 'bohemian-artist', name: 'Bohemian Artist', prompt: 'a bohemian artist look with a loose-fitting linen shirt, a patterned scarf, and dark trousers', tags: ['casual', 'themed', 'artistic'] },
+        { id: 'gallery-owner-chic', name: 'Gallery Owner Chic', prompt: 'a chic gallery owner look with a black turtleneck, tailored black blazer, and designer glasses', tags: ['business', 'modern', 'artistic'] },
+        { id: 'avant-garde-designer', name: 'Avant-Garde Designer', prompt: 'an avant-garde designer outfit with an asymmetrical black jacket and wide-leg trousers', tags: ['modern', 'themed', 'artistic'] },
+    ]
+  },
+  {
+    category: 'Hip-Hop & Streetwear',
+    styles: [
+        { id: 'classic-tracksuit', name: 'Classic Tracksuit', prompt: 'a classic 90s hip-hop style velour tracksuit with a gold chain', tags: ['casual', 'themed', 'streetwear', 'vintage'] },
+        { id: 'modern-streetwear', name: 'Modern Streetwear', prompt: 'a modern streetwear look with an oversized graphic hoodie, cargo pants, and high-top sneakers', tags: ['casual', 'modern', 'streetwear', 'everyday'] },
+        { id: 'luxury-hip-hop', name: 'Luxury Hip-Hop', prompt: 'a luxury hip-hop look with a designer bomber jacket, slim-fit distressed jeans, and a statement watch', tags: ['casual', 'modern', 'streetwear', 'designer'] },
+    ]
+  },
+  {
+    category: 'Afrobeats Stars',
+    styles: [
+        {
+            id: 'vibrant-coord-set',
+            name: 'Vibrant Co-ord Set',
+            prompt: 'a vibrant, silk co-ord set featuring a matching button-down shirt and trousers with a bold abstract African print, worn with the top few buttons unbuttoned and layered gold chains',
+            tags: ['cultural', 'modern', 'streetwear', 'artistic', 'everyday'],
+        },
+        {
+            id: 'modern-agbada-street',
+            name: 'Modern Agbada Street Style',
+            prompt: 'a modern, minimalist Agbada in a solid bright color like electric blue, with clean, sharp lines and minimal embroidery, worn with stylish chunky sneakers and sunglasses for a streetwear edge',
+            tags: ['cultural', 'modern', 'streetwear', 'artistic'],
+        },
+        {
+            id: 'luxury-graphic-trousers',
+            name: 'Luxury Graphic & Trousers',
+            prompt: 'a high-end streetwear look featuring a luxury designer graphic t-shirt, paired with impeccably tailored, wide-leg trousers and chunky designer sneakers',
+            tags: ['designer', 'modern', 'streetwear', 'artistic'],
+        },
+        {
+            id: 'embellished-denim-jacket',
+            name: 'Embellished Denim Jacket',
+            prompt: 'a unique, embellished denim jacket with intricate African-inspired beadwork and colorful patches on the back and shoulders, layered over a black t-shirt with slim-fit black jeans',
+            tags: ['vintage', 'streetwear', 'artistic', 'modern'],
+        },
+    ]
   }
 ];
 
@@ -400,6 +461,51 @@ export const CATEGORIZED_WOMENS_STYLES: StyleCategory[] = [
                 name: 'Utility Jumpsuit',
                 prompt: 'a stylish and comfortable long-sleeve utility-style jumpsuit in olive green, cinched at the waist with a matching fabric belt',
                 tags: ['casual', 'modern', 'everyday', 'utilitarian'],
+            },
+        ]
+    },
+    {
+        category: 'Artists & Creatives',
+        styles: [
+            { id: 'art-teacher-chic', name: 'Art Teacher Chic', prompt: "an 'art teacher chic' look with a colorful, flowy kimono over a simple black dress, with bold, artistic jewelry", tags: ['casual', 'artistic', 'themed'] },
+            { id: 'minimalist-architect', name: 'Minimalist Architect', prompt: 'a minimalist architect style with a structured, monochrome tunic, wide-leg trousers, and a geometric necklace', tags: ['modern', 'business', 'artistic'] },
+            { id: 'sculptor-utility-wear', name: 'Sculptor Utility Wear', prompt: "a sculptor's utility wear look with a stylish canvas jumpsuit, leather apron, and sturdy boots", tags: ['casual', 'themed', 'artistic'] },
+        ]
+    },
+    {
+        category: 'Hip-Hop & Streetwear',
+        styles: [
+            { id: '90s-rnb-style', name: '90s R&B Style', prompt: "a classic 90s R&B look with baggy jeans, a crop top, and an oversized bomber jacket", tags: ['casual', 'streetwear', 'vintage'] },
+            { id: 'hypebeast-sneakerhead', name: 'Hypebeast Sneakerhead', prompt: 'a hypebeast sneakerhead outfit with limited-edition sneakers, joggers, and a branded hoodie', tags: ['casual', 'streetwear', 'modern', 'sporty'] },
+            { id: 'glam-hip-hop', name: 'Glam Hip-Hop', prompt: 'a glamorous hip-hop look with a sequined tracksuit, large hoop earrings, and designer sunglasses', tags: ['themed', 'streetwear', 'modern'] },
+        ]
+    },
+    {
+        category: 'Afrobeats Stars',
+        styles: [
+            {
+                id: 'custom-ankara-jumpsuit',
+                name: 'Custom Ankara Jumpsuit',
+                prompt: 'a fierce, custom-tailored jumpsuit made from a bold Ankara print, featuring a structured corset bodice, a plunging neckline, and dramatic flared legs',
+                tags: ['cultural', 'modern', 'formal', 'artistic'],
+            },
+            {
+                id: 'sequin-fringe-dress',
+                name: 'Sequin & Fringe Dress',
+                prompt: 'a dazzling, stage-ready, form-fitting mini dress covered in iridescent sequins and layers of long, dynamic fringe that sways with every movement',
+                tags: ['themed', 'modern', 'formal', 'event'],
+            },
+            {
+                id: 'high-fashion-corset-cargo',
+                name: 'High-Fashion Corset & Cargos',
+                prompt: 'a high-fashion streetwear look combining a structured designer corset top with colorful, baggy cargo pants and chunky high-heeled boots',
+                tags: ['streetwear', 'modern', 'edgy', 'artistic'],
+            },
+            {
+                id: 'dramatic-kaftan-gele',
+                name: 'Dramatic Kaftan & Gele',
+                prompt: 'an elegant and dramatic, floor-sweeping silk kaftan in a single vibrant color, styled with an elaborate, matching headwrap (gele) for a regal look',
+                tags: ['cultural', 'regal', 'formal', 'artistic'],
             },
         ]
     }
@@ -691,4 +797,67 @@ export const CATEGORIZED_HEADWEAR_STYLES: StyleCategory[] = [
       { id: 'burberry-check-cap', name: 'Burberry Check Cap', prompt: 'a baseball cap in the classic Burberry vintage check pattern', tags: ['designer', 'luxury'] },
     ]
   }
+];
+
+export const POSTER_POSES: PosterPose[] = [
+    { name: 'Back to Back', prompt: 'Standing back to back, looking confident and powerful.' },
+    { name: 'Side by Side', prompt: 'Standing side by side, looking towards the camera.' },
+    { name: 'Face Off', prompt: 'Facing each other in a dramatic, confrontational pose.' },
+    { name: 'One in Front', prompt: 'Artist 1 is slightly in front of Artist 2, both looking at the camera with a serious expression.' },
+    { name: 'Casual Lean', prompt: 'Artist 1 is leaning casually on Artist 2\'s shoulder.' },
+];
+
+export const POSTER_ASPECT_RATIOS: PosterAspectRatio[] = [
+    { name: 'Square (Social)', value: '1:1' },
+    { name: 'CD Cover (Hi-Res)', value: '1:1-hires' },
+    { name: 'Portrait (Social)', value: '4:5' },
+    { name: 'Story (Mobile)', value: '9:16' },
+    { name: 'Landscape (Wide)', value: '16:9' },
+];
+
+export const POSTER_BACKGROUND_OPTIONS: BackgroundOption[] = [
+    { name: 'Studio (Custom Color)', prompt: 'a clean, minimalist studio background with the hex color ' },
+    { name: 'Neon-lit Alley', prompt: 'a gritty, urban alley at night, illuminated by vibrant neon signs' },
+    { name: 'Recording Studio', prompt: 'a professional music recording studio with mixing boards and soundproofing' },
+    { name: 'Stage with Spotlights', prompt: 'a dark stage with dramatic, bright spotlights shining down' },
+    { name: 'Luxury Penthouse', prompt: 'a modern luxury penthouse apartment with a view of a city skyline at night' },
+    { name: 'Graffiti Wall', prompt: 'a vibrant, colorful graffiti-covered wall in an urban setting' },
+];
+
+export const POSTER_LIGHTING_OPTIONS: SimpleOption[] = [
+  { name: 'Dramatic Spotlight', prompt: 'dramatic, high-contrast spotlight lighting' },
+  { name: 'Cinematic', prompt: 'cinematic, moody lighting with deep shadows and highlights' },
+  { name: 'Neon Glow', prompt: 'a vibrant, colorful neon glow that casts colored light on the subjects' },
+  { name: 'Soft Studio', prompt: 'clean, professional, soft-diffused studio lighting' },
+];
+
+export const POSTER_DISTANCE_OPTIONS: SimpleOption[] = [
+    { name: 'Default', prompt: '' },
+    { name: 'Close Together', prompt: 'They should be very close to each other, almost touching, creating a sense of intimacy or collaboration.' },
+    { name: 'Normal Distance', prompt: 'They should be a natural, conversational distance apart, like they are on stage together.' },
+    { name: 'Far Apart', prompt: 'They should be positioned far apart from each other within the frame, creating a sense of scale, distance, or opposition.' },
+];
+
+export const POSTER_INDIVIDUAL_POSTURES: SimpleOption[] = [
+    { name: 'Default', prompt: '' },
+    { name: 'Power Stance', prompt: 'Both artists should adopt a power stance: standing tall, with confident, strong body language.' },
+    { name: 'Relaxed & Casual', prompt: 'Both artists should have a relaxed, casual posture, looking natural and at ease.' },
+    { name: 'In Motion', prompt: 'Both artists should be captured in a moment of motion, such as walking, dancing, or turning, adding a dynamic feel.' },
+];
+
+export const POSTER_FONT_OPTIONS: PosterElementOption[] = [
+    { name: 'Modern Sans-Serif', prompt: 'a clean, modern, bold sans-serif font, similar to Helvetica or Futura' },
+    { name: 'Elegant Serif', prompt: 'an elegant, high-contrast serif font, like Didot or Bodoni' },
+    { name: 'Graffiti Tag', prompt: 'a vibrant, expressive street art graffiti tag style font' },
+    { name: 'Retro Script', prompt: 'a flowing, retro script font reminiscent of the 1970s or 80s' },
+    { name: 'Gothic / Metal', prompt: 'a sharp, angular, gothic-style font, typical of heavy metal album covers' },
+    { name: 'Handwritten', prompt: 'a personal, authentic handwritten scrawl font' },
+];
+
+export const POSTER_ICON_OPTIONS: PosterElementOption[] = [
+    { name: 'None', prompt: '' },
+    { name: 'Parental Advisory', prompt: 'the standard black and white "Parental Advisory: Explicit Content" logo in a corner' },
+    { name: '18+ Icon', prompt: 'a simple, clean "18+" circular icon in a corner' },
+    { name: 'Vinyl Record Icon', prompt: 'a small, stylized icon of a vinyl record' },
+    { name: '"New Single" Sticker', prompt: 'a circular sticker with the text "New Single" on it' },
 ];

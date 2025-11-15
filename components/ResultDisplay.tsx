@@ -8,9 +8,15 @@ interface ResultDisplayProps {
   originalImage: string | null;
   generatedImage: string | null;
   isLoading: boolean;
+  showBeforeAfterToggle?: boolean;
 }
 
-const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, generatedImage, isLoading }) => {
+const ResultDisplay: React.FC<ResultDisplayProps> = ({ 
+  originalImage, 
+  generatedImage, 
+  isLoading, 
+  showBeforeAfterToggle = true 
+}) => {
   const [showGenerated, setShowGenerated] = useState(true);
   const [addLogo, setAddLogo] = useState(false);
 
@@ -24,20 +30,18 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, generatedI
   const handleDownload = async () => {
     if (!generatedImage) return;
 
-    const mimeTypeMatch = generatedImage.match(/^data:(image\/[a-z]+);base64,/);
-    const mimeType = mimeTypeMatch ? mimeTypeMatch[1] : 'image/png';
-    const extension = mimeType.split('/')[1] || 'png';
+    const downloadFormat = 'image/jpeg';
+    const extension = 'jpeg';
+    const quality = 0.95; // High quality JPEG
 
-    if (!addLogo) {
-      await downloadResource(generatedImage, `lion-apparel-look.${extension}`);
-      return;
-    }
-
-    // Canvas logic for adding logo
     try {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        if (!ctx) return;
+        if (!ctx) {
+            // Fallback if canvas is not supported
+            await downloadResource(generatedImage, `lion-apparel-poster.png`);
+            return;
+        };
 
         const mainImage = await new Promise<HTMLImageElement>((resolve, reject) => {
             const img = new Image();
@@ -49,34 +53,46 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, generatedI
 
         canvas.width = mainImage.naturalWidth;
         canvas.height = mainImage.naturalHeight;
+        
+        // Draw the main generated image onto the canvas
+        // This is necessary for both adding a logo and for converting format
         ctx.drawImage(mainImage, 0, 0);
 
-        const logoImage = await new Promise<HTMLImageElement>((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => resolve(img);
-            img.onerror = (err) => reject(err);
-            img.src = getLogoSvgDataUrl(mainImage.naturalWidth);
-        });
-        
-        const padding = mainImage.naturalWidth * 0.025; // 2.5% padding
-        const logoWidth = logoImage.width;
-        const logoHeight = logoImage.height;
-        const x = mainImage.naturalWidth - logoWidth - padding;
-        const y = mainImage.naturalHeight - logoHeight - padding;
+        let finalFilename = `lion-apparel-poster.${extension}`;
 
-        ctx.globalAlpha = 0.85; // Make logo slightly transparent
-        ctx.drawImage(logoImage, x, y, logoWidth, logoHeight);
-        ctx.globalAlpha = 1.0;
+        if (addLogo) {
+            const logoImage = await new Promise<HTMLImageElement>((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = (err) => reject(err);
+                img.src = getLogoSvgDataUrl(mainImage.naturalWidth);
+            });
+            
+            const padding = mainImage.naturalWidth * 0.025;
+            const logoWidth = logoImage.width;
+            const logoHeight = logoImage.height;
+            const x = mainImage.naturalWidth - logoWidth - padding;
+            const y = mainImage.naturalHeight - logoHeight - padding;
 
-        const dataUrlWithLogo = canvas.toDataURL(mimeType);
-        await downloadResource(dataUrlWithLogo, `lion-apparel-look-watermarked.${extension}`);
+            ctx.globalAlpha = 0.85;
+            ctx.drawImage(logoImage, x, y, logoWidth, logoHeight);
+            ctx.globalAlpha = 1.0;
+            finalFilename = `lion-apparel-poster-watermarked.${extension}`;
+        }
+
+        // Convert canvas to the desired format (JPEG) and trigger download
+        const finalDataUrl = canvas.toDataURL(downloadFormat, quality);
+        await downloadResource(finalDataUrl, finalFilename);
 
     } catch (err) {
-        console.error("Failed to load logo for watermarking.", err);
-        // Fallback to downloading original image
-        await downloadResource(generatedImage, `lion-apparel-look.${extension}`);
+        console.error("Failed during download process:", err);
+        // Fallback to downloading the original generated image data
+        const originalMimeTypeMatch = generatedImage.match(/^data:(image\/[a-z]+);base64,/);
+        const originalExtension = originalMimeTypeMatch ? originalMimeTypeMatch[1].split('/')[1] || 'png' : 'png';
+        await downloadResource(generatedImage, `lion-apparel-poster-fallback.${originalExtension}`);
     }
   };
+
 
   const imageToShow = showGenerated ? generatedImage : originalImage;
   const hasBothImages = originalImage && generatedImage;
@@ -105,7 +121,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ originalImage, generatedI
           )
         )}
         
-        {hasBothImages && !isLoading && (
+        {showBeforeAfterToggle && hasBothImages && !isLoading && (
           <div className="absolute bottom-4 left-4">
             <div className="flex items-center bg-black/60 backdrop-blur-sm rounded-full p-1">
               <button 

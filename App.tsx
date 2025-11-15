@@ -5,6 +5,10 @@ import GalleryPage from './pages/GalleryPage.tsx';
 import AboutPage from './pages/AboutPage.tsx';
 import AnimatePage from './pages/AnimatePage.tsx';
 import StyleQuizPage from './pages/StyleQuizPage.tsx';
+import MusicPosterPage from './pages/MusicPosterPage.tsx';
+import PricingPage from './pages/PricingPage.tsx';
+import AuthPage from './pages/AuthPage.tsx';
+import { AuthProvider } from './contexts/AuthContext.tsx';
 import { GalleryItem } from './data/galleryData.ts';
 
 export interface RemixConfig extends Omit<GalleryItem, 'image' | 'title' | 'description'> {}
@@ -30,6 +34,8 @@ const App: React.FC = () => {
     switch (currentPage) {
       case 'home':
         return <HomePage initialRemixConfig={remixConfig} clearRemixConfig={() => setRemixConfig(null)} />;
+      case 'poster':
+        return <MusicPosterPage />;
       case 'animate':
         return <AnimatePage />;
       case 'gallery':
@@ -38,16 +44,22 @@ const App: React.FC = () => {
         return <StyleQuizPage onRemix={handleRemix} />;
       case 'about':
         return <AboutPage />;
+      case 'pricing':
+        return <PricingPage />;
+      case 'auth':
+        return <AuthPage onAuthenticated={() => setCurrentPage('home')} />;
       default:
         return <HomePage initialRemixConfig={remixConfig} clearRemixConfig={() => setRemixConfig(null)} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans">
-      <Header onNavigate={handleNavigate} />
-      {renderPage()}
-    </div>
+    <AuthProvider>
+      <div className="min-h-screen bg-black text-white font-sans">
+        <Header onNavigate={handleNavigate} />
+        {renderPage()}
+      </div>
+    </AuthProvider>
   );
 };
 
