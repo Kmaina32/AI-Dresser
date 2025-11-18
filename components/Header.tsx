@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext.tsx';
 import { MenuIcon } from './icons/MenuIcon.tsx';
 import { CloseIcon } from './icons/CloseIcon.tsx';
 import { MovieIcon } from './icons/MovieIcon.tsx';
@@ -13,40 +12,11 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { session, signOut } = useAuth();
 
     const handleNavClick = (page: string) => {
         onNavigate(page);
         setIsMenuOpen(false);
     };
-
-    const handleLogout = async () => {
-        await signOut();
-        setIsMenuOpen(false);
-        onNavigate('home');
-    }
-
-    const renderAuthButtons = () => {
-        if (session) {
-            return (
-                <button onClick={handleLogout} className="text-gray-300 hover:text-amber-400 transition-colors">Logout</button>
-            );
-        }
-        return (
-            <button onClick={() => handleNavClick('auth')} className="text-gray-300 hover:text-amber-400 transition-colors">Login</button>
-        );
-    };
-
-    const renderMobileAuthButtons = () => {
-         if (session) {
-            return (
-                <button onClick={handleLogout} className="text-gray-200 hover:text-amber-400 transition-colors">Logout</button>
-            );
-        }
-        return (
-            <button onClick={() => handleNavClick('auth')} className="text-gray-200 hover:text-amber-400 transition-colors">Login</button>
-        );
-    }
 
     return (
         <header className="bg-black/50 backdrop-blur-sm border-b border-zinc-800 sticky top-0 z-50">
@@ -67,11 +37,8 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                     <button onClick={() => handleNavClick('animate')} className="text-gray-300 hover:text-amber-400 transition-colors flex items-center gap-2">
                         <MovieIcon className="w-5 h-5" /> Animate
                     </button>
-                    <button onClick={() => handleNavClick('pricing')} className="text-gray-300 hover:text-amber-400 transition-colors">Pricing</button>
                     <button onClick={() => handleNavClick('gallery')} className="text-gray-300 hover:text-amber-400 transition-colors">Gallery</button>
                     <button onClick={() => handleNavClick('about')} className="text-gray-300 hover:text-amber-400 transition-colors">About</button>
-                    <div className="border-l border-zinc-700 h-6 mx-2"></div>
-                    {renderAuthButtons()}
                 </nav>
 
                 {/* Mobile Menu Button */}
@@ -85,18 +52,13 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
             {/* Mobile Menu Overlay */}
             {isMenuOpen && (
                 <div className="md:hidden fixed inset-0 bg-black bg-opacity-90 backdrop-blur-md z-40 flex flex-col items-center justify-center">
-                    <nav className="flex flex-col items-center gap-8 text-3xl">
+                    <nav className="flex flex-col items-center gap-10 text-3xl">
                         <button onClick={() => handleNavClick('home')} className="text-gray-200 hover:text-amber-400 transition-colors">Creator</button>
                         <button onClick={() => handleNavClick('poster')} className="text-gray-200 hover:text-amber-400 transition-colors">Poster</button>
                         <button onClick={() => handleNavClick('quiz')} className="text-gray-200 hover:text-amber-400 transition-colors">Style Quiz</button>
                         <button onClick={() => handleNavClick('animate')} className="text-gray-200 hover:text-amber-400 transition-colors">Animate</button>
-                        <button onClick={() => handleNavClick('pricing')} className="text-gray-200 hover:text-amber-400 transition-colors">Pricing</button>
                         <button onClick={() => handleNavClick('gallery')} className="text-gray-200 hover:text-amber-400 transition-colors">Gallery</button>
                         <button onClick={() => handleNavClick('about')} className="text-gray-200 hover:text-amber-400 transition-colors">About</button>
-                        <div className="border-b border-zinc-700 w-24 my-2"></div>
-                        <div className="text-3xl">
-                            {renderMobileAuthButtons()}
-                        </div>
                     </nav>
                 </div>
             )}
