@@ -7,9 +7,9 @@ async function handler(req, res) {
   const user = req.user;
 
   try {
-    // Example: Fetch items from a 'todos' table that belong to the logged-in user
-    // This assumes you have a 'todos' table with a 'user_id' column.
-    const { rows } = await db.query('SELECT * FROM todos WHERE user_id = $1', [user.id]);
+    // Fetch clothing items that belong to the currently authenticated user.
+    // This correctly uses your 'clothing_items' table schema.
+    const { rows } = await db.query('SELECT id, name, category, color FROM clothing_items WHERE user_id = $1', [user.id]);
     
     res.status(200).json(rows);
   } catch (error) {
