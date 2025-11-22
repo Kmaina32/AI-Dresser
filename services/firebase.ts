@@ -28,15 +28,24 @@ try {
     
     // Initialize services only if app is successfully created
     if (app) {
-        auth = getAuth(app);
-        db = getFirestore(app);
-        googleProvider = new GoogleAuthProvider();
-        console.log("Firebase initialized successfully.");
+        // We wrap getAuth in try-catch specifically because it throws if versions mismatch or dependencies are missing
+        try {
+            auth = getAuth(app);
+            db = getFirestore(app);
+            googleProvider = new GoogleAuthProvider();
+            console.log("Firebase initialized successfully.");
+        } catch (innerError) {
+            console.error("Firebase Services Initialization Error:", innerError);
+            auth = null;
+            db = null;
+            googleProvider = null;
+        }
     }
 } catch (error) {
     console.warn("Firebase initialization failed. Falling back to Mock Mode.");
     console.error("Firebase Error Details:", error);
     // Ensure variables are null so AuthContext can switch to Mock Mode without crashing
+    app = null;
     auth = null;
     db = null;
     googleProvider = null;
