@@ -196,7 +196,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
             {isResetting ? (
                 <button 
                     onClick={() => { setIsResetting(false); setError(''); }}
-                    className="w-full mt-4 text-xs font-bold uppercase tracking-widest text-zinc-500 hover:text-black dark:hover:text-white"
+                    className="w-full mt-6 py-3 text-xs font-bold uppercase tracking-widest text-zinc-500 hover:text-black dark:hover:text-white border border-transparent hover:border-zinc-200 dark:hover:border-white/10 rounded-sm transition-all"
                 >
                     Back to Login
                 </button>
@@ -211,22 +211,22 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
                     <button 
                         onClick={handleGoogleLogin}
                         disabled={isLoading}
-                        className="w-full py-3 bg-white dark:bg-black/20 border border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-white font-medium text-sm rounded-sm hover:bg-zinc-50 dark:hover:bg-white/5 transition-all flex items-center justify-center gap-3"
+                        className="w-full py-3 bg-white dark:bg-black/20 border border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-white font-medium text-sm rounded-sm hover:bg-zinc-50 dark:hover:bg-white/5 transition-all flex items-center justify-center gap-3 hover:border-amber-500/30"
                     >
                         <GoogleIcon />
                         Sign in with Google
                     </button>
 
-                    <div className="mt-10 pt-6 border-t border-zinc-200 dark:border-white/5 text-center">
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                            Don't have an account?{' '}
-                            <button 
-                                onClick={() => onNavigate('signup')}
-                                className="text-zinc-900 dark:text-white font-bold hover:text-amber-500 transition-colors ml-1 underline decoration-zinc-300 dark:decoration-zinc-700 underline-offset-4"
-                            >
-                                Get Started
-                            </button>
+                    <div className="mt-12 pt-6 border-t border-zinc-200 dark:border-white/5">
+                        <p className="text-xs text-center text-zinc-500 dark:text-zinc-400 mb-4 uppercase tracking-widest">
+                            New to Geo Studio?
                         </p>
+                        <button 
+                            onClick={() => onNavigate('signup')}
+                            className="w-full py-4 bg-transparent border border-zinc-300 dark:border-white/10 text-zinc-700 dark:text-zinc-300 font-bold text-xs uppercase tracking-[0.2em] rounded-sm hover:bg-white hover:border-amber-500 dark:hover:bg-white/5 dark:hover:text-white dark:hover:border-white transition-all duration-300 group"
+                        >
+                            Create Account <span className="inline-block transition-transform group-hover:translate-x-1 ml-1">→</span>
+                        </button>
                     </div>
                 </>
             )}
