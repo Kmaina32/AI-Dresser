@@ -1,12 +1,11 @@
+
 import { GoogleGenAI } from "@google/genai";
 
-const API_KEY = process.env.API_KEY;
+// Safely retrieve API Key to avoid Uncaught ReferenceError in browser
+const API_KEY = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
 
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable not set");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+// We allow initialization even without key to prevent crash on load
+const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
 
 const SYSTEM_INSTRUCTION = `
 You are "Geo", the advanced AI assistant for **Geo Studio AI**.
@@ -37,17 +36,24 @@ export interface ChatMessage {
 }
 
 export async function sendChatMessage(history: ChatMessage[], newMessage: string): Promise<string> {
-  const chat = ai.chats.create({
-    model: 'gemini-3-pro-preview',
-    config: {
-      systemInstruction: SYSTEM_INSTRUCTION,
-    },
-    history: history.map(msg => ({
-      role: msg.role,
-      parts: [{ text: msg.text }]
-    }))
-  });
+  if (!ai) return "I apologize, I cannot connect to the mainframe (Missing API Key).";
 
-  const result = await chat.sendMessage({ message: newMessage });
-  return result.text || "I apologize, I am unable to respond at the moment.";
+  try {
+    const chat = ai.chats.create({
+        model: 'gemini-3-pro-preview',
+        config: {
+        systemInstruction: SYSTEM_INSTRUCTION,
+        },
+        history: history.map(msg => ({
+        role: msg.role,
+        parts: [{ text: msg.text }]
+        }))
+    });
+
+    const result = await chat.sendMessage({ message: newMessage });
+    return result.text || "I apologize, I am unable to respond at the moment.";
+  } catch (error) {
+    console.error("Chat Error:", error);
+    return "I encountered a processing error. Please try again.";
+  }
 }

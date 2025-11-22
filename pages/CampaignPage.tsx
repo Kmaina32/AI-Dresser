@@ -29,7 +29,7 @@ const CampaignPage: React.FC = () => {
     const [selectedPartyId, setSelectedPartyId] = useState<string>(KENYAN_PARTIES[0].id);
     const [position, setPosition] = useState<string>(CAMPAIGN_POSITIONS[0].value);
     const [slogan, setSlogan] = useState<string>('Maendeleo kwa Wote');
-    const [wrapStyle, setWrapStyle] = useState<string>(CAMPAIGN_WRAP_STYLES[0].value);
+    const [wrapStyle, setWrapStyle] = useState<string>(CAMPAIGN_WRAP_STYLES[0].value || 'full');
     const [selectedCampaignMods, setSelectedCampaignMods] = useState<string[]>([]);
 
     const [generatedImage, setGeneratedImage] = useState<string | null>(null);
@@ -85,7 +85,7 @@ const CampaignPage: React.FC = () => {
 
     const partyOptions = KENYAN_PARTIES.map(p => ({ label: p.name, value: p.id }));
     const positionOptions = CAMPAIGN_POSITIONS.map(p => ({ label: p.name, value: p.value }));
-    const wrapStyleOptions = CAMPAIGN_WRAP_STYLES.map(w => ({ label: w.name, value: w.value }));
+    const wrapStyleOptions = CAMPAIGN_WRAP_STYLES.map(w => ({ label: w.name, value: w.value || w.name }));
 
     const shareText = `Vote for ${position}: "${slogan}". Proudly supporting ${selectedParty.name}! Generated with Campaign Builder.`;
     const shareTitle = `Vote for ${selectedParty.name}`;
@@ -104,10 +104,10 @@ const CampaignPage: React.FC = () => {
             <div className={`
                 fixed inset-0 lg:relative lg:inset-auto
                 w-full sm:w-[420px] lg:w-[420px]
-                glass-panel border-r-0 lg:border-r border-zinc-200 dark:border-white/5
+                border-r-0 lg:border-r border-zinc-200 dark:border-white/5
                 flex flex-col z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 
-                bg-white/95 dark:bg-zinc-950/80 backdrop-blur-xl
+                bg-white dark:bg-zinc-950/90 backdrop-blur-xl
             `}>
                  {/* Mobile Sidebar Header */}
                  <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-white dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">

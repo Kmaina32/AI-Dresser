@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header.tsx';
 import HomePage from './pages/HomePage.tsx';
@@ -21,7 +22,8 @@ const App: React.FC = () => {
 
   // Sync URL with state on initial load (SSR/Refresh support)
   useEffect(() => {
-    const path = window.location.pathname.replace('/', '');
+    // Strip leading/trailing slashes
+    const path = window.location.pathname.replace(/^\/|\/$/g, '');
     if (path && path !== '') {
       setCurrentPage(path);
     }
@@ -41,7 +43,7 @@ const App: React.FC = () => {
   // Handle browser back/forward buttons
   useEffect(() => {
     const onPopState = (event: PopStateEvent) => {
-        const path = window.location.pathname.replace('/', '');
+        const path = window.location.pathname.replace(/^\/|\/$/g, '');
         setCurrentPage(path || 'landing');
     };
     window.addEventListener('popstate', onPopState);

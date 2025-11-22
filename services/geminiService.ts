@@ -1,17 +1,13 @@
 
-
-
 import { GoogleGenAI, Modality, VideoGenerationReferenceImage, VideoGenerationReferenceType } from "@google/genai";
 import { fileToBase64 } from "../utils/fileUtils.ts";
 import { PoliticalParty } from "../constants.ts";
 
-const API_KEY = process.env.API_KEY;
+// Safely retrieve API Key to avoid Uncaught ReferenceError in browser
+const API_KEY = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
 
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable not set");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+// We allow initialization even without key to prevent crash on load
+const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
 
 export type DesignMode = 'apparel' | 'vehicle' | 'interior' | 'landscape';
 
@@ -32,20 +28,18 @@ export async function editImageWithGemini(
   isLockEnabled: boolean,
   quality: string,
   mode: DesignMode,
-  // New Vehicle Mod Props (Optional)
   rimsPrompt?: string,
   aeroPrompt?: string,
   vehicleInteriorPrompt?: string,
   vehicleLightingPrompt?: string
 ): Promise<string> {
+  if (!ai) throw new Error("API Key is missing. Please check your environment variables.");
+  
   const base64Data = await fileToBase64(imageFile);
   
   const promptParts: string[] = [];
   
-  // --- MODE SPECIFIC PROMPT CONSTRUCTION ---
-  
   if (mode === 'apparel') {
-      // If targetPersonPrompt is explicitly set (e.g. "child"), use it.
       const targetPrefix = targetPersonPrompt ? `For the ${targetPersonPrompt}, ` : `For the main person, `;
       
       if (stylePrompt) {
@@ -68,13 +62,11 @@ export async function editImageWithGemini(
           promptParts.push(`- **Paint Color:** The vehicle paint should be the hex color ${color}.`);
       }
       
-      // Detailed Vehicle Mods
       if (rimsPrompt) promptParts.push(`- **Wheels/Rims:** Change wheels to: ${rimsPrompt}. Ensure proper fitment.`);
       if (aeroPrompt) promptParts.push(`- **Body Aero:** Install ${aeroPrompt}.`);
       if (vehicleInteriorPrompt) promptParts.push(`- **Interior:** Update visible interior to: ${vehicleInteriorPrompt}.`);
       if (vehicleLightingPrompt) promptParts.push(`- **Lighting/Grill:** Modify lighting/grill: ${vehicleLightingPrompt}.`);
 
-      // Explicit constraint for vehicles
       promptParts.push(`- **NUMBER PLATES:** RETAIN THE ORIGINAL NUMBER PLATES / LICENSE PLATES EXACTLY. DO NOT BLUR OR ALTER TEXT.`);
   }
   else if (mode === 'interior') {
@@ -87,7 +79,6 @@ export async function editImageWithGemini(
       promptParts.push(`- **Landscape Architecture:** Redesign the outdoor landscape/garden. Change the plants and hardscape to match this style: ${stylePrompt}.`);
   }
 
-  // --- SHARED ENVIRONMENT PROMPTS ---
   if (backgroundPrompt) {
     promptParts.push(`- **Background:** Place the subject in the following setting: ${backgroundPrompt}.`);
   } else {
@@ -99,8 +90,6 @@ export async function editImageWithGemini(
   }
 
   const finalEdits = promptParts.join('\n');
-
-  // --- MODE SPECIFIC CORE DIRECTIVES ---
   
   let preservationDirective = "";
   
@@ -187,6 +176,8 @@ export async function generateMusicPoster(
   fontPrompt: string,
   iconPrompt: string
 ): Promise<string> {
+     if (!ai) throw new Error("API Key is missing.");
+
      const base64Artist1 = await fileToBase64(artist1File);
      const base64Artist2 = await fileToBase64(artist2File);
      
@@ -239,6 +230,8 @@ export async function generateStudioSession(
   lightingPrompt: string,
   aspectRatio: string
 ): Promise<string> {
+    if (!ai) throw new Error("API Key is missing.");
+    
     const base64Person1 = await fileToBase64(person1File);
     const base64Person2 = await fileToBase64(person2File);
 
@@ -287,6 +280,8 @@ export async function generateCampaignMaterial(
     wrapStyle?: string,
     campaignMods?: string[]
 ): Promise<string> {
+    if (!ai) throw new Error("API Key is missing.");
+
     const base64Data = await fileToBase64(imageFile);
     
     let prompt = "";
@@ -371,6 +366,6 @@ export async function generateVideoWithVeo(
   isExtendedLength: boolean,
   referenceImages: File[],
 ): Promise<string> {
-    await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate work
+    await new Promise(resolve => setTimeout(resolve, 3000)); 
     return "https://storage.googleapis.com/aistudio-project-files/assets/video_mock.mp4"; 
 }

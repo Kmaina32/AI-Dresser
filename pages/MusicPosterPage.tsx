@@ -116,10 +116,10 @@ const MusicPosterPage: React.FC = () => {
             <div className={`
                 fixed inset-0 lg:relative lg:inset-auto
                 w-full sm:w-[420px] lg:w-[420px]
-                glass-panel border-r-0 lg:border-r border-zinc-200 dark:border-white/5
+                border-r-0 lg:border-r border-zinc-200 dark:border-white/5
                 flex flex-col z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 
-                bg-white/95 dark:bg-zinc-950/80 backdrop-blur-xl
+                bg-white dark:bg-zinc-950/90 backdrop-blur-xl
             `}>
                  {/* Mobile Sidebar Header */}
                  <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-white dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">

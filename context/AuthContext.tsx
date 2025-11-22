@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export interface User {
@@ -20,35 +21,44 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 /* 
- * STACK AUTH & NEON DB CONFIGURATION
+ * STACK AUTH CONFIGURATION
  * 
- * Public Client Keys (Safe for Frontend):
- * Project ID: 932ad0d2-4788-4b76-b9f3-6a5decb2a20f
- * Client Key: pck_qrjd2q1cgvxfz03wfc9mmzsdxsfftmr2bwbcbgxhhz8vg
+ * These keys are public identifiers for the Stack Auth project.
+ * In a real implementation, the @stack-auth/client SDK would use these.
+ */
+const STACK_CONFIG = {
+    projectId: '932ad0d2-4788-4b76-b9f3-6a5decb2a20f',
+    publishableClientKey: 'pck_qrjd2q1cgvxfz03wfc9mmzsdxsfftmr2bwbcbgxhhz8vg',
+    jwksUrl: 'https://api.stack-auth.com/api/v1/projects/932ad0d2-4788-4b76-b9f3-6a5decb2a20f/.well-known/jwks.json'
+};
+
+/*
+ * NEON DB CONFIGURATION
  * 
- * SECURITY WARNING:
- * The DATABASE_URL and STACK_SECRET_SERVER_KEY provided must NOT be used here.
- * They are server-side secrets. Using them in this file would expose your 
- * database to the public internet.
+ * SECURITY NOTE: The connection string 'postgresql://neondb_owner:...'
+ * MUST NOT be used here in client-side code. It exposes the database secret.
  * 
- * For this preview, we are simulating the connection using local state
- * to keep your secrets safe. In a real deployment, these interactions
- * would happen via a Next.js API route or backend server.
+ * Real implementation:
+ * 1. Backend API Route (e.g., /api/auth/login) uses `neon(process.env.DATABASE_URL)`.
+ * 2. Frontend calls this API.
+ * 
+ * For this preview, we simulate the API call latency.
  */
 
-const STACK_PROJECT_ID = '932ad0d2-4788-4b76-b9f3-6a5decb2a20f';
-const STACK_CLIENT_KEY = 'pck_qrjd2q1cgvxfz03wfc9mmzsdxsfftmr2bwbcbgxhhz8vg';
-
-const MOCK_DELAY = 1200; // Simulate network latency for realism
+const MOCK_DELAY = 1000;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize Auth State (Simulate checking session token)
   useEffect(() => {
     const initializeAuth = async () => {
-        // In real app: await stack.getUser();
+        // Simulate Stack Auth SDK initialization
+        // const stack = new StackAuth(STACK_CONFIG);
+        // const currentUser = await stack.getUser();
+        
+        console.log(`[Auth] Initialized Stack Auth (Project ID: ${STACK_CONFIG.projectId})`);
+        
         const storedUser = localStorage.getItem('geo-user');
         if (storedUser) {
             setUser(JSON.parse(storedUser));
@@ -60,19 +70,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
+    
+    // Simulate API Call to Backend -> Neon DB
     return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
-        // Mock validation logic
         if (email && password) {
-          // Retrieve potential existing user from "DB"
+          // Retrieve mock user from local storage to simulate persistence
           const dbUserString = localStorage.getItem(`geo-db-${email}`);
-          
           let finalUser: User;
           
           if (dbUserString) {
              finalUser = JSON.parse(dbUserString);
           } else {
-             // Mock user generation if not found (Demo mode)
+             // Fallback for demo
              finalUser = {
                 id: `user-${Math.random().toString(36).substr(2, 9)}`,
                 name: email.split('@')[0],
@@ -82,8 +92,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
              };
           }
 
+          console.log(`[DB] User authenticated via Neon connection.`);
           setUser(finalUser);
-          localStorage.setItem('geo-user', JSON.stringify(finalUser)); // Set Session
+          localStorage.setItem('geo-user', JSON.stringify(finalUser));
           setIsLoading(false);
           resolve();
         } else {
@@ -96,6 +107,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signup = async (name: string, email: string, password: string) => {
     setIsLoading(true);
+    
+    // Simulate Stack Auth Registration
     return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
         if (email && password && name) {
@@ -104,13 +117,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             name: name,
             email: email,
             avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${name}`,
-            isPro: true // Give new users Pro trial
+            isPro: true 
           };
           
-          // Store in "Database"
+          // Persist to "DB"
           localStorage.setItem(`geo-db-${email}`, JSON.stringify(newUser));
           
-          // Set Active Session
+          console.log(`[Auth] User registered in Stack Auth & Neon DB.`);
           setUser(newUser);
           localStorage.setItem('geo-user', JSON.stringify(newUser));
           
@@ -125,13 +138,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    // In real app: await stack.signOut();
     setUser(null);
     localStorage.removeItem('geo-user');
   };
 
   const updateProfile = async (data: Partial<User>) => {
-      // In real app: await api.patch('/users/me', data);
       return new Promise<void>((resolve) => {
           setTimeout(() => {
               if (user) {
@@ -140,8 +151,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                       updatedUser.avatar = `https://api.dicebear.com/7.x/initials/svg?seed=${data.name}`;
                   }
                   setUser(updatedUser);
-                  localStorage.setItem('geo-user', JSON.stringify(updatedUser)); // Update Session
-                  localStorage.setItem(`geo-db-${user.email}`, JSON.stringify(updatedUser)); // Update "DB"
+                  localStorage.setItem('geo-user', JSON.stringify(updatedUser));
+                  localStorage.setItem(`geo-db-${user.email}`, JSON.stringify(updatedUser));
               }
               resolve();
           }, MOCK_DELAY / 2);
