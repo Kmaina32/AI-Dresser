@@ -14,8 +14,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Check local storage or system preference, default to dark
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('geo-theme');
-      if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
+      try {
+        const savedTheme = localStorage.getItem('geo-theme');
+        if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
+      } catch (e) {
+          // Silent fail for restricted storage access
+      }
       if (window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
     }
     return 'dark';
@@ -25,7 +29,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
-    localStorage.setItem('geo-theme', theme);
+    try {
+        localStorage.setItem('geo-theme', theme);
+    } catch(e) {
+        // Silent fail for restricted storage access
+    }
   }, [theme]);
 
   const toggleTheme = () => {

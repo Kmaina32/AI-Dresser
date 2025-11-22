@@ -36,9 +36,13 @@ const getDatabase = (): Record<string, any> => {
 };
 
 const saveToDatabase = (email: string, data: any) => {
-    const db = getDatabase();
-    db[email] = data;
-    localStorage.setItem(DB_KEY, JSON.stringify(db));
+    try {
+        const db = getDatabase();
+        db[email] = data;
+        localStorage.setItem(DB_KEY, JSON.stringify(db));
+    } catch (e) {
+        console.error("Storage operation failed", e);
+    }
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -76,7 +80,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           // Login Success
           const userData: User = record.user;
           setUser(userData);
-          localStorage.setItem(SESSION_KEY, JSON.stringify(userData));
+          try {
+              localStorage.setItem(SESSION_KEY, JSON.stringify(userData));
+          } catch(e) { console.error("Session save failed", e); }
+          
           setIsLoading(false);
           resolve();
         } else {
@@ -119,7 +126,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           
           // Auto Login
           setUser(newUser);
-          localStorage.setItem(SESSION_KEY, JSON.stringify(newUser));
+          try {
+            localStorage.setItem(SESSION_KEY, JSON.stringify(newUser));
+          } catch(e) { console.error("Session save failed", e); }
           
           setIsLoading(false);
           resolve();
@@ -133,7 +142,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem(SESSION_KEY);
+    try {
+        localStorage.removeItem(SESSION_KEY);
+    } catch(e) { console.error("Logout storage clear failed", e); }
   };
 
   const updateProfile = async (data: Partial<User>) => {
@@ -147,7 +158,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                   }
                   
                   setUser(updatedUser);
-                  localStorage.setItem(SESSION_KEY, JSON.stringify(updatedUser));
+                  try {
+                      localStorage.setItem(SESSION_KEY, JSON.stringify(updatedUser));
+                  } catch(e) { console.error("Update profile storage failed", e); }
                   
                   // Update DB record
                   const db = getDatabase();

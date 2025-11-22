@@ -1,22 +1,48 @@
 
 export const fileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
+    if (!file) {
+        reject(new Error('File is missing or invalid'));
+        return;
+    }
     const reader = new FileReader();
-    reader.readAsDataURL(file);
+    try {
+        reader.readAsDataURL(file);
+    } catch (e) {
+        reject(new Error('Failed to read file: ' + (e as Error).message));
+        return;
+    }
+    
     reader.onload = () => {
       const result = reader.result as string;
+      if (!result || typeof result !== 'string') {
+          reject(new Error('Failed to read file content'));
+          return;
+      }
       // remove the `data:mime/type;base64,` prefix
-      const base64 = result.split(',')[1];
-      resolve(base64);
+      const parts = result.split(',');
+      if (parts.length < 2) {
+          reject(new Error('Invalid Data URL format'));
+          return;
+      }
+      resolve(parts[1]);
     };
     reader.onerror = (error) => reject(error);
   });
 };
 
 export const dataUrlToFile = async (dataUrl: string, filename: string): Promise<File> => {
-    const res = await fetch(dataUrl);
-    const blob = await res.blob();
-    return new File([blob], filename, { type: blob.type });
+    if (!dataUrl) {
+        throw new Error("Invalid dataUrl provided");
+    }
+    try {
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        return new File([blob], filename, { type: blob.type });
+    } catch (e) {
+        console.error("DataUrl conversion error:", e);
+        throw new Error("Failed to convert DataURL to File");
+    }
 };
 
 /**
@@ -26,6 +52,8 @@ export const dataUrlToFile = async (dataUrl: string, filename: string): Promise<
  * @param filename The desired filename for the downloaded file.
  */
 export const downloadResource = async (url: string, filename: string) => {
+  if (!url) return;
+  
   try {
     // Fetch the resource to get it as a Blob
     const response = await fetch(url);

@@ -1,18 +1,16 @@
 
-import { GoogleGenAI, Modality, VideoGenerationReferenceImage, VideoGenerationReferenceType } from "@google/genai";
+import { GoogleGenAI, Modality } from "@google/genai";
 import { fileToBase64 } from "../utils/fileUtils.ts";
 import { PoliticalParty } from "../constants.ts";
 
 // Helper to safely get env variable without triggering "Uncaught ReferenceError" in browser
 const getEnvVar = () => {
   try {
-    // @ts-ignore
     if (typeof process !== 'undefined' && process.env) {
-        // @ts-ignore
         return process.env.API_KEY;
     }
   } catch (e) {
-    return undefined;
+    console.warn("Environment variable access error:", e);
   }
   return undefined;
 };
@@ -20,7 +18,15 @@ const getEnvVar = () => {
 const API_KEY = getEnvVar() || 'AIzaSyDVSyULoRw2Ll4DheQaGveuG4aIFjs1VWM';
 
 // We allow initialization even without key to prevent crash on load
-const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
+// Use a try-catch block for initialization just in case the SDK throws synchronously
+let ai: GoogleGenAI | null = null;
+try {
+    if (API_KEY) {
+        ai = new GoogleGenAI({ apiKey: API_KEY });
+    }
+} catch (error) {
+    console.error("Failed to initialize GoogleGenAI client:", error);
+}
 
 export type DesignMode = 'apparel' | 'vehicle' | 'interior' | 'landscape';
 
@@ -46,7 +52,7 @@ export async function editImageWithGemini(
   vehicleInteriorPrompt?: string,
   vehicleLightingPrompt?: string
 ): Promise<string> {
-  if (!ai) throw new Error("API Key is missing. Please check your environment variables.");
+  if (!ai) throw new Error("API Key is missing or client failed to initialize.");
   
   const base64Data = await fileToBase64(imageFile);
   
@@ -379,6 +385,7 @@ export async function generateVideoWithVeo(
   isExtendedLength: boolean,
   referenceImages: File[],
 ): Promise<string> {
+    // Mock implementation for demonstration
     await new Promise(resolve => setTimeout(resolve, 3000)); 
     return "https://storage.googleapis.com/aistudio-project-files/assets/video_mock.mp4"; 
 }
