@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Header from './components/Header.tsx';
 import HomePage from './pages/HomePage.tsx';
@@ -6,50 +7,69 @@ import AboutPage from './pages/AboutPage.tsx';
 import AnimatePage from './pages/AnimatePage.tsx';
 import StyleQuizPage from './pages/StyleQuizPage.tsx';
 import MusicPosterPage from './pages/MusicPosterPage.tsx';
+import StudioSessionPage from './pages/StudioSessionPage.tsx';
+import CampaignPage from './pages/CampaignPage.tsx';
+import LandingPage from './pages/LandingPage.tsx';
+import LoginPage from './pages/LoginPage.tsx';
+import SignupPage from './pages/SignupPage.tsx';
+import ProfilePage from './pages/ProfilePage.tsx';
+import ChatWidget from './components/ChatWidget.tsx';
 import { GalleryItem } from './data/galleryData.ts';
 
 export interface RemixConfig extends Omit<GalleryItem, 'image' | 'title' | 'description'> {}
 
 const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState('landing');
   const [remixConfig, setRemixConfig] = useState<RemixConfig | null>(null);
 
   const handleNavigate = (page: string) => {
     setCurrentPage(page);
-    // Clear remix config when navigating manually
-    if (page !== 'home') {
-      setRemixConfig(null);
-    }
+    if (page !== 'home') setRemixConfig(null);
+    window.scrollTo(0, 0);
   };
 
   const handleRemix = (config: RemixConfig) => {
     setRemixConfig(config);
     setCurrentPage('home');
+    window.scrollTo(0, 0);
   };
 
   const renderPage = () => {
     switch (currentPage) {
-      case 'home':
-        return <HomePage initialRemixConfig={remixConfig} clearRemixConfig={() => setRemixConfig(null)} />;
-      case 'poster':
-        return <MusicPosterPage />;
-      case 'animate':
-        return <AnimatePage />;
-      case 'gallery':
-        return <GalleryPage onRemix={handleRemix} />;
-      case 'quiz':
-        return <StyleQuizPage onRemix={handleRemix} />;
-      case 'about':
-        return <AboutPage />;
-      default:
-        return <HomePage initialRemixConfig={remixConfig} clearRemixConfig={() => setRemixConfig(null)} />;
+      case 'landing': return <LandingPage onNavigate={handleNavigate} />;
+      case 'home': return <HomePage initialRemixConfig={remixConfig} clearRemixConfig={() => setRemixConfig(null)} />;
+      case 'session': return <StudioSessionPage />;
+      case 'campaign': return <CampaignPage />;
+      case 'poster': return <MusicPosterPage />;
+      case 'animate': return <AnimatePage />;
+      case 'gallery': return <GalleryPage onRemix={handleRemix} />;
+      case 'quiz': return <StyleQuizPage onRemix={handleRemix} />;
+      case 'about': return <AboutPage />;
+      case 'login': return <LoginPage onNavigate={handleNavigate} />;
+      case 'signup': return <SignupPage onNavigate={handleNavigate} />;
+      case 'profile': return <ProfilePage onNavigate={handleNavigate} />;
+      default: return <LandingPage onNavigate={handleNavigate} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans">
+    <div className="h-screen w-screen overflow-hidden bg-zinc-50 dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200 font-sans selection:bg-amber-500/30 selection:text-black dark:selection:text-white flex flex-col transition-colors duration-500">
+      {/* Global Background Pattern */}
+      <div className="fixed inset-0 pointer-events-none bg-grid-pattern opacity-30 z-0" />
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-white/50 via-white/10 to-transparent dark:from-transparent dark:via-zinc-950/50 dark:to-zinc-950 z-0" />
+      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.08),transparent_50%)] z-0" />
+      
       <Header onNavigate={handleNavigate} />
-      {renderPage()}
+      
+      {/* Main Content Area */}
+      <main className="flex-1 relative overflow-hidden flex flex-col">
+        <div className={`h-full w-full ${currentPage === 'landing' ? '' : 'mt-16'}`}>
+             {renderPage()}
+        </div>
+      </main>
+      
+      {/* AI Assistant */}
+      <ChatWidget />
     </div>
   );
 };

@@ -1,11 +1,12 @@
+
 import React from 'react';
+import { ChevronDownIcon } from './icons/ChevronDownIcon.tsx';
 
 interface DropdownOption {
   label: string;
   value: string;
 }
 
-// Interfaces to describe the shape of categorized data without importing from constants
 interface StyleOption {
     id: string;
     name: string;
@@ -24,14 +25,13 @@ interface DropdownSelectorProps {
   selectedValue: string;
   onSelect: (value: string) => void;
   valueProp?: 'id' | 'prompt';
-  isCentered?: boolean;
 }
 
-const DropdownSelector: React.FC<DropdownSelectorProps> = ({ label, options, optionGroups, selectedValue, onSelect, valueProp = 'id', isCentered = true }) => {
+const DropdownSelector: React.FC<DropdownSelectorProps> = ({ label, options, optionGroups, selectedValue, onSelect, valueProp = 'id' }) => {
   const selectId = `dropdown-${label.toLowerCase().replace(/\s+/g, '-')}`;
   return (
-    <div>
-      <label htmlFor={selectId} className={`block text-lg font-semibold mb-2 text-gray-300 ${isCentered ? 'text-center' : ''}`}>
+    <div className="group">
+      <label htmlFor={selectId} className="block text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2 group-hover:text-amber-500 dark:group-hover:text-amber-400 transition-colors pl-1">
         {label}
       </label>
       <div className="relative">
@@ -39,28 +39,26 @@ const DropdownSelector: React.FC<DropdownSelectorProps> = ({ label, options, opt
           id={selectId}
           value={selectedValue}
           onChange={(e) => onSelect(e.target.value)}
-          className="appearance-none w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200"
-          aria-label={`Select ${label}`}
+          className="appearance-none w-full bg-white dark:bg-zinc-950/50 border border-zinc-300 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 text-xs font-medium py-3 pl-4 pr-10 rounded-sm focus:ring-0 focus:border-amber-500 focus:bg-zinc-50 dark:focus:bg-zinc-900 focus:shadow-[0_0_15px_rgba(245,158,11,0.1)] transition-all cursor-pointer hover:border-zinc-400 dark:hover:border-zinc-600"
+          style={{ backgroundImage: 'none' }}
         >
           {options && options.map((option) => (
-            <option key={option.label} value={option.value}>
+            <option key={option.label} value={option.value} className="bg-white dark:bg-zinc-950 text-zinc-800 dark:text-zinc-300 py-2">
               {option.label}
             </option>
           ))}
           {optionGroups && optionGroups.map((group) => (
-            <optgroup key={group.category} label={group.category}>
+            <optgroup key={group.category} label={group.category} className="bg-white dark:bg-zinc-950 text-zinc-500 font-bold uppercase">
               {group.styles.map((style) => (
-                <option key={style.id} value={valueProp === 'prompt' && style.prompt ? style.prompt : style.id}>
+                <option key={style.id} value={valueProp === 'prompt' && style.prompt ? style.prompt : style.id} className="bg-white dark:bg-zinc-950 text-zinc-800 dark:text-zinc-300 font-normal normal-case">
                   {style.name}
                 </option>
               ))}
             </optgroup>
           ))}
         </select>
-        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
-          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-          </svg>
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-zinc-500 dark:text-zinc-600 group-hover:text-amber-500 dark:group-hover:text-amber-400 transition-colors">
+          <ChevronDownIcon className="w-4 h-4" />
         </div>
       </div>
     </div>

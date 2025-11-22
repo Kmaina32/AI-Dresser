@@ -17,31 +17,30 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({ palette, selectedColor, o
   const isCustomColorSelected = selectedColor !== 'automatic' && !palette.includes(selectedColor);
   
   return (
-    <div>
-      <h3 className="text-lg font-semibold mb-3 text-gray-300">Attire Color</h3>
-      <div className="flex flex-wrap gap-3 items-center">
+    <div className="bg-zinc-900/30 p-3 rounded-md border border-white/5">
+      <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">Attire Tone</h3>
+      <div className="flex flex-wrap gap-2 items-center">
         <button 
           onClick={() => onSelectColor('automatic')}
-          className={`w-10 h-10 rounded-full flex items-center justify-center transition-all border-2 ${
+          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all border ${
             selectedColor === 'automatic' 
-              ? 'border-amber-500 scale-110 ring-2 ring-amber-500 ring-offset-2 ring-offset-zinc-900' 
-              : 'border-zinc-700 hover:border-white'
+              ? 'bg-amber-500/20 border-amber-500 text-amber-400' 
+              : 'bg-zinc-800 border-zinc-700 text-zinc-500 hover:text-zinc-300 hover:border-zinc-500'
           }`}
-          style={{ background: 'conic-gradient(from 180deg at 50% 50%, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000)'}}
           aria-label="Automatic color selection"
-          title="Automatic (Let AI choose)"
+          title="Auto (AI Choice)"
         >
-          <WandIcon className="w-5 h-5 text-white" />
+          <WandIcon className="w-4 h-4" />
         </button>
         
         {palette.map(color => (
           <button
             key={color}
             onClick={() => onSelectColor(color)}
-            className={`w-10 h-10 rounded-full transition-all border-2 ${
+            className={`w-8 h-8 rounded-full transition-all border ${
               selectedColor === color 
-                ? 'border-white scale-110 ring-2 ring-white ring-offset-2 ring-offset-zinc-900' 
-                : 'border-transparent hover:border-white'
+                ? 'border-white scale-110 shadow-md' 
+                : 'border-transparent hover:border-white/50'
             }`}
             style={{ backgroundColor: color }}
             aria-label={`Select color ${color}`}
@@ -49,28 +48,27 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({ palette, selectedColor, o
           />
         ))}
 
-        <div className="relative w-10 h-10">
+        <div className="relative w-8 h-8">
           <input
             ref={colorInputRef}
             type="color"
-            value={isCustomColorSelected ? selectedColor : '#000000'} // Prevent showing black for palette colors
+            value={isCustomColorSelected ? selectedColor : '#000000'}
             onChange={handleCustomColorChange}
-            className="absolute -top-full -left-full w-[300%] h-[300%] opacity-0 cursor-pointer"
-            aria-label="Choose a custom color"
+            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
           />
           <button
             onClick={() => colorInputRef.current?.click()}
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all border-2 ${
+            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all border ${
               isCustomColorSelected
-                ? 'border-white scale-110 ring-2 ring-white ring-offset-2 ring-offset-zinc-900'
-                : 'border-zinc-700 hover:border-white'
+                ? 'border-white scale-110 shadow-md'
+                : 'bg-transparent border-zinc-700 border-dashed hover:border-zinc-500 text-zinc-500 hover:text-zinc-300'
             }`}
             style={{ 
-                background: isCustomColorSelected ? selectedColor : 'conic-gradient(from 180deg at 50% 50%, red, orange, yellow, green, blue, indigo, violet, red)',
+                background: isCustomColorSelected ? selectedColor : 'transparent',
             }}
-            title="Choose a custom color"
+            title="Custom Color"
           >
-            {!isCustomColorSelected && <span className="text-white font-bold text-xl">+</span>}
+            {!isCustomColorSelected && <span className="text-sm font-light">+</span>}
           </button>
         </div>
       </div>

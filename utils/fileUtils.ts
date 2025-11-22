@@ -13,6 +13,12 @@ export const fileToBase64 = (file: File): Promise<string> => {
   });
 };
 
+export const dataUrlToFile = async (dataUrl: string, filename: string): Promise<File> => {
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    return new File([blob], filename, { type: blob.type });
+};
+
 /**
  * Downloads a resource from a given URL (can be a data URL or a blob URL).
  * This approach is more robust for mobile devices.

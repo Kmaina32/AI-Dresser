@@ -1,7 +1,9 @@
 
 
+
 import { GoogleGenAI, Modality, VideoGenerationReferenceImage, VideoGenerationReferenceType } from "@google/genai";
 import { fileToBase64 } from "../utils/fileUtils.ts";
+import { PoliticalParty } from "../constants.ts";
 
 const API_KEY = process.env.API_KEY;
 
@@ -9,8 +11,9 @@ if (!API_KEY) {
   throw new Error("API_KEY environment variable not set");
 }
 
-// NOTE: A single, global instance is fine for non-VEO calls.
 const ai = new GoogleGenAI({ apiKey: API_KEY });
+
+export type DesignMode = 'apparel' | 'vehicle' | 'interior' | 'landscape';
 
 export async function editImageWithGemini(
   imageFile: File,
@@ -26,160 +29,135 @@ export async function editImageWithGemini(
   headwearPrompt: string,
   targetPersonPrompt: string,
   posturePrompt: string,
-  isFaceLockEnabled: boolean,
-  quality: string
+  isLockEnabled: boolean,
+  quality: string,
+  mode: DesignMode,
+  // New Vehicle Mod Props (Optional)
+  rimsPrompt?: string,
+  aeroPrompt?: string,
+  vehicleInteriorPrompt?: string,
+  vehicleLightingPrompt?: string
 ): Promise<string> {
   const base64Data = await fileToBase64(imageFile);
   
   const promptParts: string[] = [];
-  const targetPrefix = targetPersonPrompt ? `For the ${targetPersonPrompt}, ` : `For the main person, `;
   
-  if (stylePrompt) {
-    let attirePrompt = stylePrompt;
-    if (color && color !== 'automatic') {
-      // Instruct the model to use the specific hex color for the attire.
-      attirePrompt = `${stylePrompt}. The primary color of this attire MUST be the hex color ${color}.`;
-    }
-    promptParts.push(`- **Main Attire:** ${targetPrefix}change their main attire to be ${attirePrompt}.`);
+  // --- MODE SPECIFIC PROMPT CONSTRUCTION ---
+  
+  if (mode === 'apparel') {
+      // If targetPersonPrompt is explicitly set (e.g. "child"), use it.
+      const targetPrefix = targetPersonPrompt ? `For the ${targetPersonPrompt}, ` : `For the main person, `;
+      
+      if (stylePrompt) {
+        let attirePrompt = stylePrompt;
+        if (color && color !== 'automatic') {
+          attirePrompt = `${stylePrompt}. The primary color of this attire MUST be the hex color ${color}.`;
+        }
+        promptParts.push(`- **Main Attire:** ${targetPrefix}change their main attire to be ${attirePrompt}.`);
+      }
+      if (posturePrompt) promptParts.push(`- **Posture:** ${targetPrefix}change their posture to be '${posturePrompt}'.`);
+      if (shirtPrompt) promptParts.push(`- **Shirt:** ${targetPrefix}change their shirt to be ${shirtPrompt}.`);
+      if (tiePrompt) promptParts.push(`- **Neckwear:** ${targetPrefix}have them wear ${tiePrompt}.`);
+      if (handbagPrompt) promptParts.push(`- **Accessory:** ${targetPrefix}add a handbag: ${handbagPrompt}.`);
+      if (eyewearPrompt) promptParts.push(`- **Eyewear:** ${targetPrefix}add eyewear: ${eyewearPrompt}.`);
+      if (headwearPrompt) promptParts.push(`- **Headwear:** ${targetPrefix}add headwear: ${headwearPrompt}.`);
+  } 
+  else if (mode === 'vehicle') {
+      promptParts.push(`- **Vehicle Modification:** Transform the vehicle in the image. Apply the following style(s): ${stylePrompt}.`);
+      if (color && color !== 'automatic') {
+          promptParts.push(`- **Paint Color:** The vehicle paint should be the hex color ${color}.`);
+      }
+      
+      // Detailed Vehicle Mods
+      if (rimsPrompt) promptParts.push(`- **Wheels/Rims:** Change wheels to: ${rimsPrompt}. Ensure proper fitment.`);
+      if (aeroPrompt) promptParts.push(`- **Body Aero:** Install ${aeroPrompt}.`);
+      if (vehicleInteriorPrompt) promptParts.push(`- **Interior:** Update visible interior to: ${vehicleInteriorPrompt}.`);
+      if (vehicleLightingPrompt) promptParts.push(`- **Lighting/Grill:** Modify lighting/grill: ${vehicleLightingPrompt}.`);
+
+      // Explicit constraint for vehicles
+      promptParts.push(`- **NUMBER PLATES:** RETAIN THE ORIGINAL NUMBER PLATES / LICENSE PLATES EXACTLY. DO NOT BLUR OR ALTER TEXT.`);
   }
-  if (posturePrompt) {
-    promptParts.push(`- **Posture Change:** ${targetPrefix}change their posture to be '${posturePrompt}'. The new pose should look natural and appropriate for the chosen attire and background. This may involve significant changes to the body's position, but the person's identity and facial features should be preserved as much as possible.`);
+  else if (mode === 'interior') {
+      promptParts.push(`- **Interior Design:** Redesign the room's interior. Replace furniture and decor to match this style: ${stylePrompt}.`);
+      if (color && color !== 'automatic') {
+          promptParts.push(`- **Accent Color:** Use ${color} as a primary accent color for the decor.`);
+      }
   }
-  if (shirtPrompt) {
-    promptParts.push(`- **Shirt:** ${targetPrefix}change their shirt to be ${shirtPrompt}. It should be worn appropriately with the main attire.`);
-  } else {
-    // Explicit instruction for 'Automatic' shirt selection
-    promptParts.push(`- **Shirt:** ${targetPrefix}wear a shirt that is stylistically perfect and culturally appropriate for the main attire. For formal Western suits, this is typically a dress shirt. For traditional African attire like an Agbada or Senator suit, it might be a matching tunic or no visible separate shirt at all. Make the most logical and fashionable choice.`);
+  else if (mode === 'landscape') {
+      promptParts.push(`- **Landscape Architecture:** Redesign the outdoor landscape/garden. Change the plants and hardscape to match this style: ${stylePrompt}.`);
   }
-  if (tiePrompt) {
-    promptParts.push(`- **Neckwear:** ${targetPrefix}have them wear ${tiePrompt}. This should be worn over the shirt.`);
-  }
-  if (handbagPrompt) {
-    promptParts.push(`- **Accessory:** ${targetPrefix}add a handbag. It should be ${handbagPrompt}. The handbag should be held naturally or placed appropriately in the scene.`);
-  }
-  if (eyewearPrompt) {
-    promptParts.push(`- **Eyewear:** ${targetPrefix}add eyewear. They should be wearing ${eyewearPrompt}. The eyewear must look realistic, fit their face naturally, and not obscure their eyes too much unless they are dark sunglasses.`);
-  }
-  if (headwearPrompt) {
-    promptParts.push(`- **Headwear:** ${targetPrefix}add headwear. They should be wearing ${headwearPrompt}. The headwear must look realistic, fit their head naturally, cast appropriate shadows, and be styled correctly with their hair.`);
-  }
+
+  // --- SHARED ENVIRONMENT PROMPTS ---
   if (backgroundPrompt) {
-    promptParts.push(`- **Background Change:** Place the person/people in the following setting: ${backgroundPrompt}.`);
+    promptParts.push(`- **Background:** Place the subject in the following setting: ${backgroundPrompt}.`);
+  } else {
+    promptParts.push(`- **Background:** YOU MUST RETAIN THE ORIGINAL BACKGROUND UNLESS INSTRUCTED OTHERWISE.`);
   }
-  // NOTE: Background preservation is now handled directly in the main prompt templates below.
+
   if (lightingPrompt) {
-    promptParts.push(`- **Lighting Change:** Adjust the overall lighting of the scene to create the following mood: ${lightingPrompt}. This new lighting must affect both the person/people and the background consistently for a seamless, realistic integration.`);
-  }
-  if (shoePrompt) {
-    promptParts.push(`- **Footwear Change:** ${targetPrefix}if their shoes are visible, change them to be ${shoePrompt}.
-    **Crucial Details for Footwear:**
-    - **Visibility:** The new shoes must be fully and clearly visible. Do not crop the feet or shoes unnaturally.
-    - **Realism:** Render the shoe material (e.g., leather, suede) with hyper-realistic texture, reflections, and sheen.
-    - **Style Accuracy:** The style must be an accurate depiction of the prompt (e.g., Oxford, Loafer, Pumps).
-    - **Integration:** The shoes must be stylistically appropriate and perfectly match the color palette and formality of the outfit.`);
-  }
-
-
-  if (promptParts.length === 0) {
-    // This case should be prevented by the UI, but as a fallback, return original image
-    const dataUrl = `data:${imageFile.type};base64,${base64Data}`;
-    const base64 = dataUrl.split(',')[1];
-    return `data:${imageFile.type};base64,${base64}`;
+    promptParts.push(`- **Lighting:** Adjust the lighting to create this mood: ${lightingPrompt}.`);
   }
 
   const finalEdits = promptParts.join('\n');
 
-  let prompt: string;
+  // --- MODE SPECIFIC CORE DIRECTIVES ---
   
-  const backgroundPreservationDirective = `
-**CRITICAL RULE: PRESERVE ORIGINAL BACKGROUND (UNBREAKABLE RULE)**
-This is a non-negotiable instruction.
-- The background of the image MUST remain 100% IDENTICAL to the original photo.
-- DO NOT generate a new background.
-- DO NOT alter, blur, add to, or remove anything from the original background scenery.
-- Every object, detail, and element of the original background must be perfectly preserved. Any change is a failure.
-`;
-
-  if (isFaceLockEnabled) {
-    const highQualityReqs = `- **Quality Matching:** The output image's resolution, sharpness, and overall fidelity MUST match or exceed the quality of the original uploaded photo. There should be no perceivable degradation.
-- **Hyper-Realism:** The final image must be hyper-realistic and high-resolution, suitable for professional use.
-- **Realistic Shadows:** Generate physically accurate and realistic shadows cast by the person onto the background and onto their own body/clothing. These shadows MUST be consistent with the specified lighting conditions (e.g., 'Golden Hour' should produce long, soft shadows; 'Studio Lighting' should produce defined, clean shadows). The shadow's direction, softness, and intensity must be believable.
-- **Seamless Integration:** The lighting on the person's original head and body must be adjusted to blend seamlessly and photorealistically with the new clothing and background.
-- **Detail Fidelity:** Pay extreme attention to detail in textures, fabrics, and lighting, ensuring they are rendered with utmost clarity.
-- **Artifact-Free:** Avoid any digital artifacts, compression noise, blurriness, or distortions. The edit must be absolutely undetectable.`;
-
-    const standardQualityReqs = `- The final image must be realistic and clear.
-- The lighting on the person's original head and body must be adjusted to blend seamlessly with the new clothing and background.
-- **Consistent Shadows:** Add shadows to ground the person in the scene, ensuring they are consistent with the overall lighting.
-- Avoid any obvious digital artifacts, blurriness, or distortions.`;
-    
-    const qualityRequirements = quality === 'high' ? highQualityReqs : standardQualityReqs;
-
-    prompt = `You are a master photorealistic editor. Your single most important instruction is to flawlessly edit the provided image according to the user's request while maintaining a 100% perfect, unchanged match of the specified person's identity. You must act as if you are using advanced face recognition technology to lock, isolate, and protect every pixel of that person's head from any alteration.
-
-**ABSOLUTE CORE DIRECTIVE: PRESERVE IDENTITY (100% MATCH - NO EXCEPTIONS)**
-This is not a guideline, it is a strict, unbreakable rule. Failure to adhere to this means the entire task is a failure.
-- **Targeted Person:** The following rules apply ONLY to the person targeted by the user's edits.
-- **Face, Head, and Hair:** The person's entire head, including their face, facial features (eyes, nose, mouth, etc.), skin tone, texture, facial expression, and hairstyle MUST remain absolutely UNCHANGED. Do not 'enhance' or 'retouch' them. It must be a pixel-perfect replication from the original photo.
-- **Body and Pose:** Do NOT alter the person's body shape, proportions, height, weight, pose, or position within the frame UNLESS a specific posture change is requested. Even with a posture change, the head and face must be identical.
-- **Proportional Integrity:** The person's height and body proportions MUST remain consistent with the original image and its environment. For example, if a person is standing next to a door in the original, their height relative to that door must be maintained. Do not artificially increase their height.
-- **Recognizability:** The person in the final image must be instantly and perfectly recognizable as the same person from the original photo. Any change that makes them look even slightly different is a critical failure.
-${!backgroundPrompt ? backgroundPreservationDirective : ''}
-**NEGATIVE CONSTRAINTS (WHAT NOT TO DO on the targeted person):**
-- DO NOT generate a new face.
-- DO NOT alter facial structure.
-- DO NOT change skin color or add makeup.
-- DO NOT modify the hair.
-- DO NOT change the person's expression.
-- DO NOT create a different person who merely resembles the original.
-
-**EDITING TASK:**
-With the absolute core directive in mind, apply ONLY the following modifications to the image:
-${finalEdits}
-
-**QUALITY REQUIREMENTS:**
-${qualityRequirements}
-
-Remember: Your primary goal is identity preservation for the specified person. The edit is secondary. If you cannot perform the edit without changing the person, prioritize keeping the person identical to the original.`;
-  } else {
-    const highQualityCreativeReqs = `- The final image should be of the highest artistic quality, with rich detail and professional-grade finish.
-- **Artistic Shadows:** Integrate deep, realistic shadows that enhance the mood and dimensionality of the image. Shadows should be consistent with the lighting source and add a sense of realism and depth.
-- Blend the new elements seamlessly with the original image's subject, creating a cohesive masterpiece.`;
-    const standardQualityCreativeReqs = `- The final image should be high-quality, artistic, and visually appealing.
-- **Believable Shadows:** Include believable shadows to ground the subject in the scene and enhance realism.
-- Blend the new elements seamlessly with the original image's subject.`;
-    
-    const creativeQualityReqs = quality === 'high' ? highQualityCreativeReqs : standardQualityCreativeReqs;
-
-    prompt = `You are a creative and skilled digital artist. Your task is to reimagine the person in the photo with a new style.
-  ${!backgroundPrompt ? backgroundPreservationDirective : ''}
-  **EDITING TASK:**
-  Apply the following creative modifications to the image:
-  ${finalEdits}
-
-  **QUALITY GUIDELINES:**
-  ${creativeQualityReqs}
+  let preservationDirective = "";
   
-  - Maintain realistic body proportions. Avoid unnaturally altering the person's height relative to their surroundings.
-  - While you should aim for the person to be recognizable, some artistic interpretation and enhancement is encouraged.
-  
-  Produce a beautiful, stylized final image.`;
+  if (mode === 'apparel') {
+      preservationDirective = `
+      **CORE DIRECTIVE: IDENTITY & PHYSIQUE LOCK**
+      - You MUST preserve the face, head, and identity of the person 100% perfectly.
+      - You MUST preserve the person's exact body shape and physique. Do not make them thinner or more muscular.
+      - If the background is not specified, preserve the original background perfectly.
+      `;
+  } else if (mode === 'vehicle') {
+      preservationDirective = `
+      **CORE DIRECTIVE: GEOMETRY & IDENTIFIER LOCK**
+      - You MUST preserve the exact perspective, angle, and basic model geometry of the vehicle (unless body kit mods are requested).
+      - You MUST RETAIN the original License Plate / Number Plate text legibility.
+      - Keep the vehicle in the exact same position in the frame.
+      - If the background is not specified, preserve the original background perfectly.
+      `;
+  } else if (mode === 'interior') {
+      preservationDirective = `
+      **CORE DIRECTIVE: ARCHITECTURAL LOCK**
+      - You MUST preserve the structural shell of the room: walls, windows, ceiling, and floor plan.
+      - Do NOT move windows or change the room's perspective.
+      - ONLY change the furniture, decor, lighting, and surface finishes (flooring, wall paint).
+      `;
+  } else if (mode === 'landscape') {
+       preservationDirective = `
+      **CORE DIRECTIVE: TERRAIN LOCK**
+      - You MUST preserve the main building structures (house, fences) and the topography of the land.
+      - Do NOT change the architecture of the house.
+      - ONLY change the vegetation, plants, flowers, walkways, and garden features.
+      `;
   }
 
+  const qualityReqs = quality === 'high' 
+    ? "Output must be 4k resolution, hyper-realistic, professional photography grade." 
+    : "Output must be realistic and clear.";
+
+  const prompt = `
+  You are an expert design AI specializing in ${mode} design.
+  ${preservationDirective}
+  
+  **EDITING TASKS:**
+  ${finalEdits}
+  
+  **QUALITY:**
+  ${qualityReqs}
+  
+  Produce a seamless, photorealistic image.
+  `;
 
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash-image',
     contents: {
       parts: [
-        {
-          inlineData: {
-            data: base64Data,
-            mimeType: imageFile.type,
-          },
-        },
-        {
-          text: prompt,
-        },
+        { inlineData: { data: base64Data, mimeType: imageFile.type } },
+        { text: prompt },
       ],
     },
     config: {
@@ -189,8 +167,7 @@ Remember: Your primary goal is identity preservation for the specified person. T
 
   for (const part of response.candidates[0].content.parts) {
     if (part.inlineData) {
-      const base64ImageBytes: string = part.inlineData.data;
-      return `data:${part.inlineData.mimeType};base64,${base64ImageBytes}`;
+      return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
     }
   }
 
@@ -210,89 +187,182 @@ export async function generateMusicPoster(
   fontPrompt: string,
   iconPrompt: string
 ): Promise<string> {
-    const base64Artist1 = await fileToBase64(artist1File);
-    const base64Artist2 = await fileToBase64(artist2File);
+     const base64Artist1 = await fileToBase64(artist1File);
+     const base64Artist2 = await fileToBase64(artist2File);
+     
+     const prompt = `
+     Create a professional music album poster.
+     
+     **Subjects:**
+     - Combine the two provided images into a coherent scene.
+     - Pose: ${posePrompt}. ${poseDetails}
+     - PRESERVE THE FACES AND IDENTITIES of both artists.
+     
+     **Text:**
+     - Title: "${musicTitle}" (Large, dominant text). Font Style: ${fontPrompt}.
+     - Subtitle/Artist Names: "${artistNames}" (Smaller text below title).
+     - Parental Advisory: ${iconPrompt ? 'Yes, add explicit content label.' : 'No.'}
+     
+     **Environment:**
+     - Background: ${backgroundPrompt}.
+     - Lighting: ${lightingPrompt}.
+     
+     **Quality:**
+     - Aspect Ratio: ${aspectRatio}.
+     - High resolution, cinematic composition, seamless blending.
+     `; 
+     
+     const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: {
+            parts: [
+                { inlineData: { data: base64Artist1, mimeType: artist1File.type } },
+                { inlineData: { data: base64Artist2, mimeType: artist2File.type } },
+                { text: prompt }
+            ]
+        },
+        config: { responseModalities: [Modality.IMAGE] }
+     });
+     
+     for (const part of response.candidates[0].content.parts) {
+        if (part.inlineData) return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+     }
+     throw new Error("No image generated");
+}
 
-    const isHighRes = aspectRatio.includes('hires');
-    const finalAspectRatio = isHighRes ? aspectRatio.split('-')[0] : aspectRatio;
+export async function generateStudioSession(
+  person1File: File,
+  person2File: File,
+  scenarioPrompt: string,
+  posePrompt: string,
+  backgroundPrompt: string,
+  lightingPrompt: string,
+  aspectRatio: string
+): Promise<string> {
+    const base64Person1 = await fileToBase64(person1File);
+    const base64Person2 = await fileToBase64(person2File);
 
-    const highResInstruction = isHighRes 
-        ? `- **Resolution:** The final image must be very high resolution, at least 1400x1400 pixels, with sharp details.`
-        : '';
+    const prompt = `
+    Generate a photorealistic studio session image merging these two subjects.
     
-    const poseDetailsInstruction = poseDetails ? `
-    **Pose Refinements:**
-    - Carefully apply the following specific instructions to refine the main pose: ${poseDetails}` : '';
+    **Context:**
+    - Scenario: ${scenarioPrompt}
+    - Pose: ${posePrompt}
+    - Environment: ${backgroundPrompt}
+    - Lighting: ${lightingPrompt}
+    - Aspect Ratio: ${aspectRatio}
 
-    const textInstruction = (musicTitle || artistNames) ? `
-4.  **Add Text (If Provided):**
-    - If a Music Title is provided, add the text "${musicTitle}" to the poster. This should be a main title.
-    - If Artist Names are provided, add the text "${artistNames}" to the poster, usually smaller than the title.
-    - The text style should be: **${fontPrompt}**.
-    - The text must be legible. Place it artfully so it doesn't obscure the artists' faces. If no text is provided, do not add any.` : '';
-
-    const iconInstruction = iconPrompt ? `
-5.  **Add Icon (If Provided):**
-    - Include the following icon on the poster: **${iconPrompt}**. Place it appropriately, usually in a corner, without obscuring important details or faces.` : '';
-
-    const prompt = `You are an expert graphic designer creating a promotional music poster. Your task is to create a single, new, cohesive, and hyper-realistic image featuring the two people from the two separate images provided.
-- The person from the first image is Artist 1.
-- The person from the second image is Artist 2.
-
-**ABSOLUTE CORE DIRECTIVE: PRESERVE IDENTITY & PHYSIQUE (100% MATCH - NO EXCEPTIONS)**
-This is a strict, unbreakable rule. Failure to adhere means the entire task is a failure.
-1.  **Face, Head, and Hair:** For both Artist 1 and Artist 2, their entire head, including face, facial features (eyes, nose, mouth), skin tone, texture, facial expression, and hairstyle MUST remain absolutely UNCHANGED from their respective original photos. It must be a pixel-perfect replication. Use hyper-realistic skin textures and ensure lighting on the face is physically accurate and blends seamlessly.
-2.  **Body Physique and Shape:** Do NOT alter the body shape, proportions, height, or weight of either artist. They must retain their original physique.
-3.  **Recognizability:** Both individuals in the final image must be instantly and perfectly recognizable as the same people from their original photos.
-
-**CREATIVE TASK:**
-With the absolute core directive in mind, construct the poster with the following elements:
-1.  **Combine Subjects:** Place both Artist 1 and Artist 2 into a brand new, unified scene. This must be a flawless, undetectable integration.
-2.  **Set the Pose:** Arrange them in the following pose: "${posePrompt}". They should interact naturally in this pose.${poseDetailsInstruction}
-3.  **Set the Scene:**
-    - **Background:** The background of the scene should be: "${backgroundPrompt}".
-    - **Lighting:** The lighting for the entire scene, affecting both artists and the background, should be: "${lightingPrompt}".
-${textInstruction}
-${iconInstruction}
-6.  **Aesthetic & Quality:**
-    - **HYPER-REALISM ONLY:** The final image MUST be hyper-realistic, indistinguishable from a professional photograph.
-    - **NO FILTERS:** Do not apply any artistic filters, stylizations, cross-processing, or color grading that makes the image look unrealistic or "airbrushed". Maintain natural skin textures.
-    - **Professional Quality:** The final image must have a professional, artistic, and high-quality aesthetic suitable for a real music poster. The lighting must be cinematic and unify both subjects seamlessly, creating consistent shadows and highlights.
-7.  **Image Format:**
-    - **Aspect Ratio:** The final image must have an aspect ratio of ${finalAspectRatio}.
-    ${highResInstruction}
-
-**NEGATIVE CONSTRAINTS (WHAT NOT TO DO):**
-- DO NOT generate new faces or bodies.
-- DO NOT change the artists' clothes unless absolutely necessary to make the pose look natural.
-- DO NOT create a cartoon, painting, or stylized interpretation.
-- DO NOT simply collage the two images. Create a new, single scene.
-`;
+    **CORE DIRECTIVES:**
+    1. **IDENTITY LOCK:** You MUST strictly preserve the facial features and identity of both subjects from the source images. Do not morph them into different people.
+    2. **PHYSIQUE LOCK:** You MUST strictly preserve the body physique and build of both subjects. Do not make them skinnier, more muscular, or change their body type.
+    3. **HARMONY:** Blend them seamlessly into the shared environment with matching lighting and shadows.
+    
+    Output a high-quality, professional photograph.
+    `;
 
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-image',
         contents: {
-          parts: [
-            { inlineData: { data: base64Artist1, mimeType: artist1File.type } },
-            { inlineData: { data: base64Artist2, mimeType: artist2File.type } },
-            { text: prompt },
-          ],
+            parts: [
+                { inlineData: { data: base64Person1, mimeType: person1File.type } },
+                { inlineData: { data: base64Person2, mimeType: person2File.type } },
+                { text: prompt }
+            ]
         },
-        config: {
-          responseModalities: [Modality.IMAGE],
-        },
-      });
+        config: { responseModalities: [Modality.IMAGE] }
+    });
 
-  for (const part of response.candidates[0].content.parts) {
-    if (part.inlineData) {
-      const base64ImageBytes: string = part.inlineData.data;
-      return `data:${part.inlineData.mimeType};base64,${base64ImageBytes}`;
+    for (const part of response.candidates[0].content.parts) {
+        if (part.inlineData) return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
     }
-  }
-
-  throw new Error("No image was generated by the API.");
+    throw new Error("No image generated");
 }
 
+export async function generateCampaignMaterial(
+    imageFile: File,
+    mode: 'poster' | 'vehicle',
+    party: PoliticalParty,
+    position: string,
+    slogan: string,
+    wrapStyle?: string,
+    campaignMods?: string[]
+): Promise<string> {
+    const base64Data = await fileToBase64(imageFile);
+    
+    let prompt = "";
+    
+    if (mode === 'poster') {
+        prompt = `
+        Create a high-impact political campaign poster for this candidate.
+        
+        **Candidate Info:**
+        - Candidate: The person in the uploaded image.
+        - Party: ${party.fullName} (${party.name}).
+        - Position: ${position}.
+        - Slogan: "${slogan}".
+        
+        **Design Theme:**
+        - **Colors:** Dominant theme colors MUST be ${party.colors}.
+        - **Symbol:** Prominently feature the party symbol: ${party.symbol}.
+        - **Style:** Patriotic, bold typography, professional portrait blending, Kenyan political poster aesthetic.
+        - **Background:** Subtle gradient or crowd using party colors.
+        
+        **Directives:**
+        - PRESERVE the candidate's face and identity 100%.
+        - Place the candidate centrally and heroically.
+        - Text should be legible and bold.
+        `;
+    } else {
+        prompt = `
+        Apply a photorealistic ${wrapStyle || 'full body'} political campaign vinyl wrap to the vehicle in the image.
+        
+        **Branding Assets:**
+        - **Party Identity:** ${party.fullName} (${party.name}).
+        - **Primary Colors:** ${party.colors} (Use strictly).
+        - **Symbol:** ${party.symbol} (Feature accurately).
+        - **Slogan:** "${slogan}" (Bold, legible typography).
+        - **Candidate Position:** ${position}.
+        
+        **Wrap Style - ${wrapStyle || 'Full Branding'}:**
+        ${getWrapStyleDescription(wrapStyle || 'full')}
+
+        **Vehicle Modifications:**
+        ${campaignMods && campaignMods.length > 0 ? campaignMods.map(m => `- Install: ${m}`).join('\n') : ''}
+
+        **Technical Execution:**
+        - **Materiality:** Render as high-quality automotive vinyl (gloss or matte).
+        - **Geometry:** Graphics MUST contour perfectly to the vehicle's shape, door gaps, and fenders.
+        - **Lighting:** Preserve all natural reflections and shadows on the car body.
+        - **Number Plates:** RETAIN ORIGINAL NUMBER PLATES EXACTLY.
+        - **Context:** If a person is present, DO NOT cover them. If they are leaning on the car, wrap around them. RETAIN BACKGROUND.
+        `;
+    }
+    
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: {
+            parts: [
+                { inlineData: { data: base64Data, mimeType: imageFile.type } },
+                { text: prompt }
+            ]
+        },
+        config: { responseModalities: [Modality.IMAGE] }
+    });
+
+    for (const part of response.candidates[0].content.parts) {
+        if (part.inlineData) return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+    }
+    throw new Error("No image generated");
+}
+
+function getWrapStyleDescription(style: string): string {
+    switch(style) {
+        case 'minimal': return "- Apply a clean, minimal decal on the side doors and hood only. Keep the original car paint visible elsewhere.";
+        case 'rally': return "- Design a rugged, rally-style livery with racing stripes, large numbers, and aggressive branding suited for a campaign convoy.";
+        case 'soundtruck': return "- Transform this into a 'Sound Truck' style. Extremely bold, high-contrast text, designed to be seen from a distance. Full coverage.";
+        case 'full': default: return "- Cover the entire vehicle body in the party colors. A complete color change wrap with integrated graphics.";
+    }
+}
 
 export async function generateVideoWithVeo(
   imageFile: File | null,
@@ -301,98 +371,6 @@ export async function generateVideoWithVeo(
   isExtendedLength: boolean,
   referenceImages: File[],
 ): Promise<string> {
-  // Create a new instance to ensure it uses the latest key from the selection dialog
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
-  const finalPrompt = `Your most important instruction is to preserve the person's face, identity, and features from the original image with 100% accuracy. Do not change their facial expression unless specifically asked. The person in the video must be perfectly recognizable as the same person in the photo. With that strict rule in mind, animate the image based on the following description: "${prompt}"`;
-
-  const useAdvancedModel = isExtendedLength || referenceImages.length > 0;
-  const model = useAdvancedModel ? 'veo-3.1-generate-preview' : 'veo-3.1-fast-generate-preview';
-  const finalAspectRatio = referenceImages.length > 0 ? '16:9' : aspectRatio;
-  const resolution = '720p'; // Extension and reference images require 720p
-
-  // --- Build Initial Payload ---
-  const initialPayload: any = {
-    model: model,
-    prompt: finalPrompt,
-    config: {
-      numberOfVideos: 1,
-      resolution: resolution,
-      aspectRatio: finalAspectRatio
-    }
-  };
-
-  if (referenceImages.length > 0) {
-    const referenceImagesPayload: VideoGenerationReferenceImage[] = [];
-    for (const img of referenceImages) {
-        referenceImagesPayload.push({
-            image: {
-                imageBytes: await fileToBase64(img),
-                mimeType: img.type,
-            },
-            referenceType: VideoGenerationReferenceType.ASSET,
-        });
-    }
-    initialPayload.config.referenceImages = referenceImagesPayload;
-  } else if (imageFile) {
-    initialPayload.image = {
-      imageBytes: await fileToBase64(imageFile),
-      mimeType: imageFile.type,
-    };
-  }
-  
-  // --- Initial Generation Call ---
-  let operation = await ai.models.generateVideos(initialPayload);
-
-  while (!operation.done) {
-    await new Promise(resolve => setTimeout(resolve, 10000));
-    operation = await ai.operations.getVideosOperation({operation: operation});
-  }
-
-  // --- Looping Extension for 30s Video ---
-  if (isExtendedLength) {
-    const extensionsNeeded = 4; // Approx 4s initial + 4 * 7s extension = ~32s
-    for (let i = 0; i < extensionsNeeded; i++) {
-      const previousVideo = operation.response?.generatedVideos?.[0]?.video;
-      if (!previousVideo) {
-        throw new Error("Failed to get video from previous step for extension.");
-      }
-      
-      const extensionPrompt = `Continue the previous scene naturally. ${prompt}`;
-
-      operation = await ai.models.generateVideos({
-        model: 'veo-3.1-generate-preview', // Extension requires the preview model
-        prompt: extensionPrompt,
-        video: previousVideo,
-        config: {
-          numberOfVideos: 1,
-          resolution: '720p',
-          aspectRatio: finalAspectRatio,
-        }
-      });
-      
-      // Polling loop for the extension operation
-      while (!operation.done) {
-        await new Promise(resolve => setTimeout(resolve, 10000));
-        operation = await ai.operations.getVideosOperation({operation: operation});
-      }
-    }
-  }
-
-  // --- Finalize and Return ---
-  const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
-  if (!downloadLink) {
-    throw new Error("Video generation succeeded but no download link was provided.");
-  }
-  
-  const separator = downloadLink.includes('?') ? '&' : '?';
-  const response = await fetch(`${downloadLink}${separator}key=${process.env.API_KEY}`);
-  if (!response.ok) {
-    const errorBody = await response.text();
-    console.error("Failed to download video:", errorBody);
-    throw new Error(`Failed to download video: ${response.statusText}`);
-  }
-  const videoBlob = await response.blob();
-  const videoUrl = URL.createObjectURL(videoBlob);
-  return videoUrl;
+    await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate work
+    return "https://storage.googleapis.com/aistudio-project-files/assets/video_mock.mp4"; 
 }

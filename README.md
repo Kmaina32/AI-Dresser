@@ -1,91 +1,79 @@
-# Lion's Apparel ✨
 
-**Experience bespoke tailoring like never before. Upload a photo, select your desired style, and let our AI create your perfect look in seconds.**
+# Geo Studio AI 🦁✨
 
-![Lion's Apparel Screenshot](https://storage.googleapis.com/aistudio-project-files/assets/screenshot.png) <!--- This is a placeholder for a real screenshot of the app --->
+**The Ultimate Neural Design Engine.**
 
-Welcome to Lion's Apparel, a revolutionary application that brings the tailor's shop to your fingertips. Powered by Google's advanced Gemini AI, our tool allows you to visualize yourself in a vast collection of exquisite attire from around the world without ever leaving your home.
+![Geo Studio](https://storage.googleapis.com/aistudio-project-files/assets/screenshot.png)
+
+Welcome to **Geo Studio**, an experimental generative AI platform that bridges the gap between imagination and photorealism. Powered by Google's cutting-edge **Gemini 2.5** models, this application goes far beyond simple face-swapping. It is a comprehensive design suite for Fashion, Automotive, Politics, and Cinema.
 
 ---
 
-## 🚀 Key Features
+## 🚀 The Modules
 
--   **📸 Easy Photo Upload:** Simply upload a photo or drag and drop an image to get started.
--   **🌍 Diverse Style Catalog:** Explore a rich collection of styles across various categories:
-    -   **African Bespoke:** From Nigerian Senator styles to Maasai Shuka patterns.
-    -   **Indian Regal:** Classic Sherwanis, Jodhpuri suits, and more.
-    -   **Arabic Attire:** Elegant Thobes, Bishts, and Kanduras.
-    -   **Western Classics:** Timeless tuxedos, pinstripes, and modern fits.
--   **🎨 Full Customization:** Fine-tune your look with options for:
-    -   **Backgrounds:** Place yourself in a conference hall, at a wedding, or next to a luxury car.
-    -   **Lighting:** Set the mood with studio, golden hour, or dramatic evening light.
-    -   **Footwear:** Complete your outfit with the perfect pair of shoes, from classic Oxfords to suede loafers.
--   **🔒 Face Lock Technology:** Our unique "Face Lock" feature ensures your facial features, expression, and identity are preserved with 100% accuracy, providing a realistic and believable result.
--   **💎 High-Quality Renders:** Choose between Standard and High quality to generate stunning, photorealistic images suitable for professional use.
--   **✒️ Optional Watermark:** Choose to add the stylish "Lion's Apparel" logo to your downloaded images.
--   **⬇️ Instant Download:** Download your final creation with a single click and share it with the world.
--   **📱 Fully Responsive:** A sleek, modern, and responsive UI that works beautifully on both desktop and mobile devices.
+### 1. 👔 Apparel Studio
+Experience bespoke tailoring like never before.
+- **Global Wardrobe:** From Nigerian Agbada and Indian Sherwanis to Italian Suits and Streetwear.
+- **Identity Lock:** Preserves facial features and body physique with 100% accuracy using semantic segmentation prompts.
+- **Custom Accessories:** Add eyewear, headwear, and luxury handbags.
+
+### 2. 🏎️ Automotive Works
+A complete virtual garage for car enthusiasts.
+- **Wraps & Paint:** Visualize vinyl wraps, color-shifting paints, and commercial branding.
+- **Parts Modification:** Install body kits, spoilers, diffusers, and custom rims (JDM, Euro, Muscle).
+- **Geometry Lock:** Preserves the exact perspective and model of the vehicle while applying modifications.
+- **License Plate Protection:** Ensures original plates remain legible.
+
+### 3. 🗳️ Campaign Bureau
+Rapid content generation for political and brand campaigns.
+- **Poster Generator:** Create high-impact election posters with slogans and party branding.
+- **Vehicle Branding:** Automatically wrap campaign vehicles with party colors and symbols.
+- **Kenyan Context:** Pre-loaded with major Kenyan political party assets.
+
+### 4. 🎬 Veo Cinema
+Bring still images to life.
+- **Motion Synthesis:** Generate cinematic video clips from your static designs using the **Veo** model.
+- **Control:** Adjust aspect ratios and prompt specifically for movement types (zoom, pan, breeze).
+
+### 5. 🎵 Music Poster & Session
+- **Duo Composition:** Merge two separate artist photos into a single cohesive album cover or studio session.
+- **Atmosphere Control:** Set the lighting, background, and typography.
 
 ---
 
 ## 🛠️ Tech Stack
 
-This project is built with a modern frontend stack, leveraging the power of generative AI.
-
--   **Frontend:** [React](https://react.dev/) & [TypeScript](https://www.typescriptlang.org/)
--   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
--   **Generative AI:** [Google Gemini API](https://ai.google.dev/gemini-api) (`gemini-2.5-flash-image` model)
-
----
-
-## ⚙️ How It Works
-
-Lion's Apparel uses the multimodal capabilities of the **Google Gemini API**.
-
-1.  When you upload an image and select your customization options (suit, background, lighting, etc.), the application constructs a detailed text prompt.
-2.  The original image and the detailed prompt are sent to the Gemini API (`gemini-2.5-flash-image` model).
-3.  The model processes this request, performing an image-to-image edit based on the instructions. The "Face Lock" feature is a key part of the prompt, instructing the AI to isolate and protect the user's head and face from any alteration.
-4.  The API returns a new, high-quality image, which is then displayed in the app.
-5.  If the "Add Logo" option is selected, the app uses a client-side Canvas to composite the logo onto the final image before downloading.
+-   **Frontend:** [React 18](https://react.dev/) & [TypeScript](https://www.typescriptlang.org/)
+-   **Styling:** [Tailwind CSS](https://tailwindcss.com/) for glassmorphism and responsiveness.
+-   **AI Core:** [Google GenAI SDK](https://www.npmjs.com/package/@google/genai)
+    -   `gemini-2.5-flash-image` for high-speed image editing.
+    -   `veo` models for video generation.
 
 ---
 
-## 🔧 Getting Started
+## ⚙️ Setup & Installation
 
-To run this project, you'll need to set up your environment.
-
-### Prerequisites
-
--   A modern web browser.
--   A Google Gemini API key.
-
-### Setup
-
-1.  **Download the project files.**
-
-2.  **Set up your API Key:**
-    The application requires a Google Gemini API key to function. You must set this key as an environment variable named `API_KEY`. How you set this variable will depend on your operating system and development environment.
-
-3.  **Open the App:**
-    Simply open the `index.html` file in your web browser to launch the application.
+1.  **Clone the Repository.**
+2.  **Environment Variables:**
+    You must provide a valid Google Gemini API Key.
+    `API_KEY=your_key_here`
+3.  **Install Dependencies:**
+    ```bash
+    npm install
+    ```
+4.  **Run Development Server:**
+    ```bash
+    npm start
+    ```
 
 ---
 
-## 📁 Project Structure
+## 🎨 UI/UX Philosophy
 
-The project is organized into a clear and modular structure:
-
-```
-/
-├── components/         # Reusable React components (Uploader, Selectors, Icons, Logo etc.)
-├── pages/              # Page components (HomePage, GalleryPage, AboutPage)
-├── services/           # Service files for API calls (geminiService.ts)
-├── utils/              # Utility functions (fileUtils.ts)
-├── constants.ts        # All constant data (style options, prompts, etc.)
-├── App.tsx             # Main app component with routing logic
-├── index.tsx           # Entry point for the React application
-└── index.html          # The main HTML file
-```
+Geo Studio features a "Dark Glass" aesthetic inspired by high-end creative software and cyberpunk interfaces.
+-   **Knob Scroller:** Mobile navigation utilizes a unique haptic rotary dial interface.
+-   **Glassmorphism:** Heavy use of backdrop blur and translucent layers.
+-   **Fluid Animations:** CSS transitions for all state changes.
 
 ---
 

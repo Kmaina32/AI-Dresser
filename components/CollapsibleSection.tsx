@@ -12,18 +12,18 @@ const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({ title, children
   const [isSectionOpen, setIsSectionOpen] = useState(isOpen);
 
   return (
-    <div className="border-b border-zinc-800 last:border-b-0">
+    <div className="border-b border-white/5 last:border-b-0 group">
       <button
         onClick={() => setIsSectionOpen(!isSectionOpen)}
-        className="w-full flex justify-between items-center p-4 text-left transition-colors hover:bg-zinc-800/50"
+        className="w-full flex justify-between items-center py-5 px-6 text-left transition-colors hover:bg-white/5"
         aria-expanded={isSectionOpen}
       >
         <div className="flex items-center gap-3">
             {icon}
-            <h3 className="text-lg font-semibold text-white">{title}</h3>
+            <h3 className={`text-xs font-bold uppercase tracking-widest transition-colors ${isSectionOpen ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-200'}`}>{title}</h3>
         </div>
         <ChevronDownIcon
-          className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${
+          className={`w-4 h-4 text-zinc-600 transition-transform duration-300 group-hover:text-zinc-400 ${
             isSectionOpen ? 'rotate-180' : ''
           }`}
         />
@@ -31,7 +31,7 @@ const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({ title, children
       <div
         className={`collapsible-content ${isSectionOpen ? 'open' : ''}`}
       >
-        <div className="pt-0 p-4">
+        <div className="px-6 pb-6 pt-2">
             {children}
         </div>
       </div>

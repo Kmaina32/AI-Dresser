@@ -1,11 +1,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { MenuIcon } from './icons/MenuIcon.tsx';
-import { CloseIcon } from './icons/CloseIcon.tsx';
-import { GeoLogo } from './logo.tsx';
-import ThemeToggle from './ThemeToggle.tsx';
-import { useAuth } from '../context/AuthContext.tsx';
-import { UserIcon } from './icons/UserIcon.tsx';
+import { MenuIcon } from './components/icons/MenuIcon.tsx';
+import { CloseIcon } from './components/icons/CloseIcon.tsx';
+import { GeoLogo } from './components/logo.tsx';
+import ThemeToggle from './components/ThemeToggle.tsx';
 
 interface HeaderProps {
     onNavigate: (page: string) => void;
@@ -20,12 +18,10 @@ const MENU_ITEMS = [
     { id: 'animate', label: 'Cinema' },
     { id: 'gallery', label: 'Gallery' },
     { id: 'quiz', label: 'Quiz' },
-    { id: 'about', label: 'About' },
-    { id: 'profile', label: 'Account' }
+    { id: 'about', label: 'About' }
 ];
 
 const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
-    const { user } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [rotation, setRotation] = useState(0);
@@ -55,14 +51,6 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
     const handleNavClick = (page: string) => {
         onNavigate(page);
         setIsMenuOpen(false);
-    };
-
-    const handleUserClick = () => {
-        if (user) {
-            onNavigate('profile');
-        } else {
-            onNavigate('login');
-        }
     };
 
     // --- Rotary Interaction Logic ---
@@ -123,22 +111,6 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                     <div className="z-50 hidden md:block">
                         <ThemeToggle />
                     </div>
-
-                    {/* User Account Button */}
-                    <button 
-                        onClick={handleUserClick}
-                        className={`relative z-50 p-1 rounded-full border transition-all duration-300 flex items-center gap-2 pr-3 ${user ? 'bg-amber-500/10 border-amber-500/50 text-amber-600 dark:text-amber-400 pl-1' : 'bg-white/50 dark:bg-zinc-900/50 border-zinc-200 dark:border-white/5 text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white pl-2'}`}
-                        title={user ? 'My Account' : 'Sign In'}
-                    >
-                        {user ? (
-                            <img src={user.avatar} alt={user.name} className="w-6 h-6 rounded-full object-cover border border-amber-500/30" />
-                        ) : (
-                            <UserIcon className="w-5 h-5" />
-                        )}
-                        <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:block">
-                            {user ? user.name.split(' ')[0] : 'Login'}
-                        </span>
-                    </button>
 
                     {/* Mobile Toggle */}
                     <div className="lg:hidden z-50 flex items-center gap-2">
@@ -216,7 +188,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                                         </span>
                                         {isActive && (
                                             <span className="block text-[8px] uppercase tracking-[0.3em] text-amber-500 mt-1 animate-fade-in">
-                                                {item.id === 'profile' ? (user ? 'Manage' : 'Sign In') : 'Enter Module'}
+                                                Enter Module
                                             </span>
                                         )}
                                     </button>

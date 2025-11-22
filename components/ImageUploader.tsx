@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { UploadIcon } from './icons/UploadIcon.tsx';
 import { DownloadIcon } from './icons/DownloadIcon.tsx';
-import { LionLogo, getLogoSvgDataUrl } from './logo.tsx';
+import { GeoLogo, getLogoSvgDataUrl } from './logo.tsx';
 import { downloadResource } from '../utils/fileUtils.ts';
 
 interface CreatorDisplayProps {
@@ -53,13 +54,12 @@ const CreatorDisplay: React.FC<CreatorDisplayProps> = ({ originalImage, generate
 
   const handleDownload = async () => {
     if (!generatedImage) return;
-
     const mimeTypeMatch = generatedImage.match(/^data:(image\/[a-z]+);base64,/);
     const mimeType = mimeTypeMatch ? mimeTypeMatch[1] : 'image/png';
     const extension = mimeType.split('/')[1] || 'png';
 
     if (!addLogo) {
-      await downloadResource(generatedImage, `lion-apparel-look.${extension}`);
+      await downloadResource(generatedImage, `geo-studio-look.${extension}`);
       return;
     }
 
@@ -67,7 +67,6 @@ const CreatorDisplay: React.FC<CreatorDisplayProps> = ({ originalImage, generate
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
-
         const mainImage = await new Promise<HTMLImageElement>((resolve, reject) => {
             const img = new Image();
             img.crossOrigin = "anonymous";
@@ -75,130 +74,133 @@ const CreatorDisplay: React.FC<CreatorDisplayProps> = ({ originalImage, generate
             img.onerror = (err) => reject(err);
             img.src = generatedImage;
         });
-
         canvas.width = mainImage.naturalWidth;
         canvas.height = mainImage.naturalHeight;
         ctx.drawImage(mainImage, 0, 0);
-
         const logoImage = await new Promise<HTMLImageElement>((resolve, reject) => {
             const img = new Image();
             img.onload = () => resolve(img);
             img.onerror = (err) => reject(err);
             img.src = getLogoSvgDataUrl(mainImage.naturalWidth);
         });
-        
         const padding = mainImage.naturalWidth * 0.025;
         const logoWidth = logoImage.width;
         const logoHeight = logoImage.height;
         const x = mainImage.naturalWidth - logoWidth - padding;
         const y = mainImage.naturalHeight - logoHeight - padding;
-
         ctx.globalAlpha = 0.85;
         ctx.drawImage(logoImage, x, y, logoWidth, logoHeight);
         ctx.globalAlpha = 1.0;
-
         const dataUrlWithLogo = canvas.toDataURL(mimeType);
-        await downloadResource(dataUrlWithLogo, `lion-apparel-look-watermarked.${extension}`);
-
+        await downloadResource(dataUrlWithLogo, `geo-studio-look-watermarked.${extension}`);
     } catch (err) {
         console.error("Failed to load logo for watermarking.", err);
-        await downloadResource(generatedImage, `lion-apparel-look.${extension}`);
+        await downloadResource(generatedImage, `geo-studio-look.${extension}`);
     }
   };
   
-  const imageToShow = showGenerated ? generatedImage : originalImage;
+  // Prioritize showing generated image if available and selected, otherwise fall back to original.
+  const imageToShow = (showGenerated && generatedImage) ? generatedImage : originalImage;
   const hasBothImages = originalImage && generatedImage;
 
   return (
-    <div className="w-full">
-      <div 
-        className="aspect-w-4 aspect-h-5 w-full bg-zinc-900 rounded-xl border-2 border-dashed border-zinc-800 flex items-center justify-center text-gray-400 overflow-hidden relative group transition-all duration-300 hover:border-amber-500 hover:bg-zinc-800"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onClick={() => !originalImage && fileInputRef.current?.click()}
-      >
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          accept="image/png, image/jpeg, image/webp"
-          className="hidden"
-        />
-        
-        {isLoading && (
-          <div className="absolute inset-0 bg-black bg-opacity-80 backdrop-blur-sm flex flex-col items-center justify-center z-20">
-            <div className="animate-pulse">
-                <LionLogo />
-            </div>
-            <p className="mt-4 text-lg font-semibold text-white">Generating new look...</p>
-          </div>
-        )}
-
-        {originalImage ? (
-          <img src={imageToShow || originalImage} alt={showGenerated ? "Styled result" : "Original upload"} className="object-cover w-full h-full" />
-        ) : (
-          <div className="text-center p-4 cursor-pointer">
-            <UploadIcon className="w-12 h-12 mx-auto mb-2" />
-            <p className="font-semibold">Click to upload or drag & drop</p>
-            <p className="text-sm text-gray-500">PNG, JPG, or WEBP</p>
-          </div>
-        )}
-         
-        {originalImage && (
-             <div 
-                className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center transition-all duration-300 z-10 cursor-pointer"
-                onClick={() => fileInputRef.current?.click()}
-            >
-               <p className="text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Change Image
-               </p>
-            </div>
-        )}
-
-        {hasBothImages && !isLoading && (
-          <div className="absolute bottom-4 left-4 z-20">
-            <div className="flex items-center bg-black/60 backdrop-blur-sm rounded-full p-1">
-              <button 
-                onClick={() => setShowGenerated(false)} 
-                className={`px-3 py-1 text-sm rounded-full transition-colors ${!showGenerated ? 'bg-amber-500 text-black font-semibold' : 'text-white'}`}
-                aria-pressed={!showGenerated}
-              >
-                Before
-              </button>
-              <button 
-                onClick={() => setShowGenerated(true)} 
-                className={`px-3 py-1 text-sm rounded-full transition-colors ${showGenerated ? 'bg-amber-500 text-black font-semibold' : 'text-white'}`}
-                aria-pressed={showGenerated}
-              >
-                After
-              </button>
-            </div>
-          </div>
-        )}
-
-        {generatedImage && !isLoading && (
-          <div className="absolute bottom-4 right-4 flex items-center gap-3 z-20">
-            <div className="flex items-center gap-2 bg-black/60 backdrop-blur-sm rounded-full py-2 pl-2 pr-3">
-              <input 
-                type="checkbox" 
-                id="addLogoToggle" 
-                checked={addLogo} 
-                onChange={(e) => setAddLogo(e.target.checked)}
-                className="h-4 w-4 rounded bg-zinc-700 border-zinc-600 text-amber-500 focus:ring-amber-500 cursor-pointer"
-              />
-              <label htmlFor="addLogoToggle" className="text-white text-sm cursor-pointer select-none">Add Logo</label>
-            </div>
+    <div className="w-full relative group glass-panel rounded-xl p-1 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+        {/* Frame / Canvas */}
+        <div 
+            className="relative aspect-[4/5] w-full bg-white/50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/5 rounded-lg overflow-hidden"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onClick={() => !originalImage && fileInputRef.current?.click()}
+        >
+            <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/png, image/jpeg, image/webp"
+                className="hidden"
+            />
             
-            <button
-              onClick={handleDownload}
-              className="bg-black/60 backdrop-blur-sm text-white p-3 rounded-full hover:bg-amber-500/80 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-black"
-              aria-label="Download image"
-            >
-              <DownloadIcon className="w-6 h-6" />
-            </button>
-          </div>
-        )}
-      </div>
+            {isLoading && (
+                <div className="absolute inset-0 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md flex flex-col items-center justify-center z-30">
+                    <div className="animate-pulse mb-6 scale-150">
+                        <GeoLogo />
+                    </div>
+                    <div className="w-48 h-1 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+                        <div className="h-full bg-amber-500 animate-progress"></div>
+                    </div>
+                    <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-500 dark:text-amber-400 mt-4">Processing</p>
+                </div>
+            )}
+
+            {imageToShow ? (
+                <img 
+                    src={imageToShow} 
+                    alt={(showGenerated && generatedImage) ? "Styled result" : "Original upload"} 
+                    className="object-cover w-full h-full transition-transform duration-700 hover:scale-105" 
+                />
+            ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-zinc-500 dark:text-zinc-600 transition-colors group-hover:text-zinc-700 dark:group-hover:text-zinc-400 cursor-pointer border-2 border-dashed border-zinc-300 dark:border-zinc-800 group-hover:border-amber-500/30 m-4 rounded-lg">
+                    <div className="w-20 h-20 bg-zinc-100 dark:bg-zinc-900 rounded-full flex items-center justify-center mb-4 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                        <UploadIcon className="w-8 h-8" />
+                    </div>
+                    <p className="text-sm font-bold uppercase tracking-widest text-zinc-700 dark:text-zinc-400 group-hover:text-black dark:group-hover:text-white transition-colors">Upload Source</p>
+                    <p className="text-[10px] mt-2 opacity-60 uppercase tracking-wide">Drag & Drop or Click</p>
+                </div>
+            )}
+
+            {originalImage && !isLoading && (
+                 <button 
+                    onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                    className="absolute top-4 left-4 z-20 p-3 bg-white/60 dark:bg-black/60 backdrop-blur-md rounded-full text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white border border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 transition-all opacity-0 group-hover:opacity-100 hover:scale-110"
+                    title="Replace Image"
+                >
+                   <UploadIcon className="w-4 h-4" />
+                </button>
+            )}
+
+            {/* Floating Controls for Result */}
+            {hasBothImages && !isLoading && (
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 p-1 bg-white/80 dark:bg-black/70 backdrop-blur-xl border border-zinc-200 dark:border-white/10 rounded-full shadow-2xl">
+                    <button 
+                        onClick={(e) => { e.stopPropagation(); setShowGenerated(false); }}
+                        className={`px-5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-full transition-all duration-300 ${!showGenerated ? 'bg-zinc-900 text-white dark:bg-white dark:text-black shadow-lg' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'}`}
+                    >
+                        Original
+                    </button>
+                    <button 
+                        onClick={(e) => { e.stopPropagation(); setShowGenerated(true); }}
+                        className={`px-5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-full transition-all duration-300 ${showGenerated ? 'bg-amber-500 text-black shadow-[0_0_15px_rgba(245,158,11,0.5)]' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'}`}
+                    >
+                        Edited
+                    </button>
+                </div>
+            )}
+
+            {/* Download Actions */}
+            {generatedImage && !isLoading && (
+                <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-2">
+                    <button
+                        onClick={(e) => { e.stopPropagation(); handleDownload(); }}
+                        className="p-3 bg-amber-500 text-black rounded-full shadow-[0_0_20px_rgba(245,158,11,0.4)] hover:bg-amber-400 hover:scale-110 transition-all duration-300 btn-tech"
+                        title="Download"
+                    >
+                        <DownloadIcon className="w-5 h-5" />
+                    </button>
+                    
+                    <div className="bg-white/70 dark:bg-black/70 backdrop-blur-md p-2 rounded-full border border-zinc-200 dark:border-white/10 flex items-center gap-2 px-3">
+                        <input 
+                            type="checkbox" 
+                            id="addLogoToggle" 
+                            checked={addLogo} 
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => setAddLogo(e.target.checked)}
+                            className="w-3 h-3 rounded border-zinc-400 dark:border-zinc-600 text-amber-500 bg-zinc-100 dark:bg-zinc-800 focus:ring-amber-500/50 cursor-pointer"
+                        />
+                        <label htmlFor="addLogoToggle" className="text-[9px] font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-300 cursor-pointer select-none">Watermark</label>
+                    </div>
+                </div>
+            )}
+        </div>
     </div>
   );
 };

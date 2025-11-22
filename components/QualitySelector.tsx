@@ -10,16 +10,16 @@ interface QualitySelectorProps {
 const QualitySelector: React.FC<QualitySelectorProps> = ({ options, selectedQuality, onSelectQuality }) => {
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-3 text-center text-gray-300">Image Quality</h3>
-      <div className="flex justify-center gap-4">
+      <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">Output Quality</h3>
+      <div className="flex bg-zinc-900 p-1 rounded-md">
         {options.map((option) => (
           <button
             key={option.name}
             onClick={() => onSelectQuality(option.value)}
-            className={`px-6 py-3 w-32 text-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 ${
+            className={`flex-1 py-2 text-xs font-bold uppercase tracking-wide rounded-sm transition-all duration-200 ${
               selectedQuality === option.value
-                ? 'bg-amber-500 text-black shadow-lg scale-105 ring-amber-500'
-                : 'bg-zinc-800 text-gray-300 hover:bg-zinc-700 hover:text-white'
+                ? 'bg-zinc-800 text-white shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             {option.name}
