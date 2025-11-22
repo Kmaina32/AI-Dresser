@@ -73,7 +73,8 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
 
     const handleTouchMove = (e: React.TouchEvent) => {
         const deltaY = e.touches[0].clientY - touchStartY.current;
-        const newRotation = currentRotation.current + (deltaY * 0.8);
+        // Increased sensitivity for better mobile feel (0.8 -> 1.2)
+        const newRotation = currentRotation.current + (deltaY * 1.2);
         setRotation(newRotation);
         
         const step = 360 / MENU_ITEMS.length;
@@ -175,23 +176,24 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                 </div>
 
                 {/* The Rotary Dial Container */}
+                {/* Adjusted positioning for mobile ergonomics */}
                 <div 
-                    className="relative w-full h-full flex items-center justify-end pr-4 md:pr-20 cursor-grab active:cursor-grabbing"
+                    className="relative w-full h-full flex items-center justify-end pr-0 md:pr-20 cursor-grab active:cursor-grabbing touch-none"
                     onTouchStart={handleTouchStart}
                     onTouchMove={handleTouchMove}
                     onWheel={handleWheel}
+                    style={{ touchAction: 'none' }}
                 >
-                    {/* Background Rings */}
-                    <div className="absolute right-[-30vh] h-[80vh] w-[80vh] rounded-full border border-zinc-300 dark:border-zinc-800/50 pointer-events-none"></div>
-                    <div className="absolute right-[-35vh] h-[90vh] w-[90vh] rounded-full border border-zinc-200 dark:border-zinc-800/30 pointer-events-none"></div>
+                    {/* Background Rings - Positioned slightly more off-screen on mobile for thumb reach */}
+                    <div className="absolute right-[-40vh] md:right-[-30vh] h-[80vh] w-[80vh] rounded-full border border-zinc-300 dark:border-zinc-800/50 pointer-events-none opacity-50"></div>
+                    <div className="absolute right-[-45vh] md:right-[-35vh] h-[90vh] w-[90vh] rounded-full border border-zinc-200 dark:border-zinc-800/30 pointer-events-none opacity-30"></div>
                     
                     {/* Active Indicator */}
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 w-32 h-16 border-r-4 border-amber-500 bg-gradient-to-l from-amber-500/10 to-transparent pointer-events-none z-0"></div>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-amber-500 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.8)] z-20"></div>
-
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-32 md:w-48 h-24 border-r-4 border-amber-500 bg-gradient-to-l from-amber-500/10 to-transparent pointer-events-none z-0"></div>
+                    
                     {/* Rotating Items Container */}
                     <div 
-                        className="relative h-[60vh] w-[60vh] right-[-30vh] rounded-full transition-transform duration-75 ease-linear will-change-transform"
+                        className="relative h-[60vh] w-[60vh] right-[-40vh] md:right-[-30vh] rounded-full transition-transform duration-75 ease-linear will-change-transform"
                         style={{ transform: `rotate(${rotation}deg)` }}
                     >
                         {MENU_ITEMS.map((item, index) => {
@@ -202,16 +204,16 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                             return (
                                 <div
                                     key={item.id}
-                                    className="absolute top-1/2 left-1/2 w-48 h-10 -mt-5 -ml-24 flex items-center justify-end pr-16 origin-center will-change-transform"
+                                    className="absolute top-1/2 left-1/2 w-64 h-12 -mt-6 -ml-32 flex items-center justify-end pr-20 origin-center will-change-transform"
                                     style={{ 
-                                        transform: `rotate(${itemAngle}deg) translate(-30vh) rotate(-${itemAngle}deg) rotate(${-rotation}deg)`
+                                        transform: `rotate(${itemAngle}deg) translate(-32vh) rotate(-${itemAngle}deg) rotate(${-rotation}deg)`
                                     }}
                                 >
                                     <button
                                         onClick={() => handleNavClick(item.id)}
-                                        className={`text-right transition-all duration-300 ${isActive ? 'scale-150' : 'scale-100 opacity-40'}`}
+                                        className={`text-right transition-all duration-300 ${isActive ? 'scale-125 md:scale-150 opacity-100' : 'scale-90 opacity-30'}`}
                                     >
-                                        <span className={`block text-3xl font-playfair font-bold ${isActive ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}`}>
+                                        <span className={`block text-2xl md:text-3xl font-playfair font-bold ${isActive ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}`}>
                                             {item.label}
                                         </span>
                                         {isActive && (
@@ -226,8 +228,9 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                     </div>
                 </div>
 
-                <div className="absolute bottom-10 left-0 right-0 text-center pointer-events-none">
-                    <p className="text-zinc-500 text-[10px] animate-pulse">SCROLL KNOB TO SELECT</p>
+                <div className="absolute bottom-12 left-0 right-0 text-center pointer-events-none px-6">
+                    <div className="h-1 w-12 bg-zinc-300 dark:bg-zinc-800 mx-auto rounded-full mb-2"></div>
+                    <p className="text-zinc-500 text-[10px] animate-pulse uppercase tracking-widest">Scroll Dial to Navigate</p>
                 </div>
             </div>
         </>

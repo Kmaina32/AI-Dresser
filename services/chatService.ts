@@ -1,8 +1,21 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-// Safely retrieve API Key to avoid Uncaught ReferenceError in browser
-const API_KEY = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
+// Helper to safely get env variable without triggering "Uncaught ReferenceError" in browser
+const getEnvVar = () => {
+  try {
+    // @ts-ignore
+    if (typeof process !== 'undefined' && process.env) {
+        // @ts-ignore
+        return process.env.API_KEY;
+    }
+  } catch (e) {
+    return undefined;
+  }
+  return undefined;
+};
+
+const API_KEY = getEnvVar() || 'AIzaSyDVSyULoRw2Ll4DheQaGveuG4aIFjs1VWM';
 
 // We allow initialization even without key to prevent crash on load
 const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;

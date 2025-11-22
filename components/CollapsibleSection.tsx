@@ -21,7 +21,7 @@ const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({ title, children
       >
         <div className="flex items-center gap-3">
             {icon}
-            <h3 className={`text-xs font-bold uppercase tracking-widest transition-colors ${isSectionOpen ? 'text-zinc-900 dark:text-white' : 'text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-200'}`}>{title}</h3>
+            <h3 className={`text-xs font-bold uppercase tracking-widest transition-colors ${isSectionOpen ? 'text-amber-600 dark:text-white' : 'text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-200'}`}>{title}</h3>
         </div>
         <ChevronDownIcon
           className={`w-4 h-4 text-zinc-400 dark:text-zinc-600 transition-transform duration-300 group-hover:text-zinc-600 dark:group-hover:text-zinc-400 ${
