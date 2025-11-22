@@ -6,6 +6,7 @@ import { GeoLogo } from './logo.tsx';
 import ThemeToggle from './ThemeToggle.tsx';
 import { useAuth } from '../context/AuthContext.tsx';
 import { UserIcon } from './icons/UserIcon.tsx';
+import { LogoutIcon } from './icons/LogoutIcon.tsx';
 
 interface HeaderProps {
     onNavigate: (page: string) => void;
@@ -36,7 +37,7 @@ const NavLink: React.FC<{ page: string; label: string; onClick: (page: string) =
 );
 
 const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
 
@@ -59,6 +60,12 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
         } else {
             onNavigate('login');
         }
+        setIsMenuOpen(false);
+    };
+
+    const handleLogout = () => {
+        logout();
+        onNavigate('landing');
         setIsMenuOpen(false);
     };
 
@@ -115,58 +122,81 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                 </div>
             </header>
 
-            {/* Mobile Modern Overlay Menu (Cinematic Index) */}
+            {/* Mobile Sidebar Menu (Drawer) */}
+            {/* Backdrop */}
             <div 
-                className={`fixed inset-0 z-[100] bg-zinc-50/95 dark:bg-zinc-950/95 backdrop-blur-xl flex flex-col transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
+                className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] transition-opacity duration-300 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                onClick={() => setIsMenuOpen(false)}
+            />
+
+            {/* Drawer */}
+            <div 
+                className={`
+                    fixed inset-y-0 right-0 z-[100] w-[300px] 
+                    bg-white dark:bg-zinc-950 border-l border-zinc-200 dark:border-white/10 
+                    shadow-2xl transform transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1)
+                    flex flex-col
+                    ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}
+                `}
             >
                 {/* Top Bar */}
                 <div className="flex items-center justify-between p-6 border-b border-zinc-200 dark:border-white/5">
-                    <GeoLogo className="scale-90 origin-left" />
+                    <h2 className="text-lg font-playfair font-bold text-zinc-900 dark:text-white">Navigation</h2>
                     <button 
                         onClick={() => setIsMenuOpen(false)} 
-                        className="p-2 text-zinc-500 hover:text-black dark:hover:text-white bg-zinc-200/50 dark:bg-zinc-800/50 rounded-full transition-colors"
+                        className="p-2 text-zinc-500 hover:text-black dark:hover:text-white bg-zinc-100 dark:bg-zinc-900 rounded-full transition-colors"
                     >
-                        <CloseIcon className="w-6 h-6" />
+                        <CloseIcon className="w-5 h-5" />
                     </button>
                 </div>
 
                 {/* Menu List */}
-                <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center p-6 space-y-6">
-                    {MENU_ITEMS.map((item, index) => (
-                        <button
-                            key={item.id}
-                            onClick={() => handleNavClick(item.id)}
-                            className={`
-                                group w-full max-w-sm p-4 rounded-2xl border border-transparent hover:border-amber-500/30 hover:bg-amber-500/5 transition-all duration-500
-                                flex items-center justify-between
-                                transform ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}
-                            `}
-                            style={{ transitionDelay: `${index * 50}ms` }}
-                        >
-                            <div className="flex flex-col items-start">
-                                <span className="text-3xl font-playfair font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-amber-500 transition-colors">
-                                    {item.label}
-                                </span>
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-600 group-hover:text-amber-500/70">
-                                    0{index + 1}
-                                </span>
-                            </div>
-                            
-                            {!item.public && !user && (
-                                <div className="px-2 py-1 bg-zinc-200 dark:bg-zinc-800 rounded text-[9px] font-bold uppercase tracking-wider text-zinc-500 border border-zinc-300 dark:border-zinc-700">
-                                    Locked
+                <div className="flex-1 overflow-y-auto py-6">
+                    <div className="flex flex-col space-y-2 px-4">
+                        {MENU_ITEMS.map((item, index) => (
+                            <button
+                                key={item.id}
+                                onClick={() => handleNavClick(item.id)}
+                                className="group w-full p-4 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all duration-200 flex items-center justify-between border border-transparent hover:border-zinc-200 dark:hover:border-zinc-800"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <span className="text-[10px] font-bold text-zinc-400 w-4">0{index + 1}</span>
+                                    <span className="text-lg font-playfair font-medium text-zinc-800 dark:text-zinc-200 group-hover:text-amber-500 transition-colors">
+                                        {item.label}
+                                    </span>
                                 </div>
-                            )}
-                             {!item.public && user && (
-                                <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
-                            )}
-                        </button>
-                    ))}
+                                
+                                {!item.public && !user && (
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded">Locked</span>
+                                )}
+                                {!item.public && user && (
+                                    <span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span>
+                                )}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
-                {/* Bottom Bar */}
-                <div className="p-8 border-t border-zinc-200 dark:border-white/5 bg-white/50 dark:bg-zinc-900/50 text-center">
-                     <p className="text-xs text-zinc-500 dark:text-zinc-600 font-mono">
+                {/* Footer / Logout */}
+                <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/50">
+                    {user ? (
+                        <button 
+                            onClick={handleLogout}
+                            className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500 hover:text-white transition-all font-bold text-xs uppercase tracking-widest"
+                        >
+                            <LogoutIcon className="w-4 h-4" />
+                            Sign Out
+                        </button>
+                    ) : (
+                         <button 
+                            onClick={() => handleNavClick('login')}
+                            className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-black hover:opacity-90 transition-all font-bold text-xs uppercase tracking-widest"
+                        >
+                            <UserIcon className="w-4 h-4" />
+                            Login / Register
+                        </button>
+                    )}
+                     <p className="mt-6 text-center text-[10px] text-zinc-400 font-mono">
                          Geo Studio AI v2.4
                      </p>
                 </div>

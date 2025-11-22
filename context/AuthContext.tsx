@@ -7,14 +7,17 @@ export interface User {
   email: string;
   avatar?: string;
   isPro?: boolean;
+  provider?: 'email' | 'google';
 }
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  resetPassword: (email: string) => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
 }
 
@@ -22,26 +25,30 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const DB_KEY = 'geo_studio_users_db_v1';
 const SESSION_KEY = 'geo_user_session';
-const MOCK_DELAY = 800; // ms to simulate network latency
+const MOCK_DELAY = 1200; // Increased to simulate real DB connection latency
 
-// --- SIMULATED DATABASE HELPERS ---
+// --- SIMULATED DATABASE ADAPTER ---
+// In a production app, you would replace these functions with Firebase/Supabase calls.
 
 const getDatabase = (): Record<string, any> => {
     try {
+        if (typeof localStorage === 'undefined') return {};
         const db = localStorage.getItem(DB_KEY);
         return db ? JSON.parse(db) : {};
     } catch (e) {
+        console.warn("Database connection failed (Storage Restriction)", e);
         return {};
     }
 };
 
 const saveToDatabase = (email: string, data: any) => {
     try {
+        if (typeof localStorage === 'undefined') return;
         const db = getDatabase();
-        db[email] = data;
+        db[email.toLowerCase()] = data;
         localStorage.setItem(DB_KEY, JSON.stringify(db));
     } catch (e) {
-        console.error("Storage operation failed", e);
+        console.error("Database write failed", e);
     }
 };
 
@@ -52,18 +59,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Initialize / Restore Session
   useEffect(() => {
     const initializeAuth = async () => {
-        // Simulate connection delay
+        // Simulate connecting to Auth Provider...
         setTimeout(() => {
             try {
-                const storedUser = localStorage.getItem(SESSION_KEY);
-                if (storedUser) {
-                    setUser(JSON.parse(storedUser));
+                if (typeof localStorage !== 'undefined') {
+                    const storedUser = localStorage.getItem(SESSION_KEY);
+                    if (storedUser) {
+                        setUser(JSON.parse(storedUser));
+                    }
                 }
             } catch (e) {
                 console.error("Failed to restore session", e);
             }
             setIsLoading(false);
-        }, 500);
+        }, 800);
     };
     initializeAuth();
   }, []);
@@ -80,10 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           // Login Success
           const userData: User = record.user;
           setUser(userData);
-          try {
-              localStorage.setItem(SESSION_KEY, JSON.stringify(userData));
-          } catch(e) { console.error("Session save failed", e); }
-          
+          localStorage.setItem(SESSION_KEY, JSON.stringify(userData));
           setIsLoading(false);
           resolve();
         } else {
@@ -92,6 +98,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           reject(new Error('Invalid email or password.'));
         }
       }, MOCK_DELAY);
+    });
+  };
+
+  const loginWithGoogle = async () => {
+    setIsLoading(true);
+    return new Promise<void>((resolve) => {
+        setTimeout(() => {
+            const mockGoogleUser: User = {
+                id: `google-${Date.now()}`,
+                name: 'Guest User',
+                email: 'guest@gmail.com',
+                avatar: 'https://lh3.googleusercontent.com/a/default-user=s96-c',
+                isPro: false,
+                provider: 'google'
+            };
+
+            // Check if exists in DB, if not, create
+            const db = getDatabase();
+            if (!db[mockGoogleUser.email]) {
+                saveToDatabase(mockGoogleUser.email, { user: mockGoogleUser, provider: 'google' });
+            }
+
+            setUser(mockGoogleUser);
+            localStorage.setItem(SESSION_KEY, JSON.stringify(mockGoogleUser));
+            setIsLoading(false);
+            resolve();
+        }, MOCK_DELAY);
     });
   };
 
@@ -115,7 +148,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             name: name,
             email: email,
             avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}`,
-            isPro: true // Default to Pro for demo joy
+            isPro: true, // Default to Pro for demo joy
+            provider: 'email'
           };
           
           // Save Creds + User Data to "DB"
@@ -126,9 +160,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           
           // Auto Login
           setUser(newUser);
-          try {
-            localStorage.setItem(SESSION_KEY, JSON.stringify(newUser));
-          } catch(e) { console.error("Session save failed", e); }
+          localStorage.setItem(SESSION_KEY, JSON.stringify(newUser));
           
           setIsLoading(false);
           resolve();
@@ -140,10 +172,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const resetPassword = async (email: string) => {
+      return new Promise<void>((resolve, reject) => {
+          setTimeout(() => {
+              const db = getDatabase();
+              if (db[email.toLowerCase()]) {
+                  // Logic to send email would go here
+                  console.log(`Password reset email sent to ${email}`);
+                  resolve();
+              } else {
+                  // For security, usually we don't reveal if user exists, but for this demo:
+                  reject(new Error("Email address not found in database."));
+              }
+          }, MOCK_DELAY);
+      });
+  };
+
   const logout = () => {
     setUser(null);
     try {
-        localStorage.removeItem(SESSION_KEY);
+        if (typeof localStorage !== 'undefined') {
+            localStorage.removeItem(SESSION_KEY);
+        }
     } catch(e) { console.error("Logout storage clear failed", e); }
   };
 
@@ -158,9 +208,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                   }
                   
                   setUser(updatedUser);
-                  try {
-                      localStorage.setItem(SESSION_KEY, JSON.stringify(updatedUser));
-                  } catch(e) { console.error("Update profile storage failed", e); }
+                  localStorage.setItem(SESSION_KEY, JSON.stringify(updatedUser));
                   
                   // Update DB record
                   const db = getDatabase();
@@ -176,7 +224,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, signup, logout, updateProfile }}>
+    <AuthContext.Provider value={{ user, isLoading, login, loginWithGoogle, signup, logout, resetPassword, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );

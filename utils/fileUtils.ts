@@ -5,6 +5,12 @@ export const fileToBase64 = (file: File): Promise<string> => {
         reject(new Error('File is missing or invalid'));
         return;
     }
+    // Ensure file is actually a Blob/File before creating FileReader
+    if (!(file instanceof Blob)) {
+        reject(new Error('Provided object is not a File or Blob'));
+        return;
+    }
+
     const reader = new FileReader();
     try {
         reader.readAsDataURL(file);

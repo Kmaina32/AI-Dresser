@@ -6,11 +6,14 @@ import { PoliticalParty } from "../constants.ts";
 // Helper to safely get env variable without triggering "Uncaught ReferenceError" in browser
 const getEnvVar = () => {
   try {
-    if (typeof process !== 'undefined' && process.env) {
+    // Check if 'process' is defined globally before accessing it
+    // This prevents ReferenceError in strict browser environments
+    if (typeof process !== 'undefined' && process && process.env) {
         return process.env.API_KEY;
     }
   } catch (e) {
-    console.warn("Environment variable access error:", e);
+    // Suppress errors to prevent app crash
+    console.debug("Environment variable access check failed", e);
   }
   return undefined;
 };

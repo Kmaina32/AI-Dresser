@@ -15,22 +15,31 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
       try {
-        const savedTheme = localStorage.getItem('geo-theme');
-        if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
+        // Accessing localStorage can throw in restricted environments (e.g. iframes, private mode)
+        if (typeof localStorage !== 'undefined') {
+             const savedTheme = localStorage.getItem('geo-theme');
+             if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
+        }
       } catch (e) {
           // Silent fail for restricted storage access
+          console.warn("Theme storage access failed", e);
       }
-      if (window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
     }
     return 'dark';
   });
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const root = window.document.documentElement;
+    if (!root) return;
+
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
     try {
-        localStorage.setItem('geo-theme', theme);
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('geo-theme', theme);
+        }
     } catch(e) {
         // Silent fail for restricted storage access
     }
