@@ -116,21 +116,22 @@ const MusicPosterPage: React.FC = () => {
             <div className={`
                 fixed inset-0 lg:relative lg:inset-auto
                 w-full sm:w-[420px] lg:w-[420px]
-                glass-panel border-r-0 lg:border-r border-white/5
+                glass-panel border-r-0 lg:border-r border-zinc-200 dark:border-white/5
                 flex flex-col z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
-                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 bg-zinc-950/80
+                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 
+                bg-white/95 dark:bg-zinc-950/80 backdrop-blur-xl
             `}>
                  {/* Mobile Sidebar Header */}
-                 <div className="flex items-center justify-between p-5 border-b border-white/5 lg:hidden bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
+                 <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-white dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
                     <div className="flex items-center gap-3">
                          <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
                             <MusicIcon className="w-5 h-5 text-amber-400" />
                          </div>
-                         <span className="font-playfair text-xl text-white font-bold tracking-wide">Poster Config</span>
+                         <span className="font-playfair text-xl text-zinc-900 dark:text-white font-bold tracking-wide">Poster Config</span>
                     </div>
                     <button 
                         onClick={() => setIsSidebarOpen(false)} 
-                        className="p-2 text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-all active:scale-95 border border-white/5"
+                        className="p-2 text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-all active:scale-95 border border-black/5 dark:border-white/5"
                     >
                         <CloseIcon className="w-6 h-6" />
                     </button>
@@ -164,11 +165,11 @@ const MusicPosterPage: React.FC = () => {
                         <div className="space-y-6">
                              <div>
                                 <label className="block text-xs font-bold text-zinc-500 mb-3 uppercase tracking-wide">Title Text</label>
-                                <input type="text" value={musicTitle} onChange={(e) => setMusicTitle(e.target.value)} placeholder="Title..." className="w-full bg-black/40 border border-white/10 text-white rounded-sm px-4 py-3 focus:border-amber-500 focus:outline-none text-sm placeholder-zinc-700 transition-colors"/>
+                                <input type="text" value={musicTitle} onChange={(e) => setMusicTitle(e.target.value)} placeholder="Title..." className="w-full bg-zinc-100 dark:bg-black/40 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-sm px-4 py-3 focus:border-amber-500 focus:outline-none text-sm placeholder-zinc-500 dark:placeholder-zinc-700 transition-colors"/>
                             </div>
                              <div>
                                 <label className="block text-xs font-bold text-zinc-500 mb-3 uppercase tracking-wide">Subtitle</label>
-                                <input type="text" value={artistNames} onChange={(e) => setArtistNames(e.target.value)} placeholder="Names..." className="w-full bg-black/40 border border-white/10 text-white rounded-sm px-4 py-3 focus:border-amber-500 focus:outline-none text-sm placeholder-zinc-700 transition-colors"/>
+                                <input type="text" value={artistNames} onChange={(e) => setArtistNames(e.target.value)} placeholder="Names..." className="w-full bg-zinc-100 dark:bg-black/40 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-sm px-4 py-3 focus:border-amber-500 focus:outline-none text-sm placeholder-zinc-500 dark:placeholder-zinc-700 transition-colors"/>
                             </div>
                             <DropdownSelector label="Font Style" options={fontOptions} selectedValue={selectedFont} onSelect={setSelectedFont} />
                             <DropdownSelector label="Sticker" options={iconOptions} selectedValue={selectedIcon} onSelect={setSelectedIcon} />
@@ -211,8 +212,8 @@ const MusicPosterPage: React.FC = () => {
                                     onClick={() => setSelectedAspectRatio(ratio.value)}
                                     className={`flex-1 px-2 py-2 text-[10px] font-bold uppercase tracking-wider rounded-sm border transition-all ${
                                         selectedAspectRatio === ratio.value
-                                        ? 'bg-white text-black border-white shadow-lg'
-                                        : 'bg-transparent text-zinc-500 border-zinc-800 hover:border-zinc-600 hover:text-zinc-300'
+                                        ? 'bg-white dark:bg-zinc-200 text-black border-white shadow-lg'
+                                        : 'bg-transparent text-zinc-500 border-zinc-300 dark:border-zinc-800 hover:border-zinc-500 dark:hover:border-zinc-600 hover:text-zinc-800 dark:hover:text-zinc-300'
                                     }`}
                                 >
                                     {ratio.name}
@@ -224,15 +225,15 @@ const MusicPosterPage: React.FC = () => {
                 </div>
                 
                 {/* Desktop Generate Button Area */}
-                <div className="p-6 border-t border-white/5 bg-black/40 backdrop-blur-lg hidden lg:block">
+                <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-black/40 backdrop-blur-lg hidden lg:block">
                      <button
                         onClick={handleGenerate}
                         disabled={!artist1File || !artist2File || isLoading}
-                        className="w-full px-8 py-4 bg-amber-500 text-black font-bold text-xs tracking-[0.2em] uppercase rounded-sm shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] hover:bg-amber-400 disabled:bg-zinc-900 disabled:text-zinc-700 disabled:shadow-none transition-all btn-tech"
+                        className="w-full px-8 py-4 bg-amber-500 text-black font-bold text-xs tracking-[0.2em] uppercase rounded-sm shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] hover:bg-amber-400 disabled:bg-zinc-200 dark:disabled:bg-zinc-900 disabled:text-zinc-400 dark:disabled:text-zinc-700 disabled:shadow-none transition-all btn-tech"
                     >
                         {isLoading ? 'Compositing...' : 'Generate Poster'}
                     </button>
-                    {error && <p className="text-red-400 mt-3 text-center text-[10px] uppercase tracking-wide border border-red-500/20 bg-red-500/5 py-2 rounded-sm">{error}</p>}
+                    {error && <p className="text-red-500 dark:text-red-400 mt-3 text-center text-[10px] uppercase tracking-wide border border-red-500/20 bg-red-500/5 py-2 rounded-sm">{error}</p>}
                 </div>
             </div>
 
@@ -240,8 +241,8 @@ const MusicPosterPage: React.FC = () => {
              <div className="flex-grow h-full relative overflow-y-auto custom-scrollbar flex flex-col items-center justify-center pt-12 pb-32 px-4 md:px-12 lg:py-12 z-0">
                  {/* Mobile Toggle Button */}
                  <div className="lg:hidden absolute top-6 right-6 z-20">
-                     <button onClick={() => setIsSidebarOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-xl text-white rounded-full border border-white/10 shadow-xl hover:border-amber-400/50 transition-all active:scale-95">
-                         <SlidersIcon className="w-4 h-4 text-amber-400" />
+                     <button onClick={() => setIsSidebarOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-black/60 backdrop-blur-xl text-zinc-900 dark:text-white rounded-full border border-zinc-200 dark:border-white/10 shadow-xl hover:border-amber-400/50 transition-all active:scale-95">
+                         <SlidersIcon className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                          <span className="text-[10px] font-bold uppercase tracking-wide">Settings</span>
                      </button>
                  </div>
@@ -257,7 +258,7 @@ const MusicPosterPage: React.FC = () => {
                     />
                     {!generatedImage && !isLoading && (
                          <div className="text-center mt-8 opacity-50">
-                            <MusicIcon className="w-16 h-16 mx-auto text-zinc-700 mb-4" />
+                            <MusicIcon className="w-16 h-16 mx-auto text-zinc-700 dark:text-zinc-700 mb-4" />
                             <p className="text-zinc-500 text-sm uppercase tracking-widest">Configure poster composition to begin</p>
                          </div>
                     )}
@@ -265,7 +266,7 @@ const MusicPosterPage: React.FC = () => {
             </div>
 
              {/* Mobile Sticky Bottom Action Bar */}
-            <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-zinc-950/90 backdrop-blur-xl border-t border-white/5 z-50">
+            <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-200 dark:border-white/5 z-50">
                  <button
                     onClick={handleGenerate}
                     disabled={!artist1File || !artist2File || isLoading}
@@ -273,7 +274,7 @@ const MusicPosterPage: React.FC = () => {
                 >
                     {isLoading ? 'Processing...' : 'Generate Poster'}
                 </button>
-                {error && <p className="text-red-400 mt-2 text-center text-xs">{error}</p>}
+                {error && <p className="text-red-500 dark:text-red-400 mt-2 text-center text-xs">{error}</p>}
             </div>
         </div>
     );

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { QUIZ_QUESTIONS, getStyleRecommendations } from '../data/quizData.ts';
-import { RemixConfig } from '../App.tsx';
+import { RemixConfig } from '../constants.ts';
 import { SparklesIcon } from '../components/icons/SparklesIcon.tsx';
 import { StyleOption } from '../constants.ts';
 import { DnaIcon } from '../components/icons/DnaIcon.tsx';

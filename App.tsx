@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header.tsx';
 import HomePage from './pages/HomePage.tsx';
 import GalleryPage from './pages/GalleryPage.tsx';
@@ -14,24 +13,44 @@ import LoginPage from './pages/LoginPage.tsx';
 import SignupPage from './pages/SignupPage.tsx';
 import ProfilePage from './pages/ProfilePage.tsx';
 import ChatWidget from './components/ChatWidget.tsx';
-import { GalleryItem } from './data/galleryData.ts';
-
-export interface RemixConfig extends Omit<GalleryItem, 'image' | 'title' | 'description'> {}
+import { RemixConfig } from './constants.ts';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState('landing');
   const [remixConfig, setRemixConfig] = useState<RemixConfig | null>(null);
 
+  // Sync URL with state on initial load (SSR/Refresh support)
+  useEffect(() => {
+    const path = window.location.pathname.replace('/', '');
+    if (path && path !== '') {
+      setCurrentPage(path);
+    }
+  }, []);
+
   const handleNavigate = (page: string) => {
     setCurrentPage(page);
     if (page !== 'home') setRemixConfig(null);
+    
+    // Update URL without reload
+    const urlPath = page === 'landing' ? '/' : `/${page}`;
+    window.history.pushState({ page }, '', urlPath);
+    
     window.scrollTo(0, 0);
   };
 
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const onPopState = (event: PopStateEvent) => {
+        const path = window.location.pathname.replace('/', '');
+        setCurrentPage(path || 'landing');
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
   const handleRemix = (config: RemixConfig) => {
     setRemixConfig(config);
-    setCurrentPage('home');
-    window.scrollTo(0, 0);
+    handleNavigate('home');
   };
 
   const renderPage = () => {

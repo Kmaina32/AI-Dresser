@@ -38,14 +38,14 @@ import {
   CATEGORIZED_VEHICLE_RIMS,
   CATEGORIZED_VEHICLE_AERO,
   CATEGORIZED_VEHICLE_INTERIOR,
-  CATEGORIZED_VEHICLE_LIGHTING_GRILL
+  CATEGORIZED_VEHICLE_LIGHTING_GRILL,
+  RemixConfig
 } from '../constants.ts';
 import { editImageWithGemini, DesignMode } from '../services/geminiService.ts';
 import { SparklesIcon } from '../components/icons/SparklesIcon.tsx';
 import FaceLockToggle from '../components/FaceLockToggle.tsx';
 import QualitySelector from '../components/QualitySelector.tsx';
 import DropdownSelector from '../components/DropdownSelector.tsx';
-import { RemixConfig } from '../App.tsx';
 import StyleSelector from '../components/StyleSelector.tsx';
 import CollapsibleSection from '../components/CollapsibleSection.tsx';
 import { CloseIcon } from '../components/icons/CloseIcon.tsx';
@@ -73,7 +73,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   
-  // Changed to Array for Multi-Select
   const [selectedStyleIds, setSelectedStyleIds] = useState<string[]>([]);
   
   const [selectedColor, setSelectedColor] = useState<string>('automatic');
@@ -134,15 +133,33 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
       }
   }, [mode]);
 
+  // Handle Remix Config
   useEffect(() => {
-      // Reset selections when mode changes, default to first item
-      const firstStyle = currentStylesSource[0]?.styles[0];
-      if (firstStyle) setSelectedStyleIds([firstStyle.id]);
-      setSelectedBackground(currentBackgrounds[0]?.prompt || '');
-      setSelectedLighting(currentLighting[0]?.prompt || '');
-  }, [currentStylesSource, currentBackgrounds, currentLighting, mode]);
+      if (initialRemixConfig) {
+          setMode('apparel');
+          setAttireType(initialRemixConfig.attireType as AttireType);
+          const foundStyle = currentStylesSource.flatMap(c => c.styles).find(s => s.prompt === initialRemixConfig.stylePrompt);
+          if (foundStyle) {
+              setSelectedStyleIds([foundStyle.id]);
+          }
+          
+          setSelectedBackground(initialRemixConfig.backgroundPrompt);
+          setSelectedLighting(initialRemixConfig.lightingPrompt);
+          
+          if (initialRemixConfig.shoePrompt) setSelectedShoe(initialRemixConfig.shoePrompt);
+          if (initialRemixConfig.shirtPrompt) setSelectedShirt(initialRemixConfig.shirtPrompt);
+          if (initialRemixConfig.tiePrompt) setSelectedTie(initialRemixConfig.tiePrompt);
+          
+          clearRemixConfig();
+      } else {
+          if (selectedStyleIds.length === 0 && currentStylesSource[0]?.styles[0]) {
+              setSelectedStyleIds([currentStylesSource[0].styles[0].id]);
+              setSelectedBackground(currentBackgrounds[0]?.prompt || '');
+              setSelectedLighting(currentLighting[0]?.prompt || '');
+          }
+      }
+  }, [initialRemixConfig, currentStylesSource, currentBackgrounds, currentLighting, clearRemixConfig]);
 
-  // Used for finding color palette of the LAST selected item
   const lastSelectedStyleId = selectedStyleIds[selectedStyleIds.length - 1];
   const selectedStyleObject: StyleOption | undefined = useMemo(() => 
       currentStylesSource.flatMap(c => c.styles).find(s => s.id === lastSelectedStyleId),
@@ -152,7 +169,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
   const handleStyleToggle = (id: string) => {
       setSelectedStyleIds(prev => {
           if (prev.includes(id)) {
-              // Prevent deselecting the last item
               if (prev.length === 1) return prev;
               return prev.filter(item => item !== id);
           } else {
@@ -175,7 +191,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
       return;
     }
     
-    // Construct combined style prompt
     const allStyles = currentStylesSource.flatMap(c => c.styles);
     const activeStyles = allStyles.filter(s => selectedStyleIds.includes(s.id));
     
@@ -200,7 +215,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
         selectedTie, selectedHandbag, selectedEyewear, selectedHeadwear,
         effectiveTargetPerson, selectedPosture, isLockEnabled, selectedQuality,
         mode,
-        // Pass new vehicle mod params (will be ignored by other modes)
         selectedRims, selectedAero, selectedVehicleInterior, selectedVehicleLighting
       );
       setGeneratedImage(result);
@@ -233,7 +247,7 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
   const ModeButton = ({ m, label, icon }: { m: DesignMode, label: string, icon: React.ReactNode }) => (
       <button 
         onClick={() => setMode(m)}
-        className={`flex-1 flex flex-col items-center justify-center py-4 gap-2 transition-all border-b-2 relative overflow-hidden ${mode === m ? 'border-amber-400 text-amber-400 bg-amber-400/5' : 'border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-black/5 dark:hover:bg-white/5'}`}
+        className={`flex-1 flex flex-col items-center justify-center py-4 gap-2 transition-all border-b-2 relative overflow-hidden ${mode === m ? 'border-amber-400 text-amber-400 bg-amber-400/10' : 'border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-black/5 dark:hover:bg-white/5'}`}
       >
           <div className={`transform transition-transform ${mode === m ? 'scale-110' : ''}`}>{icon}</div>
           <span className="text-[9px] font-bold uppercase tracking-[0.2em]">{label}</span>
@@ -255,12 +269,13 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
         <div className={`
             fixed inset-0 lg:relative lg:inset-auto
             w-full sm:w-[420px] lg:w-[420px]
-            glass-panel border-r-0 lg:border-r border-white/5
+            glass-panel border-r-0 lg:border-r border-zinc-200 dark:border-white/5
             flex flex-col z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
-            ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 bg-white/90 dark:bg-zinc-950/80
+            ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 
+            bg-white/95 dark:bg-zinc-950/80 backdrop-blur-xl
         `}>
             {/* Mobile Sidebar Header */}
-            <div className="flex items-center justify-between p-5 border-b border-white/5 lg:hidden bg-zinc-50 dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
+            <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-zinc-50 dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
                 <div className="flex items-center gap-3">
                      <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
                         <SlidersIcon className="w-5 h-5 text-amber-400" />

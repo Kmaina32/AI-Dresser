@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { GALLERY_ITEMS, GalleryItem } from '../data/galleryData.ts';
-import { RemixConfig } from '../App.tsx';
+import { RemixConfig } from '../constants.ts';
 import { SparklesIcon } from '../components/icons/SparklesIcon.tsx';
 
 interface GalleryPageProps {
@@ -12,7 +12,7 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ onRemix }) => {
 
   const handleRemixClick = (item: GalleryItem) => {
     const { image, title, description, ...remixConfig } = item;
-    onRemix(remixConfig);
+    onRemix(remixConfig as RemixConfig);
   }
 
   return (

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { generateVideoWithVeo } from '../services/geminiService.ts';
 import ImageUploader from '../components/ImageUploader.tsx';
@@ -163,9 +164,9 @@ const AnimatePage: React.FC = () => {
     if (!apiKeySelected) {
         return (
             <main className="h-full flex items-center justify-center px-4 pt-20">
-                <div className="max-w-md w-full bg-zinc-900/30 backdrop-blur-xl p-8 rounded-sm border border-white/10 text-center shadow-2xl">
-                    <h2 className="text-3xl font-bold mb-4 text-white font-playfair">Access Required</h2>
-                    <p className="text-zinc-400 mb-8 leading-relaxed font-light">
+                <div className="max-w-md w-full bg-white/50 dark:bg-zinc-900/30 backdrop-blur-xl p-8 rounded-sm border border-zinc-200 dark:border-white/10 text-center shadow-2xl">
+                    <h2 className="text-3xl font-bold mb-4 text-zinc-900 dark:text-white font-playfair">Access Required</h2>
+                    <p className="text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed font-light">
                         To use the Veo cinematic engine, please verify your API key. This ensures secure access to our high-compute rendering pipeline.
                     </p>
                     <button
@@ -174,8 +175,8 @@ const AnimatePage: React.FC = () => {
                     >
                         Connect API Key
                     </button>
-                    <p className="text-xs text-zinc-600 mt-6">
-                        <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-300 transition-colors underline">
+                    <p className="text-xs text-zinc-500 dark:text-zinc-600 mt-6">
+                        <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-800 dark:hover:text-zinc-300 transition-colors underline">
                             View Billing Documentation
                         </a>
                     </p>
@@ -198,21 +199,22 @@ const AnimatePage: React.FC = () => {
             <div className={`
                 fixed inset-0 lg:relative lg:inset-auto
                 w-full sm:w-[420px] lg:w-[420px]
-                glass-panel border-r-0 lg:border-r border-white/5
+                glass-panel border-r-0 lg:border-r border-zinc-200 dark:border-white/5
                 flex flex-col z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
-                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 bg-zinc-950/80
+                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 
+                bg-white/95 dark:bg-zinc-950/80 backdrop-blur-xl
             `}>
                 {/* Mobile Sidebar Header */}
-                 <div className="flex items-center justify-between p-5 border-b border-white/5 lg:hidden bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
+                 <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-white dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
                     <div className="flex items-center gap-3">
                          <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
                             <MovieIcon className="w-5 h-5 text-amber-400" />
                          </div>
-                         <span className="font-playfair text-xl text-white font-bold tracking-wide">Motion Config</span>
+                         <span className="font-playfair text-xl text-zinc-900 dark:text-white font-bold tracking-wide">Motion Config</span>
                     </div>
                     <button 
                         onClick={() => setIsSidebarOpen(false)} 
-                        className="p-2 text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-all active:scale-95 border border-white/5"
+                        className="p-2 text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-all active:scale-95 border border-black/5 dark:border-white/5"
                     >
                         <CloseIcon className="w-6 h-6" />
                     </button>
@@ -231,7 +233,7 @@ const AnimatePage: React.FC = () => {
                             <div className="flex flex-wrap items-start gap-3">
                                 {referenceImages.map(img => (
                                     <div key={img.id} className="relative group">
-                                        <img src={img.url} alt="Reference" className="w-16 h-16 object-cover rounded-sm border border-white/10" />
+                                        <img src={img.url} alt="Reference" className="w-16 h-16 object-cover rounded-sm border border-zinc-200 dark:border-white/10" />
                                         <button 
                                             onClick={() => handleRemoveReferenceImage(img.id)}
                                             className="absolute -top-2 -right-2 bg-red-500/80 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -241,7 +243,7 @@ const AnimatePage: React.FC = () => {
                                     </div>
                                 ))}
                                 {referenceImages.length < 3 && (
-                                    <button onClick={() => referenceFileInputRef.current?.click()} className="w-16 h-16 bg-white/5 border border-dashed border-white/20 rounded-sm flex flex-col items-center justify-center text-zinc-500 hover:border-amber-500 hover:text-amber-400 transition-colors group">
+                                    <button onClick={() => referenceFileInputRef.current?.click()} className="w-16 h-16 bg-zinc-100 dark:bg-white/5 border border-dashed border-zinc-300 dark:border-white/20 rounded-sm flex flex-col items-center justify-center text-zinc-500 hover:border-amber-500 hover:text-amber-500 dark:hover:text-amber-400 transition-colors group">
                                         <UserPlusIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
                                     </button>
                                 )}
@@ -256,14 +258,14 @@ const AnimatePage: React.FC = () => {
                                 onChange={(e) => setPrompt(e.target.value)}
                                 placeholder="Describe the movement..."
                                 rows={4}
-                                className="w-full bg-black/40 border border-white/10 text-zinc-200 text-sm rounded-sm px-4 py-3 focus:border-amber-500 focus:outline-none transition-colors resize-none placeholder-zinc-600"
+                                className="w-full bg-zinc-100 dark:bg-black/40 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-zinc-200 text-sm rounded-sm px-4 py-3 focus:border-amber-500 focus:outline-none transition-colors resize-none placeholder-zinc-500 dark:placeholder-zinc-600"
                             />
                             <div className="mt-3 flex flex-wrap gap-2">
                                 {PROMPT_SUGGESTIONS.map(suggestion => (
                                     <button 
                                         key={suggestion}
                                         onClick={() => setPrompt(suggestion)}
-                                        className="px-3 py-1 text-[10px] uppercase tracking-wider bg-white/5 border border-white/10 rounded-sm hover:bg-white/10 hover:border-amber-500/50 transition-colors text-zinc-400 hover:text-zinc-200"
+                                        className="px-3 py-1 text-[10px] uppercase tracking-wider bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-sm hover:bg-zinc-50 dark:hover:bg-white/10 hover:border-amber-500/50 transition-colors text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
                                     >
                                         {suggestion}
                                     </button>
@@ -277,10 +279,10 @@ const AnimatePage: React.FC = () => {
                             <div>
                                 <h4 className="text-xs font-bold text-zinc-500 mb-3 uppercase tracking-wide">Format</h4>
                                 <div className="flex gap-2">
-                                    <button onClick={() => setAspectRatio('16:9')} disabled={isReferenceImagesUsed} className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-sm transition-colors ${finalAspectRatio === '16:9' ? 'bg-white text-black shadow-lg' : 'bg-white/5 text-zinc-500 hover:bg-white/10'} ${isReferenceImagesUsed ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                    <button onClick={() => setAspectRatio('16:9')} disabled={isReferenceImagesUsed} className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-sm transition-colors ${finalAspectRatio === '16:9' ? 'bg-white dark:bg-zinc-200 text-black shadow-lg' : 'bg-zinc-100 dark:bg-white/5 text-zinc-500 hover:bg-zinc-200 dark:hover:bg-white/10'} ${isReferenceImagesUsed ? 'opacity-50 cursor-not-allowed' : ''}`}>
                                         <LandscapeIcon className="w-4 h-4" />
                                     </button>
-                                    <button onClick={() => setAspectRatio('9:16')} disabled={isReferenceImagesUsed} className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-sm transition-colors ${finalAspectRatio === '9:16' ? 'bg-white text-black shadow-lg' : 'bg-white/5 text-zinc-500 hover:bg-white/10'} ${isReferenceImagesUsed ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                    <button onClick={() => setAspectRatio('9:16')} disabled={isReferenceImagesUsed} className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-sm transition-colors ${finalAspectRatio === '9:16' ? 'bg-white dark:bg-zinc-200 text-black shadow-lg' : 'bg-zinc-100 dark:bg-white/5 text-zinc-500 hover:bg-zinc-200 dark:hover:bg-white/10'} ${isReferenceImagesUsed ? 'opacity-50 cursor-not-allowed' : ''}`}>
                                         <PortraitIcon className="w-4 h-4" />
                                     </button>
                                 </div>
@@ -289,7 +291,7 @@ const AnimatePage: React.FC = () => {
                                 <h4 className="text-xs font-bold text-zinc-500 mb-3 uppercase tracking-wide">Duration</h4>
                                 <button
                                     onClick={() => setIsExtendedLength(!isExtendedLength)}
-                                    className={`w-full py-3 px-3 rounded-sm border text-[10px] font-bold uppercase tracking-wider transition-all ${isExtendedLength ? 'bg-amber-500/10 border-amber-500 text-amber-400' : 'bg-white/5 border-white/10 text-zinc-500 hover:border-white/30'}`}
+                                    className={`w-full py-3 px-3 rounded-sm border text-[10px] font-bold uppercase tracking-wider transition-all ${isExtendedLength ? 'bg-amber-500/10 border-amber-500 text-amber-600 dark:text-amber-400' : 'bg-zinc-100 dark:bg-white/5 border-zinc-200 dark:border-white/10 text-zinc-500 hover:border-zinc-400 dark:hover:border-white/30'}`}
                                 >
                                     {isExtendedLength ? 'Extended (~30s)' : 'Standard (~5s)'}
                                 </button>
@@ -299,15 +301,15 @@ const AnimatePage: React.FC = () => {
                  </div>
 
                   {/* Desktop Generate Button Area */}
-                <div className="p-6 border-t border-white/5 bg-black/40 backdrop-blur-lg hidden lg:block">
+                <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-black/40 backdrop-blur-lg hidden lg:block">
                      <button
                          onClick={handleGenerate}
                          disabled={(!imageFile && !isReferenceImagesUsed) || isLoading}
-                        className="w-full px-8 py-4 bg-amber-500 text-black font-bold text-xs tracking-[0.2em] uppercase rounded-sm shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] hover:bg-amber-400 disabled:bg-zinc-900 disabled:text-zinc-700 disabled:shadow-none transition-all btn-tech"
+                        className="w-full px-8 py-4 bg-amber-500 text-black font-bold text-xs tracking-[0.2em] uppercase rounded-sm shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] hover:bg-amber-400 disabled:bg-zinc-200 dark:disabled:bg-zinc-900 disabled:text-zinc-400 dark:disabled:text-zinc-700 disabled:shadow-none transition-all btn-tech"
                     >
                         {isLoading ? 'Rendering...' : 'Generate Video'}
                     </button>
-                    {error && <p className="text-red-400 mt-3 text-center text-[10px] uppercase tracking-wide border border-red-500/20 bg-red-500/5 py-2 rounded-sm">{error}</p>}
+                    {error && <p className="text-red-500 dark:text-red-400 mt-3 text-center text-[10px] uppercase tracking-wide border border-red-500/20 bg-red-500/5 py-2 rounded-sm">{error}</p>}
                 </div>
             </div>
 
@@ -315,8 +317,8 @@ const AnimatePage: React.FC = () => {
              <div className="flex-grow h-full relative overflow-y-auto custom-scrollbar flex flex-col items-center justify-center pt-12 pb-32 px-4 md:px-12 lg:py-12 z-0">
                  {/* Mobile Toggle Button */}
                  <div className="lg:hidden absolute top-6 right-6 z-20">
-                     <button onClick={() => setIsSidebarOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-xl text-white rounded-full border border-white/10 shadow-xl hover:border-amber-400/50 transition-all active:scale-95">
-                         <SlidersIcon className="w-4 h-4 text-amber-400" />
+                     <button onClick={() => setIsSidebarOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-black/60 backdrop-blur-xl text-zinc-900 dark:text-white rounded-full border border-zinc-200 dark:border-white/10 shadow-xl hover:border-amber-400/50 transition-all active:scale-95">
+                         <SlidersIcon className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                          <span className="text-[10px] font-bold uppercase tracking-wide">Settings</span>
                      </button>
                  </div>
@@ -329,7 +331,7 @@ const AnimatePage: React.FC = () => {
                              <div className="flex justify-center">
                                  <button
                                      onClick={handleDownload}
-                                     className="px-8 py-4 bg-transparent text-white font-bold text-sm uppercase tracking-[0.2em] rounded-sm border border-white/20 hover:bg-white/5 hover:border-white transition-all"
+                                     className="px-8 py-4 bg-transparent text-zinc-900 dark:text-white font-bold text-sm uppercase tracking-[0.2em] rounded-sm border border-zinc-300 dark:border-white/20 hover:bg-zinc-100 dark:hover:bg-white/5 hover:border-zinc-400 dark:hover:border-white transition-all"
                                  >
                                      Download MP4
                                  </button>
@@ -337,7 +339,7 @@ const AnimatePage: React.FC = () => {
                          )}
                          {!videoUrl && !isLoading && (
                              <div className="text-center mt-8 opacity-50">
-                                <MovieIcon className="w-16 h-16 mx-auto text-zinc-700 mb-4" />
+                                <MovieIcon className="w-16 h-16 mx-auto text-zinc-700 dark:text-zinc-700 mb-4" />
                                 <p className="text-zinc-500 text-sm uppercase tracking-widest">Configure motion settings to begin</p>
                              </div>
                         )}
@@ -346,7 +348,7 @@ const AnimatePage: React.FC = () => {
              </div>
 
              {/* Mobile Sticky Bottom Action Bar */}
-             <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-zinc-950/90 backdrop-blur-xl border-t border-white/5 z-50">
+             <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-200 dark:border-white/5 z-50">
                  <button
                     onClick={handleGenerate}
                     disabled={(!imageFile && !isReferenceImagesUsed) || isLoading}
@@ -354,7 +356,7 @@ const AnimatePage: React.FC = () => {
                 >
                     {isLoading ? 'Rendering...' : 'Generate Video'}
                 </button>
-                {error && <p className="text-red-400 mt-2 text-center text-xs">{error}</p>}
+                {error && <p className="text-red-500 dark:text-red-400 mt-2 text-center text-xs">{error}</p>}
             </div>
         </div>
     );

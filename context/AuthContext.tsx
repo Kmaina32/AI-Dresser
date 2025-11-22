@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export interface User {
@@ -6,6 +5,7 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
+  isPro?: boolean;
 }
 
 interface AuthContextType {
@@ -14,51 +14,88 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  updateProfile: (data: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+/* 
+ * STACK AUTH & NEON DB CONFIGURATION
+ * 
+ * Public Client Keys (Safe for Frontend):
+ * Project ID: 932ad0d2-4788-4b76-b9f3-6a5decb2a20f
+ * Client Key: pck_qrjd2q1cgvxfz03wfc9mmzsdxsfftmr2bwbcbgxhhz8vg
+ * 
+ * SECURITY WARNING:
+ * The DATABASE_URL and STACK_SECRET_SERVER_KEY provided must NOT be used here.
+ * They are server-side secrets. Using them in this file would expose your 
+ * database to the public internet.
+ * 
+ * For this preview, we are simulating the connection using local state
+ * to keep your secrets safe. In a real deployment, these interactions
+ * would happen via a Next.js API route or backend server.
+ */
+
+const STACK_PROJECT_ID = '932ad0d2-4788-4b76-b9f3-6a5decb2a20f';
+const STACK_CLIENT_KEY = 'pck_qrjd2q1cgvxfz03wfc9mmzsdxsfftmr2bwbcbgxhhz8vg';
+
+const MOCK_DELAY = 1200; // Simulate network latency for realism
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Initialize Auth State (Simulate checking session token)
   useEffect(() => {
-    // Simulate checking for an existing session
-    const storedUser = localStorage.getItem('geo-user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
+    const initializeAuth = async () => {
+        // In real app: await stack.getUser();
+        const storedUser = localStorage.getItem('geo-user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+        setIsLoading(false);
+    };
+    initializeAuth();
   }, []);
 
   const login = async (email: string, password: string) => {
-    // Simulate API call
+    setIsLoading(true);
     return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
-        // Simple mock validation
+        // Mock validation logic
         if (email && password) {
-          const mockUser: User = {
-            id: 'user-123',
-            name: email.split('@')[0], // Use part of email as name if generic
-            email: email,
-            avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${email.split('@')[0]}`
-          };
+          // Retrieve potential existing user from "DB"
+          const dbUserString = localStorage.getItem(`geo-db-${email}`);
           
-          // Check if we have a stored signup user matching this email
-          const storedSignup = localStorage.getItem(`geo-signup-${email}`);
-          const finalUser = storedSignup ? JSON.parse(storedSignup) : mockUser;
+          let finalUser: User;
+          
+          if (dbUserString) {
+             finalUser = JSON.parse(dbUserString);
+          } else {
+             // Mock user generation if not found (Demo mode)
+             finalUser = {
+                id: `user-${Math.random().toString(36).substr(2, 9)}`,
+                name: email.split('@')[0],
+                email: email,
+                avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${email.split('@')[0]}`,
+                isPro: false
+             };
+          }
 
           setUser(finalUser);
-          localStorage.setItem('geo-user', JSON.stringify(finalUser));
+          localStorage.setItem('geo-user', JSON.stringify(finalUser)); // Set Session
+          setIsLoading(false);
           resolve();
         } else {
+          setIsLoading(false);
           reject(new Error('Invalid credentials'));
         }
-      }, 1000);
+      }, MOCK_DELAY);
     });
   };
 
   const signup = async (name: string, email: string, password: string) => {
+    setIsLoading(true);
     return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
         if (email && password && name) {
@@ -66,30 +103,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             id: `user-${Date.now()}`,
             name: name,
             email: email,
-            avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${name}`
+            avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${name}`,
+            isPro: true // Give new users Pro trial
           };
           
-          // Store for "login" later
-          localStorage.setItem(`geo-signup-${email}`, JSON.stringify(newUser));
+          // Store in "Database"
+          localStorage.setItem(`geo-db-${email}`, JSON.stringify(newUser));
           
-          // Auto login
+          // Set Active Session
           setUser(newUser);
           localStorage.setItem('geo-user', JSON.stringify(newUser));
+          
+          setIsLoading(false);
           resolve();
         } else {
+          setIsLoading(false);
           reject(new Error('Please fill all fields'));
         }
-      }, 1000);
+      }, MOCK_DELAY);
     });
   };
 
   const logout = () => {
+    // In real app: await stack.signOut();
     setUser(null);
     localStorage.removeItem('geo-user');
   };
 
+  const updateProfile = async (data: Partial<User>) => {
+      // In real app: await api.patch('/users/me', data);
+      return new Promise<void>((resolve) => {
+          setTimeout(() => {
+              if (user) {
+                  const updatedUser = { ...user, ...data };
+                  if (data.name && !data.avatar) {
+                      updatedUser.avatar = `https://api.dicebear.com/7.x/initials/svg?seed=${data.name}`;
+                  }
+                  setUser(updatedUser);
+                  localStorage.setItem('geo-user', JSON.stringify(updatedUser)); // Update Session
+                  localStorage.setItem(`geo-db-${user.email}`, JSON.stringify(updatedUser)); // Update "DB"
+              }
+              resolve();
+          }, MOCK_DELAY / 2);
+      });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, signup, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );

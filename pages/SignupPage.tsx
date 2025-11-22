@@ -8,107 +8,118 @@ interface SignupPageProps {
 }
 
 const SignupPage: React.FC<SignupPageProps> = ({ onNavigate }) => {
-  const { signup } = useAuth();
+  const { signup, isLoading } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
     try {
       await signup(name, email, password);
       onNavigate('profile');
     } catch (err) {
       setError('Failed to create account. Please try again.');
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-full flex items-center justify-center px-4 py-12 bg-zinc-50 dark:bg-zinc-950">
-      <div className="w-full max-w-md space-y-8 glass-panel p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-2xl animate-fade-in">
-        <div className="text-center">
-          <div className="flex justify-center mb-6">
-            <GeoLogo className="scale-125" />
-          </div>
-          <h2 className="text-3xl font-bold text-zinc-900 dark:text-white font-playfair">Create Account</h2>
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            Join the future of design
-          </p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-zinc-50 dark:bg-zinc-950 transition-colors duration-500">
+      {/* Dynamic Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -bottom-[10%] -right-[10%] w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[100px] animate-pulse"></div>
+          <div className="absolute top-[10%] left-[20%] w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '3s' }}></div>
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150"></div>
+      </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="full-name" className="sr-only">Full Name</label>
+      {/* Auth Card */}
+      <div className="relative z-10 w-full max-w-md px-4">
+        <div className="glass-panel rounded-2xl p-8 md:p-10 shadow-2xl border border-white/20 dark:border-white/5 bg-white/70 dark:bg-zinc-900/60 backdrop-blur-xl">
+          
+          <div className="flex flex-col items-center text-center mb-8">
+             <div className="mb-6 scale-110">
+                <GeoLogo />
+             </div>
+             <h2 className="text-2xl font-bold font-playfair text-zinc-900 dark:text-white">Join the Collective</h2>
+             <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-2">Create your account to start designing.</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+             <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 ml-1">Full Name</label>
               <input
-                id="full-name"
-                name="name"
                 type="text"
-                autoComplete="name"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="appearance-none relative block w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 placeholder-zinc-500 dark:placeholder-zinc-500 text-zinc-900 dark:text-white rounded-lg bg-transparent focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 focus:z-10 sm:text-sm transition-colors"
-                placeholder="Full Name"
+                className="w-full bg-zinc-50 dark:bg-black/30 border border-zinc-200 dark:border-white/10 rounded-lg px-4 py-3 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-all placeholder-zinc-400"
+                placeholder="John Doe"
               />
             </div>
-            <div>
-              <label htmlFor="email-address" className="sr-only">Email address</label>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 ml-1">Email</label>
               <input
-                id="email-address"
-                name="email"
                 type="email"
-                autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none relative block w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 placeholder-zinc-500 dark:placeholder-zinc-500 text-zinc-900 dark:text-white rounded-lg bg-transparent focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 focus:z-10 sm:text-sm transition-colors"
-                placeholder="Email address"
+                className="w-full bg-zinc-50 dark:bg-black/30 border border-zinc-200 dark:border-white/10 rounded-lg px-4 py-3 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-all placeholder-zinc-400"
+                placeholder="design@geostudio.ai"
               />
             </div>
-            <div>
-              <label htmlFor="password" className="sr-only">Password</label>
+
+            <div className="space-y-1">
+               <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 ml-1">Password</label>
               <input
-                id="password"
-                name="password"
                 type="password"
-                autoComplete="new-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none relative block w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 placeholder-zinc-500 dark:placeholder-zinc-500 text-zinc-900 dark:text-white rounded-lg bg-transparent focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 focus:z-10 sm:text-sm transition-colors"
-                placeholder="Password"
+                className="w-full bg-zinc-50 dark:bg-black/30 border border-zinc-200 dark:border-white/10 rounded-lg px-4 py-3 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-all placeholder-zinc-400"
+                placeholder="Create a strong password"
               />
             </div>
-          </div>
 
-          {error && <p className="text-red-500 text-xs text-center">{error}</p>}
+            {error && (
+                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs text-center font-medium">
+                    {error}
+                </div>
+            )}
 
-          <div>
             <button
               type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold uppercase tracking-widest rounded-lg text-black bg-amber-500 hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 transition-all"
+              disabled={isLoading}
+              className="w-full py-3.5 px-4 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs uppercase tracking-[0.15em] rounded-lg shadow-lg hover:shadow-xl transform transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed mt-4"
             >
-              {loading ? 'Creating...' : 'Sign Up'}
+               {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+                      Initializing...
+                  </span>
+              ) : 'Create Account'}
             </button>
-          </div>
-        </form>
+          </form>
 
-        <div className="text-center mt-4">
-          <p className="text-xs text-zinc-600 dark:text-zinc-400">
-            Already have an account?{' '}
-            <button onClick={() => onNavigate('login')} className="font-medium text-amber-600 dark:text-amber-500 hover:text-amber-500">
-              Sign In
-            </button>
-          </p>
+          <div className="mt-8 pt-6 border-t border-zinc-200 dark:border-white/5 text-center">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              Already have an account?{' '}
+              <button 
+                onClick={() => onNavigate('login')}
+                className="text-zinc-900 dark:text-white font-bold hover:text-amber-500 dark:hover:text-amber-400 transition-colors"
+              >
+                Sign In
+              </button>
+            </p>
+          </div>
+
         </div>
+        
+        <p className="text-center text-[10px] text-zinc-400 mt-8 opacity-60 uppercase tracking-widest">
+            Secured by Stack Auth & Neon DB
+        </p>
       </div>
     </div>
   );
