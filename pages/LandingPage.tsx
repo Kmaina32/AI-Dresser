@@ -1,5 +1,6 @@
 
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { SparklesIcon } from '../components/icons/SparklesIcon.tsx';
 import { ArrowRightIcon } from '../components/icons/ArrowRightIcon.tsx';
 import { GeoLogo } from '../components/logo.tsx';
@@ -7,6 +8,12 @@ import { GeoLogo } from '../components/logo.tsx';
 interface LandingPageProps {
   onNavigate: (page: string) => void;
 }
+
+const HERO_IMAGES = [
+  "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=1780&auto=format&fit=crop", // Sharp grey check suit
+  "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop", // Classic suit
+  "https://images.unsplash.com/photo-1593030761757-71bd90dbe364?q=80&w=2069&auto=format&fit=crop"  // Green/Dark suit
+];
 
 const FeatureCard = ({ title, description, icon, delay }: { title: string, description: string, icon: React.ReactNode, delay: string }) => (
     <div className="group relative p-8 rounded-xl bg-white/40 dark:bg-zinc-900/30 border border-zinc-200 dark:border-white/5 hover:border-amber-500/30 transition-all duration-500 hover:-translate-y-2 backdrop-blur-sm overflow-hidden shadow-sm hover:shadow-lg dark:shadow-none" style={{ animationDelay: delay }}>
@@ -22,13 +29,32 @@ const FeatureCard = ({ title, description, icon, delay }: { title: string, descr
 );
 
 const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+      const interval = setInterval(() => {
+          setCurrentImageIndex((prev) => (prev + 1) % HERO_IMAGES.length);
+      }, 5000);
+      return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen overflow-y-auto custom-scrollbar bg-zinc-50 dark:bg-zinc-950 relative">
         {/* Hero Section */}
         <section className="relative min-h-screen flex flex-col items-center justify-center px-4 py-20 overflow-hidden">
-            {/* Background Effects */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 pointer-events-none"></div>
+            
+            {/* Background Slideshow */}
+            <div className="absolute inset-0 overflow-hidden">
+                {HERO_IMAGES.map((img, index) => (
+                    <div 
+                        key={index}
+                        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? 'opacity-100 scale-105' : 'opacity-0 scale-100'}`}
+                        style={{ backgroundImage: `url(${img})` }}
+                    />
+                ))}
+                <div className="absolute inset-0 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-sm"></div> 
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-50/50 dark:via-zinc-950/50 to-zinc-50 dark:to-zinc-950"></div>
+            </div>
             
             <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8 animate-fade-in">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/40 dark:bg-white/5 border border-zinc-200 dark:border-white/10 backdrop-blur-md mb-4 shadow-sm dark:shadow-none">
@@ -58,7 +84,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                     
                     <button 
                         onClick={() => onNavigate('gallery')}
-                        className="px-8 py-4 bg-transparent border border-zinc-300 dark:border-white/20 text-zinc-700 dark:text-white font-bold text-sm uppercase tracking-[0.2em] rounded-sm hover:bg-zinc-100 dark:hover:bg-white/5 hover:border-zinc-400 dark:hover:border-white transition-all"
+                        className="px-8 py-4 bg-white/50 dark:bg-black/20 border border-zinc-300 dark:border-white/20 text-zinc-700 dark:text-white font-bold text-sm uppercase tracking-[0.2em] rounded-sm hover:bg-zinc-100 dark:hover:bg-white/5 hover:border-zinc-400 dark:hover:border-white transition-all backdrop-blur-md"
                     >
                         View Gallery
                     </button>
@@ -120,7 +146,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                  <button onClick={() => onNavigate('gallery')} className="hover:text-zinc-900 dark:hover:text-white transition-colors">Gallery</button>
                  <button onClick={() => onNavigate('about')} className="hover:text-zinc-900 dark:hover:text-white transition-colors">About</button>
              </div>
-             <p className="text-[10px] text-zinc-600 dark:text-zinc-700 uppercase tracking-widest">© 2024 Geo Studio AI. Powered by Google Gemini.</p>
+             <p className="text-[10px] text-zinc-600 dark:text-zinc-700 uppercase tracking-widest">© 2025 Geo Studio AI. Powered by MIlleast.</p>
         </footer>
     </div>
   );

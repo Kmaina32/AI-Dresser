@@ -567,6 +567,9 @@ export const CATEGORIZED_LANDSCAPE_STYLES: StyleCategory[] = [
 
 export const APPAREL_BACKGROUNDS: SimpleOption[] = [
     { name: 'Keep Original', prompt: '' },
+    { name: 'Nairobi Graffiti', prompt: 'a vibrant Nairobi street with colorful graffiti art and matatu culture' },
+    { name: 'Kenyan Urban', prompt: 'a busy Nairobi CBD street with iconic buildings like KICC in background' },
+    { name: 'Westlands Cityscape', prompt: 'a modern Westlands Nairobi skyline with glass buildings' },
     { name: 'Studio Grey', prompt: 'a professional studio background with neutral grey tone' },
     { name: 'Studio White', prompt: 'a high-key white infinity studio background' },
     { name: 'Studio Black', prompt: 'a dramatic black void studio background' },
@@ -873,4 +876,3 @@ export const CAMPAIGN_MODS: SimpleOption[] = [
     { name: 'Flag Mounts', prompt: 'corner flag mounts', value: 'flags' },
     { name: 'Roof Rack', prompt: 'metal roof rack', value: 'roofrack' }
 ];
-
