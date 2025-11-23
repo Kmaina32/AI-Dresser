@@ -74,7 +74,7 @@ const StudioSessionPage: React.FC = () => {
     const lightingOptions = APPAREL_LIGHTING.map(l => ({ label: l.name, value: l.prompt }));
 
     return (
-        <div className="flex flex-col lg:flex-row h-full relative">
+        <div className="flex flex-col lg:flex-row h-full lg:h-[calc(100vh-4rem)] relative overflow-hidden">
              {/* Backdrop for mobile menu */}
              {isSidebarOpen && (
                 <div 
@@ -90,7 +90,7 @@ const StudioSessionPage: React.FC = () => {
                 border-r-0 lg:border-r border-zinc-200 dark:border-white/5
                 flex flex-col z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 
-                bg-white dark:bg-zinc-950/90 backdrop-blur-xl
+                bg-white dark:bg-zinc-950 h-full overflow-hidden
             `}>
                 {/* Mobile Sidebar Header */}
                  <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-white dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
@@ -170,7 +170,7 @@ const StudioSessionPage: React.FC = () => {
                  </div>
 
                  {/* Desktop Generate Button Area */}
-                <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-black/40 backdrop-blur-lg hidden lg:block">
+                <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-black/40 backdrop-blur-lg hidden lg:block shrink-0">
                      <button
                         onClick={handleGenerate}
                         disabled={!person1File || !person2File || isLoading}

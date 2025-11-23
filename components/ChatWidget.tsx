@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { ChatIcon } from './icons/ChatIcon.tsx';
 import { CloseIcon } from './icons/CloseIcon.tsx';
@@ -58,9 +59,9 @@ const ChatWidget: React.FC = () => {
           origin-bottom-right
           flex flex-col
           mb-4
-          ${isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-10 pointer-events-none h-0'}
+          ${isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-10 pointer-events-none'}
         `}
-        style={{ height: '600px', maxHeight: '70vh' }}
+        style={isOpen ? { height: '600px', maxHeight: '70vh' } : { height: '0px', maxHeight: '0px' }}
       >
         {/* Header */}
         <div className="p-4 border-b border-white/5 bg-black/20 flex items-center justify-between">

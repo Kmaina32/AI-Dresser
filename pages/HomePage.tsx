@@ -256,7 +256,7 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
   );
 
   return (
-    <div className="flex flex-col lg:flex-row h-full relative">
+    <div className="flex flex-col lg:flex-row h-full lg:h-[calc(100vh-4rem)] relative overflow-hidden">
         {/* Backdrop for mobile menu */}
         {isSidebarOpen && (
             <div 
@@ -272,7 +272,7 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
             border-r-0 lg:border-r border-zinc-200 dark:border-white/5
             flex flex-col z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
             ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 
-            bg-white dark:bg-zinc-950/90 backdrop-blur-xl
+            bg-white dark:bg-zinc-950 h-full overflow-hidden
         `}>
             {/* Mobile Sidebar Header */}
             <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-zinc-50 dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
@@ -291,7 +291,7 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
             </div>
 
             {/* Mode Selector */}
-            <div className="flex border-b border-zinc-200 dark:border-white/5 bg-zinc-50/50 dark:bg-black/20 backdrop-blur-sm">
+            <div className="flex border-b border-zinc-200 dark:border-white/5 bg-zinc-50/50 dark:bg-black/20 backdrop-blur-sm shrink-0">
                 <ModeButton m="apparel" label="Apparel" icon={<UserIcon />} />
                 <ModeButton m="vehicle" label="Vehicle" icon={<CarIcon />} />
                 <ModeButton m="interior" label="Interior" icon={<HomeIcon />} />
@@ -375,7 +375,7 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
             </div>
             
             {/* Desktop Generate Button Area */}
-            <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-black/40 backdrop-blur-lg hidden lg:block">
+            <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-black/40 backdrop-blur-lg hidden lg:block shrink-0">
                  <button
                     onClick={handleGenerateClick}
                     disabled={!originalImage || isLoading || selectedStyleIds.length === 0}
