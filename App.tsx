@@ -11,11 +11,13 @@ import StudioSessionPage from './pages/StudioSessionPage.tsx';
 import CampaignPage from './pages/CampaignPage.tsx';
 import LandingPage from './pages/LandingPage.tsx';
 import ChatWidget from './components/ChatWidget.tsx';
+import GlobalLoader from './components/GlobalLoader.tsx';
 import { RemixConfig } from './constants.ts';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState('landing');
   const [remixConfig, setRemixConfig] = useState<RemixConfig | null>(null);
+  const [isGlobalLoading, setIsGlobalLoading] = useState(false);
 
   // Sync URL with state on initial load (SSR/Refresh support)
   useEffect(() => {
@@ -25,22 +27,38 @@ const App: React.FC = () => {
       // If path is login, signup or profile, redirect to landing since they are removed
       if (['login', 'signup', 'profile'].includes(path)) {
           setCurrentPage('landing');
-          window.history.replaceState({ page: 'landing' }, '', '/');
+          try {
+            window.history.replaceState({ page: 'landing' }, '', '/');
+          } catch (e) {
+            console.warn("History update blocked by environment");
+          }
       } else {
           setCurrentPage(path);
       }
     }
   }, []);
 
-  const handleNavigate = (page: string) => {
+  const handleNavigate = async (page: string) => {
+    if (page === currentPage) return;
+    
+    setIsGlobalLoading(true);
+    
+    // Simulate a brief network/rendering delay for smoother UX feel
+    await new Promise(resolve => setTimeout(resolve, 600));
+
     setCurrentPage(page);
     if (page !== 'home') setRemixConfig(null);
     
     // Update URL without reload
     const urlPath = page === 'landing' ? '/' : `/${page}`;
-    window.history.pushState({ page }, '', urlPath);
+    try {
+      window.history.pushState({ page }, '', urlPath);
+    } catch (e) {
+      console.warn("History update blocked by environment");
+    }
     
     window.scrollTo(0, 0);
+    setIsGlobalLoading(false);
   };
 
   // Handle browser back/forward buttons
@@ -79,6 +97,9 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200 font-sans selection:bg-amber-500/30 selection:text-black dark:selection:text-white flex flex-col transition-colors duration-500">
+      {/* Global Loader Overlay */}
+      {isGlobalLoading && <GlobalLoader />}
+
       {/* Global Background Pattern */}
       <div className="fixed inset-0 pointer-events-none bg-grid-pattern opacity-30 z-0" />
       <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-white/50 via-white/10 to-transparent dark:from-transparent dark:via-zinc-950/50 dark:to-zinc-950 z-0" />
@@ -87,7 +108,7 @@ const App: React.FC = () => {
       <Header onNavigate={handleNavigate} />
       
       {/* Main Content Area */}
-      <main className="flex-1 relative flex flex-col">
+      <main className={`flex-1 relative flex flex-col ${isGlobalLoading ? 'opacity-50 pointer-events-none filter blur-sm' : 'opacity-100'} transition-all duration-300`}>
         <div className={`flex-1 w-full ${currentPage === 'landing' ? '' : 'mt-16'}`}>
              {renderPage()}
         </div>

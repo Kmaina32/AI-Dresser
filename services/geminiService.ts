@@ -3,33 +3,7 @@ import { GoogleGenAI, Modality } from "@google/genai";
 import { fileToBase64 } from "../utils/fileUtils.ts";
 import { PoliticalParty } from "../constants.ts";
 
-// Helper to safely get env variable without triggering "Uncaught ReferenceError" in browser
-const getEnvVar = () => {
-  try {
-    // Check if 'process' is defined globally before accessing it
-    // This prevents ReferenceError in strict browser environments
-    if (typeof process !== 'undefined' && process && process.env) {
-        return process.env.API_KEY;
-    }
-  } catch (e) {
-    // Suppress errors to prevent app crash
-    console.debug("Environment variable access check failed", e);
-  }
-  return undefined;
-};
-
-const API_KEY = getEnvVar() || 'AIzaSyDVSyULoRw2Ll4DheQaGveuG4aIFjs1VWM';
-
-// We allow initialization even without key to prevent crash on load
-// Use a try-catch block for initialization just in case the SDK throws synchronously
-let ai: GoogleGenAI | null = null;
-try {
-    if (API_KEY) {
-        ai = new GoogleGenAI({ apiKey: API_KEY });
-    }
-} catch (error) {
-    console.error("Failed to initialize GoogleGenAI client:", error);
-}
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export type DesignMode = 'apparel' | 'vehicle' | 'interior' | 'landscape';
 
@@ -55,8 +29,6 @@ export async function editImageWithGemini(
   vehicleInteriorPrompt?: string,
   vehicleLightingPrompt?: string
 ): Promise<string> {
-  if (!ai) throw new Error("API Key is missing or client failed to initialize.");
-  
   const base64Data = await fileToBase64(imageFile);
   
   const promptParts: string[] = [];
@@ -198,8 +170,6 @@ export async function generateMusicPoster(
   fontPrompt: string,
   iconPrompt: string
 ): Promise<string> {
-     if (!ai) throw new Error("API Key is missing.");
-
      const base64Artist1 = await fileToBase64(artist1File);
      const base64Artist2 = await fileToBase64(artist2File);
      
@@ -252,8 +222,6 @@ export async function generateStudioSession(
   lightingPrompt: string,
   aspectRatio: string
 ): Promise<string> {
-    if (!ai) throw new Error("API Key is missing.");
-    
     const base64Person1 = await fileToBase64(person1File);
     const base64Person2 = await fileToBase64(person2File);
 
@@ -302,8 +270,6 @@ export async function generateCampaignMaterial(
     wrapStyle?: string,
     campaignMods?: string[]
 ): Promise<string> {
-    if (!ai) throw new Error("API Key is missing.");
-
     const base64Data = await fileToBase64(imageFile);
     
     let prompt = "";

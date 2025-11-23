@@ -1,24 +1,7 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-// Helper to safely get env variable without triggering "Uncaught ReferenceError" in browser
-const getEnvVar = () => {
-  try {
-    // @ts-ignore
-    if (typeof process !== 'undefined' && process.env) {
-        // @ts-ignore
-        return process.env.API_KEY;
-    }
-  } catch (e) {
-    return undefined;
-  }
-  return undefined;
-};
-
-const API_KEY = getEnvVar() || 'AIzaSyDVSyULoRw2Ll4DheQaGveuG4aIFjs1VWM';
-
-// We allow initialization even without key to prevent crash on load
-const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const SYSTEM_INSTRUCTION = `
 You are "Geo", the advanced AI assistant for **Geo Studio AI**.
@@ -49,8 +32,6 @@ export interface ChatMessage {
 }
 
 export async function sendChatMessage(history: ChatMessage[], newMessage: string): Promise<string> {
-  if (!ai) return "I apologize, I cannot connect to the mainframe (Missing API Key).";
-
   try {
     const chat = ai.chats.create({
         model: 'gemini-3-pro-preview',

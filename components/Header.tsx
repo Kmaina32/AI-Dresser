@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { MenuIcon } from './icons/MenuIcon.tsx';
 import { CloseIcon } from './icons/CloseIcon.tsx';
@@ -61,10 +62,10 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
 
     const handleNavClick = (page: string) => {
         setIsMenuOpen(false);
-        // Small timeout to allow menu close animation to start feeling responsive before nav
+        // Allow menu close animation to start feeling responsive before nav triggers the global loader
         setTimeout(() => {
             onNavigate(page);
-        }, 100);
+        }, 200);
     };
 
     return (
@@ -96,7 +97,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                         </div>
                         <button 
                             onClick={() => setIsMenuOpen(true)} 
-                            className="text-zinc-600 dark:text-zinc-300 hover:text-amber-500 dark:hover:text-amber-400 transition-colors p-2 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-full border border-zinc-200 dark:border-white/5 shadow-sm"
+                            className="text-zinc-600 dark:text-zinc-300 hover:text-amber-500 dark:hover:text-amber-400 transition-colors p-3 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-full border border-zinc-200 dark:border-white/5 shadow-sm active:scale-95"
                             aria-label="Open Menu"
                         >
                             <MenuIcon className="w-6 h-6" />
@@ -105,9 +106,10 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                 </div>
             </header>
 
-            {/* Mobile Menu Overlay - Fully Opaque & High Z-Index */}
+            {/* Mobile Menu Overlay */}
             <div 
-                className={`fixed inset-0 z-[2000] bg-zinc-50 dark:bg-zinc-950 flex flex-col transition-all duration-300 ease-in-out ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
+                className={`fixed inset-0 z-[2000] bg-zinc-50/98 dark:bg-zinc-950/98 backdrop-blur-xl flex flex-col transition-all duration-500 cubic-bezier(0.19, 1, 0.22, 1) ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
+                aria-hidden={!isMenuOpen}
             >
                 {/* Header inside Menu */}
                 <div className="flex items-center justify-between px-6 h-16 border-b border-zinc-200/50 dark:border-white/5 shrink-0">
@@ -116,7 +118,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                      </div>
                      <button 
                         onClick={() => setIsMenuOpen(false)} 
-                        className="p-2 text-zinc-500 hover:text-black dark:hover:text-white bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors active:scale-90"
+                        className="p-3 text-zinc-500 hover:text-black dark:hover:text-white bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors active:scale-90"
                         aria-label="Close Menu"
                     >
                         <CloseIcon className="w-6 h-6" />
@@ -125,19 +127,19 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
 
                 {/* Menu List */}
                 <div className="flex-1 flex flex-col items-center justify-center overflow-y-auto py-8">
-                    <nav className="flex flex-col gap-6 w-full max-w-xs px-4 text-center">
+                    <nav className="flex flex-col w-full max-w-xs px-4 text-center space-y-2">
                         {MENU_ITEMS.map((item, index) => (
                             <button
                                 key={item.id}
                                 onClick={() => handleNavClick(item.id)}
-                                className="group relative w-full p-2"
+                                className="group relative w-full py-4 px-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors duration-300"
                                 style={{ 
                                     opacity: isMenuOpen ? 1 : 0, 
-                                    transform: isMenuOpen ? 'translateY(0)' : 'translateY(20px)',
-                                    transition: `all 0.3s ease ${index * 0.05}s` 
+                                    transform: isMenuOpen ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.95)',
+                                    transition: `all 0.5s cubic-bezier(0.19, 1, 0.22, 1) ${index * 0.04}s` 
                                 }}
                             >
-                                <span className="block text-3xl font-playfair font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-amber-500 dark:group-hover:text-amber-400 transition-colors">
+                                <span className="block text-4xl font-playfair font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-amber-500 dark:group-hover:text-amber-400 transition-colors">
                                     {item.label}
                                 </span>
                             </button>
@@ -147,7 +149,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
 
                 {/* Footer Info */}
                 <div className="p-8 text-center shrink-0 border-t border-zinc-200/50 dark:border-white/5">
-                    <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 dark:text-zinc-600">Geo Studio v2.4</p>
+                    <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 dark:text-zinc-600 animate-pulse">System Online</p>
                 </div>
             </div>
         </>
