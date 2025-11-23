@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { StyleCategory, StyleOption } from '../constants.ts';
 import ColorSelector from './ColorSelector.tsx';
@@ -7,6 +8,7 @@ import { CloseIcon } from './icons/CloseIcon.tsx';
 import { CheckIcon } from './icons/CheckIcon.tsx';
 
 const FILTER_TAGS = [
+  { label: 'Jumas', value: 'jumas style' },
   { label: 'Formal', value: 'formal' },
   { label: 'Business', value: 'business' },
   { label: 'Everyday', value: 'everyday' },
@@ -112,7 +114,7 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({
                     onClick={() => onFilterToggle(tag.value)}
                     className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider border rounded-sm transition-all duration-200 ${
                     activeFilters.includes(tag.value)
-                        ? 'bg-zinc-900 text-white border-zinc-900 dark:bg-white dark:text-black dark:border-white'
+                        ? 'bg-amber-500 text-black border-amber-500 dark:bg-amber-500 dark:text-black dark:border-amber-500'
                         : 'bg-transparent text-zinc-500 border-zinc-300 dark:border-zinc-800 hover:border-zinc-500 dark:hover:border-zinc-600 hover:text-zinc-700 dark:hover:text-zinc-300'
                     }`}
                 >

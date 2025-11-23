@@ -72,6 +72,15 @@ export const POSTER_ICON_OPTIONS: SimpleOption[] = [
 
 export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
     {
+        category: "Jumas Collection",
+        styles: [
+            { id: "jumas_varsity_blue", name: "Jumas Blue Varsity", prompt: "a heavy blue and white varsity jacket with 'Bellwood' patches and '44' number, worn with loose black cargo pants featuring blue graffiti-style text on the leg, a blue fitted cap, and sneakers", tags: ["jumas style", "street", "modern"], isColorCustomizable: true },
+            { id: "jumas_varsity_red", name: "Jumas Red Edition", prompt: "a red and white varsity jacket with chenille patches, worn with black cargo pants featuring red graffiti text, a red cap, and chunky sneakers", tags: ["jumas style", "street"], isColorCustomizable: true },
+            { id: "jumas_varsity_black", name: "Jumas Stealth", prompt: "a black and grey varsity jacket with white patches, worn with black cargo pants featuring white graffiti text, a black cap", tags: ["jumas style", "street"], isColorCustomizable: true },
+            { id: "jumas_track_set", name: "Jumas Track Set", prompt: "a matching nylon track jacket and pants with bold graffiti patterns and stripes", tags: ["jumas style", "street"], isColorCustomizable: true }
+        ]
+    },
+    {
         category: "African Luxury",
         styles: [
             { id: "agbada_grand", name: "Grand Agbada", prompt: "a majestic, voluminous Agbada robe with heavy, intricate embroidery, worn with a matching cap", tags: ["cultural", "ceremony", "luxury"], isColorCustomizable: true, colorPalette: ["#FFFFFF", "#000000", "#4B0082", "#800020", "#191970"] },
@@ -88,7 +97,9 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             { id: "boubou", name: "Senegalese Boubou", prompt: "a flowing, wide-sleeved Senegalese Boubou robe in polished cotton", tags: ["cultural", "ceremony"], isColorCustomizable: true },
             { id: "djellaba", name: "Moroccan Djellaba", prompt: "a traditional hooded Djellaba robe with intricate trim", tags: ["cultural", "traditional"], isColorCustomizable: true },
             { id: "kanzu_jacket", name: "Kanzu & Jacket", prompt: "a white Kanzu robe worn with a fitted Western suit jacket", tags: ["cultural", "formal"], isColorCustomizable: true },
-            { id: "kitenge_suit", name: "Kitenge Suit", prompt: "a tailored two-piece suit made entirely from vibrant Kitenge wax print fabric", tags: ["cultural", "modern"], isColorCustomizable: false }
+            { id: "kitenge_suit", name: "Kitenge Suit", prompt: "a tailored two-piece suit made entirely from vibrant Kitenge wax print fabric", tags: ["cultural", "modern"], isColorCustomizable: false },
+            { id: "aso_oke_agbada", name: "Aso Oke Agbada", prompt: "a hand-woven Aso Oke Agbada with metallic threads", tags: ["cultural", "ceremony"], isColorCustomizable: true },
+            { id: "batakari", name: "Ghanaian Batakari", prompt: "a striped heavy cotton Batakari smock", tags: ["cultural", "traditional"], isColorCustomizable: true }
         ]
     },
     {
@@ -107,7 +118,9 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             { id: "baju_melayu", name: "Baju Melayu", prompt: "a traditional Baju Melayu set with a Sampin songket wrap", tags: ["cultural", "traditional"], isColorCustomizable: true },
             { id: "batik_shirt", name: "Batik Shirt", prompt: "a formal long-sleeve Indonesian Batik print shirt", tags: ["cultural", "business"], isColorCustomizable: false },
             { id: "ao_gam", name: "Vietnamese Ao Gam", prompt: "a traditional Vietnamese Ao Gam tunic with brocade patterns", tags: ["cultural", "traditional"], isColorCustomizable: true },
-            { id: "dzongkha", name: "Bhutanese Gho", prompt: "a traditional Bhutanese Gho robe with knee-length socks", tags: ["cultural", "traditional"], isColorCustomizable: true }
+            { id: "dzongkha", name: "Bhutanese Gho", prompt: "a traditional Bhutanese Gho robe with knee-length socks", tags: ["cultural", "traditional"], isColorCustomizable: true },
+            { id: "nehru_jacket", name: "Nehru Jacket", prompt: "a classic Nehru collar jacket worn over a crisp shirt", tags: ["cultural", "formal"], isColorCustomizable: true },
+            { id: "safari_safari", name: "Jodhpuri Suit", prompt: "a regal Jodhpuri Bandhgala suit with trousers", tags: ["cultural", "formal"], isColorCustomizable: true }
         ]
     },
     {
@@ -118,7 +131,8 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             { id: "thobe_colored", name: "Colored Thobe", prompt: "a modern tailored Thobe in earth tones", tags: ["cultural", "modern"], isColorCustomizable: true, colorPalette: ["#556B2F", "#8B4513", "#708090", "#191970"] },
             { id: "kandura", name: "Emirati Kandura", prompt: "a collarless Emirati style Kandura with tassel (tarboosh)", tags: ["cultural", "traditional"], isColorCustomizable: true },
             { id: "shemagh", name: "Shemagh & Agal", prompt: "a traditional red and white Shemagh headdress with Agal (head rope)", tags: ["cultural", "accessory"], isColorCustomizable: false },
-            { id: "ghutra", name: "Ghutra & Agal", prompt: "a pure white Ghutra headdress with Agal", tags: ["cultural", "accessory"], isColorCustomizable: false }
+            { id: "ghutra", name: "Ghutra & Agal", prompt: "a pure white Ghutra headdress with Agal", tags: ["cultural", "accessory"], isColorCustomizable: false },
+            { id: "omani_dishdasha", name: "Omani Dishdasha", prompt: "a collarless Omani Dishdasha with subtle embroidery and tassel", tags: ["cultural", "traditional"], isColorCustomizable: true }
         ]
     },
     {
@@ -129,7 +143,8 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             { id: "guayabera", name: "Guayabera", prompt: "a classic white Guayabera shirt with pintucks and pockets", tags: ["cultural", "casual"], isColorCustomizable: false },
             { id: "tweed_hunting", name: "Tweed Hunting Suit", prompt: "a British tweed three-piece suit with breeches and flat cap", tags: ["vintage", "country"], isColorCustomizable: false },
             { id: "lederhosen", name: "Bavarian Lederhosen", prompt: "traditional leather Lederhosen with suspenders and checkered shirt", tags: ["cultural", "traditional"], isColorCustomizable: false },
-            { id: "matador", name: "Matador Traje de Luces", prompt: "an ornate 'Suit of Lights' bullfighter outfit with heavy gold embroidery", tags: ["cultural", "costume"], isColorCustomizable: true }
+            { id: "matador", name: "Matador Traje de Luces", prompt: "an ornate 'Suit of Lights' bullfighter outfit with heavy gold embroidery", tags: ["cultural", "costume"], isColorCustomizable: true },
+            { id: "cowboy_rhinestone", name: "Nudie Suit", prompt: "a flamboyant 1950s country Nudie suit with rhinestones and embroidery", tags: ["cultural", "retro"], isColorCustomizable: true }
         ]
     },
     {
@@ -142,7 +157,9 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             { id: "tuxedo_db", name: "Double Breasted Tux", prompt: "a double-breasted tuxedo with wide peak lapels", tags: ["formal", "classic"], isColorCustomizable: false },
             { id: "tailcoat", name: "White Tie Tailcoat", prompt: "a formal black tailcoat with white pique vest and white bow tie", tags: ["formal", "classic"], isColorCustomizable: false },
             { id: "morning_suit", name: "Morning Suit", prompt: "a morning suit with cutaway coat, striped trousers, and grey waistcoat", tags: ["formal", "wedding"], isColorCustomizable: true },
-            { id: "jacquard_tux", name: "Jacquard Tuxedo", prompt: "a patterned floral jacquard tuxedo jacket with solid trousers", tags: ["formal", "modern"], isColorCustomizable: true }
+            { id: "jacquard_tux", name: "Jacquard Tuxedo", prompt: "a patterned floral jacquard tuxedo jacket with solid trousers", tags: ["formal", "modern"], isColorCustomizable: true },
+            { id: "tuxedo_burgundy", name: "Burgundy Tuxedo", prompt: "a rich burgundy tuxedo with black lapels", tags: ["formal", "modern"], isColorCustomizable: false },
+            { id: "tuxedo_creative", name: "Creative Black Tie", prompt: "a velvet blazer with black jeans and a bow tie", tags: ["formal", "modern"], isColorCustomizable: true }
         ]
     },
     {
@@ -157,7 +174,9 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             { id: "suit_brown", name: "Chocolate Brown Suit", prompt: "a rich chocolate brown suit with textured fabric", tags: ["business", "vintage"], isColorCustomizable: false },
             { id: "suit_black_modern", name: "Modern Black Suit", prompt: "a slim-fit matte black suit with skinny tie", tags: ["business", "modern"], isColorCustomizable: false },
             { id: "blazer_grey", name: "Grey Flannel Suit", prompt: "a mid-grey flannel suit", tags: ["business", "classic"], isColorCustomizable: false },
-            { id: "power_suit_wallstreet", name: "80s Power Suit", prompt: "a 1980s Wall Street style power suit with wide shoulders and braces", tags: ["business", "vintage"], isColorCustomizable: true }
+            { id: "power_suit_wallstreet", name: "80s Power Suit", prompt: "a 1980s Wall Street style power suit with wide shoulders and braces", tags: ["business", "vintage"], isColorCustomizable: true },
+            { id: "suit_linen_tobacco", name: "Tobacco Linen", prompt: "a tobacco brown linen suit", tags: ["business", "summer"], isColorCustomizable: false },
+            { id: "suit_double_breasted", name: "Double Breasted", prompt: "a six-button double breasted suit jacket", tags: ["business", "classic"], isColorCustomizable: true }
         ]
     },
     {
@@ -172,7 +191,9 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             { id: "safari_suit", name: "Safari Suit", prompt: "a khaki 4-pocket safari suit", tags: ["casual", "vintage"], isColorCustomizable: false },
             { id: "polo_trousers", name: "Polo & Trousers", prompt: "a knitted polo shirt tucked into tailored pleated trousers", tags: ["casual", "oldmoney"], isColorCustomizable: true },
             { id: "sweater_over_shirt", name: "Sweater & Shirt", prompt: "a cable knit sweater worn over an oxford shirt with chinos", tags: ["casual", "preppy"], isColorCustomizable: true },
-            { id: "miami_vice", name: "Miami Vice Style", prompt: "a white suit with a pastel t-shirt underneath, sleeves rolled up", tags: ["casual", "retro"], isColorCustomizable: false }
+            { id: "miami_vice", name: "Miami Vice Style", prompt: "a white suit with a pastel t-shirt underneath, sleeves rolled up", tags: ["casual", "retro"], isColorCustomizable: false },
+            { id: "riviera", name: "Riviera Style", prompt: "a Breton stripe shirt, white trousers, and a navy blazer", tags: ["casual", "summer"], isColorCustomizable: false },
+            { id: "cardigan_shawl", name: "Shawl Cardigan", prompt: "a chunky shawl collar cardigan with jeans and boots", tags: ["casual", "cozy"], isColorCustomizable: true }
         ]
     },
     {
@@ -186,7 +207,10 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             { id: "tracksuit_luxury", name: "Luxury Tracksuit", prompt: "a matching velour luxury tracksuit", tags: ["casual", "street"], isColorCustomizable: true },
             { id: "grunge", name: "90s Grunge", prompt: "a flannel shirt, band tee, and ripped jeans", tags: ["casual", "retro"], isColorCustomizable: false },
             { id: "met_gala", name: "Met Gala Avant-Garde", prompt: "an avant-garde high fashion ornate suit with cape and embroidery", tags: ["fashion", "costume"], isColorCustomizable: true },
-            { id: "sequin_suit", name: "Full Sequin Suit", prompt: "a suit entirely covered in sequins", tags: ["fashion", "party"], isColorCustomizable: true }
+            { id: "sequin_suit", name: "Full Sequin Suit", prompt: "a suit entirely covered in sequins", tags: ["fashion", "party"], isColorCustomizable: true },
+            { id: "puffer_jacket", name: "Oversized Puffer", prompt: "a massive oversized puffer jacket and baggy pants", tags: ["modern", "street"], isColorCustomizable: true },
+            { id: "skater_fit", name: "90s Skater", prompt: "baggy jeans, graphic tee, and open flannel shirt", tags: ["casual", "retro"], isColorCustomizable: true },
+            { id: "drill_uk", name: "UK Drill", prompt: "a matching Nike tech fleece tracksuit and puffer vest", tags: ["modern", "street"], isColorCustomizable: true }
         ]
     },
     {
@@ -204,7 +228,9 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             { id: "viking_warrior", name: "Viking Warrior", prompt: "Viking leather armor, furs, and tunic", tags: ["historical", "costume"], isColorCustomizable: false },
             { id: "gladiator", name: "Roman Gladiator", prompt: "Roman gladiator leather armor and tunic", tags: ["historical", "costume"], isColorCustomizable: false },
             { id: "cowboy", name: "Wild West Cowboy", prompt: "rugged cowboy attire with leather vest, chaps, and stetson hat", tags: ["historical", "costume"], isColorCustomizable: false },
-            { id: "pirate", name: "Pirate Captain", prompt: "an elaborate 18th century pirate captain coat and tricorn hat", tags: ["historical", "costume"], isColorCustomizable: false }
+            { id: "pirate", name: "Pirate Captain", prompt: "an elaborate 18th century pirate captain coat and tricorn hat", tags: ["historical", "costume"], isColorCustomizable: false },
+            { id: "peaky_blinders", name: "Peaky Blinders", prompt: "a 1920s tweed suit, overcoat, and newsboy cap", tags: ["historical", "vintage"], isColorCustomizable: false },
+            { id: "hippie_1960s", name: "1960s Hippie", prompt: "tie-dye shirt, fringe vest, and bell bottom jeans", tags: ["historical", "retro"], isColorCustomizable: true }
         ]
     },
     {
@@ -218,7 +244,9 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             { id: "sith_lord", name: "Dark Lord Armor", prompt: "black armored robes with a cape", tags: ["fantasy", "costume"], isColorCustomizable: false },
             { id: "elven_lord", name: "Elven Lord", prompt: "ethereal, intricate silver and velvet elven robes", tags: ["fantasy", "costume"], isColorCustomizable: true },
             { id: "wizard", name: "Wizard Robes", prompt: "grand wizard robes with star patterns", tags: ["fantasy", "costume"], isColorCustomizable: true },
-            { id: "superhero", name: "Superhero Suit", prompt: "a tight armored superhero bodysuit with a chest emblem", tags: ["fantasy", "costume"], isColorCustomizable: true }
+            { id: "superhero", name: "Superhero Suit", prompt: "a tight armored superhero bodysuit with a chest emblem", tags: ["fantasy", "costume"], isColorCustomizable: true },
+            { id: "vampire_lord", name: "Vampire Lord", prompt: "a gothic Victorian suit with a high collar cape", tags: ["fantasy", "costume"], isColorCustomizable: false },
+            { id: "spartan_warrior", name: "Spartan Warrior", prompt: "bronze muscle cuirass, red cape, and helmet", tags: ["historical", "costume"], isColorCustomizable: false }
         ]
     },
     {
@@ -232,7 +260,10 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             { id: "military_dress", name: "Military Dress", prompt: "formal military dress uniform with medals", tags: ["uniform", "formal"], isColorCustomizable: false },
             { id: "chef", name: "Chef", prompt: "a white chef's double breasted jacket and hat", tags: ["uniform", "work"], isColorCustomizable: false },
             { id: "astronaut", name: "Astronaut Suit", prompt: "a white NASA space suit", tags: ["uniform", "scifi"], isColorCustomizable: false },
-            { id: "racecar_driver", name: "Racing Driver", prompt: "a fireproof racing suit with sponsor logos", tags: ["uniform", "sport"], isColorCustomizable: true }
+            { id: "racecar_driver", name: "Racing Driver", prompt: "a fireproof racing suit with sponsor logos", tags: ["uniform", "sport"], isColorCustomizable: true },
+            { id: "construction", name: "Construction Worker", prompt: "high-visibility vest and hard hat", tags: ["uniform", "work"], isColorCustomizable: false },
+            { id: "mechanic", name: "Mechanic", prompt: "grease-stained coveralls", tags: ["uniform", "work"], isColorCustomizable: false },
+            { id: "judge", name: "Judge", prompt: "black judge robes", tags: ["uniform", "work"], isColorCustomizable: false }
         ]
     }
 ];
@@ -249,7 +280,9 @@ export const CATEGORIZED_WOMENS_STYLES: StyleCategory[] = [
             { id: "shweshwe_dress", name: "Shweshwe Dress", prompt: "a stylish dress made from South African Shweshwe fabric", tags: ["cultural", "modern"], isColorCustomizable: true },
             { id: "habesha_kemis", name: "Habesha Kemis", prompt: "a traditional Ethiopian Habesha Kemis white dress with tibeb borders", tags: ["cultural", "traditional"], isColorCustomizable: false },
             { id: "gomesi", name: "Ugandan Gomesi", prompt: "a traditional Ugandan Gomesi dress with large sash", tags: ["cultural", "traditional"], isColorCustomizable: true },
-            { id: "aso_ebi", name: "Aso Ebi Glam", prompt: "a glamorous, highly embellished Aso Ebi lace gown with corset back and high slit", tags: ["cultural", "party"], isColorCustomizable: true }
+            { id: "aso_ebi", name: "Aso Ebi Glam", prompt: "a glamorous, highly embellished Aso Ebi lace gown with corset back and high slit", tags: ["cultural", "party"], isColorCustomizable: true },
+            { id: "umushanana", name: "Rwandan Umushanana", prompt: "a traditional Rwandan Umushanana ceremonial dress", tags: ["cultural", "ceremony"], isColorCustomizable: true },
+            { id: "bubu_kaftan", name: "Bubu Kaftan", prompt: "a loose, flowing Bubu Kaftan dress in vibrant batik", tags: ["cultural", "casual"], isColorCustomizable: true }
         ]
     },
     {
@@ -265,7 +298,8 @@ export const CATEGORIZED_WOMENS_STYLES: StyleCategory[] = [
             { id: "hanbok_fem", name: "Korean Hanbok", prompt: "a traditional women's Hanbok with Jeogori and Chima", tags: ["cultural", "traditional"], isColorCustomizable: true },
             { id: "ao_dai", name: "Vietnamese Ao Dai", prompt: "a silk Ao Dai tunic worn over trousers", tags: ["cultural", "traditional"], isColorCustomizable: true },
             { id: "terno", name: "Filipiniana Terno", prompt: "a traditional Filipiniana Terno dress with butterfly sleeves", tags: ["cultural", "formal"], isColorCustomizable: true },
-            { id: "kebaya", name: "Kebaya", prompt: "an intricately embroidered Kebaya with batik sarong", tags: ["cultural", "traditional"], isColorCustomizable: true }
+            { id: "kebaya", name: "Kebaya", prompt: "an intricately embroidered Kebaya with batik sarong", tags: ["cultural", "traditional"], isColorCustomizable: true },
+            { id: "salwar_kameez", name: "Salwar Kameez", prompt: "a comfortable cotton Salwar Kameez set", tags: ["cultural", "casual"], isColorCustomizable: true }
         ]
     },
     {
@@ -273,7 +307,8 @@ export const CATEGORIZED_WOMENS_STYLES: StyleCategory[] = [
         styles: [
             { id: "abaya_luxury", name: "Luxury Abaya", prompt: "a flowing black open Abaya with gold embroidery and embellishments", tags: ["cultural", "modest"], isColorCustomizable: false },
             { id: "kaftan_moroccan", name: "Moroccan Takchita", prompt: "a two-piece Moroccan Takchita kaftan with belt", tags: ["cultural", "formal"], isColorCustomizable: true },
-            { id: "jalabiya", name: "Embroidered Jalabiya", prompt: "a colorful embroidered Jalabiya dress", tags: ["cultural", "casual"], isColorCustomizable: true }
+            { id: "jalabiya", name: "Embroidered Jalabiya", prompt: "a colorful embroidered Jalabiya dress", tags: ["cultural", "casual"], isColorCustomizable: true },
+            { id: "thobe_womens", name: "Palestinian Thobe", prompt: "a traditional Palestinian Thobe with cross-stitch embroidery (Tatreez)", tags: ["cultural", "traditional"], isColorCustomizable: false }
         ]
     },
     {
@@ -281,7 +316,8 @@ export const CATEGORIZED_WOMENS_STYLES: StyleCategory[] = [
         styles: [
             { id: "dirndl", name: "Bavarian Dirndl", prompt: "a traditional Bavarian Dirndl dress with apron", tags: ["cultural", "traditional"], isColorCustomizable: true },
             { id: "flamenco", name: "Flamenco Dress", prompt: "a red ruffled Spanish Flamenco dress", tags: ["cultural", "costume"], isColorCustomizable: true },
-            { id: "pollera", name: "Panamanian Pollera", prompt: "an elaborate Pollera dress with heavy jewelry", tags: ["cultural", "traditional"], isColorCustomizable: false }
+            { id: "pollera", name: "Panamanian Pollera", prompt: "an elaborate Pollera dress with heavy jewelry", tags: ["cultural", "traditional"], isColorCustomizable: false },
+            { id: "huipil", name: "Mexican Huipil", prompt: "a traditional embroidered Huipil tunic", tags: ["cultural", "traditional"], isColorCustomizable: true }
         ]
     },
     {
@@ -293,7 +329,9 @@ export const CATEGORIZED_WOMENS_STYLES: StyleCategory[] = [
             { id: "gown_sheath", name: "Sheath Dress", prompt: "an elegant, column-like sheath evening dress", tags: ["formal", "classic"], isColorCustomizable: true },
             { id: "gown_cape", name: "Cape Dress", prompt: "a dramatic evening gown with an attached cape", tags: ["formal", "regal"], isColorCustomizable: true },
             { id: "gown_sequin", name: "Full Sequin Gown", prompt: "a sparkling floor-length gown covered in sequins", tags: ["formal", "party"], isColorCustomizable: true },
-            { id: "gown_backless", name: "Backless Silk Gown", prompt: "a slinky backless silk slip gown", tags: ["formal", "sexy"], isColorCustomizable: true }
+            { id: "gown_backless", name: "Backless Silk Gown", prompt: "a slinky backless silk slip gown", tags: ["formal", "sexy"], isColorCustomizable: true },
+            { id: "gown_avant_garde", name: "Avant-Garde Sculpture", prompt: "an architectural, sculptural high fashion gown", tags: ["formal", "fashion"], isColorCustomizable: true },
+            { id: "gown_velvet", name: "Velvet Gown", prompt: "a luxurious deep velvet evening gown", tags: ["formal", "winter"], isColorCustomizable: true }
         ]
     },
     {
@@ -304,7 +342,9 @@ export const CATEGORIZED_WOMENS_STYLES: StyleCategory[] = [
             { id: "skirt_suit_tweed", name: "Tweed Skirt Suit", prompt: "a classic boucle tweed jacket and skirt set (Chanel style)", tags: ["business", "classic"], isColorCustomizable: true },
             { id: "blazer_dress", name: "Blazer Dress", prompt: "a tailored double-breasted blazer dress", tags: ["business", "modern"], isColorCustomizable: true },
             { id: "trench_dress", name: "Trench Dress", prompt: "a sleeveless trench coat style dress", tags: ["business", "chic"], isColorCustomizable: true },
-            { id: "silk_blouse", name: "Silk Blouse & Trousers", prompt: "a silk bow-tie blouse tucked into wide leg trousers", tags: ["business", "classic"], isColorCustomizable: true }
+            { id: "silk_blouse", name: "Silk Blouse & Trousers", prompt: "a silk bow-tie blouse tucked into wide leg trousers", tags: ["business", "classic"], isColorCustomizable: true },
+            { id: "wrap_dress", name: "Wrap Dress", prompt: "a classic jersey wrap dress", tags: ["business", "classic"], isColorCustomizable: true },
+            { id: "pencil_skirt", name: "Blouse & Pencil Skirt", prompt: "a fitted pencil skirt with a crisp button-down shirt", tags: ["business", "classic"], isColorCustomizable: true }
         ]
     },
     {
@@ -318,7 +358,9 @@ export const CATEGORIZED_WOMENS_STYLES: StyleCategory[] = [
             { id: "victorian_goth", name: "Victorian Gothic", prompt: "a black Victorian dress with lace, corset, and high neck", tags: ["historical", "goth"], isColorCustomizable: false },
             { id: "regency_gown", name: "Regency Empire Waist", prompt: "a Regency era empire waist gown (Bridgerton style)", tags: ["historical", "costume"], isColorCustomizable: true },
             { id: "renaissance", name: "Renaissance Gown", prompt: "an elaborate velvet Renaissance gown", tags: ["historical", "costume"], isColorCustomizable: true },
-            { id: "marie_antoinette", name: "Rococo Gown", prompt: "a wide-hipped 18th century Rococo gown with wig", tags: ["historical", "costume"], isColorCustomizable: true }
+            { id: "marie_antoinette", name: "Rococo Gown", prompt: "a wide-hipped 18th century Rococo gown with wig", tags: ["historical", "costume"], isColorCustomizable: true },
+            { id: "gibson_girl", name: "Gibson Girl", prompt: "an Edwardian Gibson Girl blouse and long skirt", tags: ["historical", "vintage"], isColorCustomizable: false },
+            { id: "pinup_1940s", name: "1940s Pinup", prompt: "a 1940s pinup style romper or dress", tags: ["historical", "retro"], isColorCustomizable: true }
         ]
     },
     {
@@ -327,7 +369,8 @@ export const CATEGORIZED_WOMENS_STYLES: StyleCategory[] = [
             { id: "bride_lace", name: "Lace Wedding Dress", prompt: "a romantic lace bridal gown with veil", tags: ["bridal", "wedding"], isColorCustomizable: false },
             { id: "bride_modern", name: "Minimalist Bridal", prompt: "a sleek, unadorned silk crepe wedding dress", tags: ["bridal", "modern"], isColorCustomizable: false },
             { id: "bride_boho", name: "Boho Bridal", prompt: "a bohemian wedding dress with bell sleeves", tags: ["bridal", "wedding"], isColorCustomizable: false },
-            { id: "bride_ballgown", name: "Bridal Ballgown", prompt: "a massive satin bridal ballgown", tags: ["bridal", "wedding"], isColorCustomizable: false }
+            { id: "bride_ballgown", name: "Bridal Ballgown", prompt: "a massive satin bridal ballgown", tags: ["bridal", "wedding"], isColorCustomizable: false },
+            { id: "bride_jumpsuit", name: "Bridal Jumpsuit", prompt: "a chic white bridal jumpsuit", tags: ["bridal", "modern"], isColorCustomizable: false }
         ]
     },
     {
@@ -339,7 +382,8 @@ export const CATEGORIZED_WOMENS_STYLES: StyleCategory[] = [
             { id: "warrior_princess", name: "Warrior Princess", prompt: "leather and metal fantasy armor", tags: ["fantasy", "costume"], isColorCustomizable: false },
             { id: "witch_supreme", name: "Witch Supreme", prompt: "elegant black witch robes", tags: ["fantasy", "costume"], isColorCustomizable: false },
             { id: "fairy", name: "Fairy Dress", prompt: "a sparkling fairy dress with wings", tags: ["fantasy", "costume"], isColorCustomizable: true },
-            { id: "wonder_hero", name: "Superheroine", prompt: "an armored superheroine suit with cape", tags: ["fantasy", "costume"], isColorCustomizable: true }
+            { id: "wonder_hero", name: "Superheroine", prompt: "an armored superheroine suit with cape", tags: ["fantasy", "costume"], isColorCustomizable: true },
+            { id: "goddess_greek", name: "Greek Goddess", prompt: "a flowing white greek goddess gown with gold laurel wreath", tags: ["fantasy", "costume"], isColorCustomizable: false }
         ]
     },
     {
@@ -349,7 +393,9 @@ export const CATEGORIZED_WOMENS_STYLES: StyleCategory[] = [
             { id: "leather_chic", name: "Leather Chic", prompt: "a leather moto jacket over a slip dress", tags: ["casual", "edgy"], isColorCustomizable: false },
             { id: "cozy_knit", name: "Cozy Knitwear", prompt: "a chunky oversized knit sweater and leggings", tags: ["casual", "comfortable"], isColorCustomizable: true },
             { id: "denim_luxe", name: "Denim Luxe", prompt: "a high-fashion denim jumpsuit", tags: ["casual", "modern"], isColorCustomizable: false },
-            { id: "athleisure", name: "Luxury Athleisure", prompt: "a matching luxury yoga set and crop top", tags: ["casual", "sport"], isColorCustomizable: true }
+            { id: "athleisure", name: "Luxury Athleisure", prompt: "a matching luxury yoga set and crop top", tags: ["casual", "sport"], isColorCustomizable: true },
+            { id: "cottagecore", name: "Cottagecore", prompt: "a romantic floral prairie dress with apron", tags: ["casual", "retro"], isColorCustomizable: true },
+            { id: "dark_academia", name: "Dark Academia", prompt: "a tweed blazer, plaid skirt, and turtleneck", tags: ["casual", "academic"], isColorCustomizable: false }
         ]
     }
 ];
@@ -370,7 +416,8 @@ export const CATEGORIZED_KIDS_STYLES: StyleCategory[] = [
             { id: "kids_agbada", name: "Mini Agbada", prompt: "a miniature Agbada robe", tags: ["cultural"], isColorCustomizable: true },
             { id: "kids_sherwani", name: "Mini Sherwani", prompt: "a miniature Sherwani", tags: ["cultural"], isColorCustomizable: true },
             { id: "kids_kimono", name: "Mini Kimono", prompt: "a child's Kimono", tags: ["cultural"], isColorCustomizable: true },
-            { id: "kids_hanbok", name: "Mini Hanbok", prompt: "a child's Hanbok", tags: ["cultural"], isColorCustomizable: true }
+            { id: "kids_hanbok", name: "Mini Hanbok", prompt: "a child's Hanbok", tags: ["cultural"], isColorCustomizable: true },
+            { id: "kids_dashiki", name: "Mini Dashiki", prompt: "a colorful Dashiki for kids", tags: ["cultural"], isColorCustomizable: true }
         ]
     },
     {
@@ -380,7 +427,8 @@ export const CATEGORIZED_KIDS_STYLES: StyleCategory[] = [
             { id: "kids_princess", name: "Princess", prompt: "a Disney-style princess gown", tags: ["costume"], isColorCustomizable: true },
             { id: "kids_astronaut", name: "Astronaut", prompt: "a mini astronaut suit", tags: ["costume"], isColorCustomizable: false },
             { id: "kids_dino", name: "Dinosaur Onesie", prompt: "a cute dinosaur onesie", tags: ["costume"], isColorCustomizable: true },
-            { id: "kids_harry", name: "Wizard Student", prompt: "Hogwarts student robes", tags: ["costume"], isColorCustomizable: false }
+            { id: "kids_harry", name: "Wizard Student", prompt: "Hogwarts student robes", tags: ["costume"], isColorCustomizable: false },
+            { id: "kids_pirate", name: "Little Pirate", prompt: "a cute pirate costume", tags: ["costume"], isColorCustomizable: false }
         ]
     }
 ];
@@ -400,7 +448,9 @@ export const CATEGORIZED_VEHICLE_STYLES: StyleCategory[] = [
             { id: "carbon_fiber", name: "Full Carbon Fiber", prompt: "exposed carbon fiber body panels", tags: ["race"], isColorCustomizable: false },
             { id: "rust_wrap", name: "Rust/Patina Wrap", prompt: "a distressed rusty patina wrap design", tags: ["ratrod"], isColorCustomizable: false },
             { id: "itasha", name: "Itasha Anime", prompt: "a colorful Itasha anime style livery", tags: ["jdm"], isColorCustomizable: false },
-            { id: "racing_stripes", name: "Racing Stripes", prompt: "dual racing stripes down the center", tags: ["classic"], isColorCustomizable: true }
+            { id: "racing_stripes", name: "Racing Stripes", prompt: "dual racing stripes down the center", tags: ["classic"], isColorCustomizable: true },
+            { id: "color_shift", name: "Color Shift / Chameleon", prompt: "a color shifting chameleon paint job", tags: ["show"], isColorCustomizable: false },
+            { id: "patrol", name: "Police Livery", prompt: "a black and white police interceptor livery", tags: ["service"], isColorCustomizable: false }
         ]
     },
     {
@@ -410,7 +460,8 @@ export const CATEGORIZED_VEHICLE_STYLES: StyleCategory[] = [
              { id: "widebody_clean", name: "Clean Widebody", prompt: "a molded, clean widebody kit extension", tags: ["mod"], isColorCustomizable: true },
              { id: "drift_missile", name: "Drift Missile", prompt: "a drift missile style with mismatched panels and zip ties", tags: ["drift"], isColorCustomizable: false },
              { id: "offroad", name: "Off-Road Conversion", prompt: "lifted suspension, off-road tires, and roof rack", tags: ["offroad"], isColorCustomizable: false },
-             { id: "drag_car", name: "Drag Setup", prompt: "drag racing setup with parachute and skinny front tires", tags: ["race"], isColorCustomizable: false }
+             { id: "drag_car", name: "Drag Setup", prompt: "drag racing setup with parachute and skinny front tires", tags: ["race"], isColorCustomizable: false },
+             { id: "time_attack", name: "Time Attack Aero", prompt: "massive front splitter, canards, and huge rear wing", tags: ["race"], isColorCustomizable: true }
         ]
     }
 ];
@@ -488,7 +539,9 @@ export const CATEGORIZED_INTERIOR_STYLES: StyleCategory[] = [
             { id: "boho", name: "Bohemian", prompt: "eclectic decor, plants, rugs, and macrame", tags: ["eclectic"], isColorCustomizable: false },
             { id: "artdeco", name: "Art Deco", prompt: "geometric patterns, gold accents, and velvet furniture", tags: ["vintage", "luxury"], isColorCustomizable: true },
             { id: "japandi", name: "Japandi", prompt: "hybrid of Japanese rustic minimalism and Scandinavian functionality", tags: ["modern", "zen"], isColorCustomizable: false },
-            { id: "farmhouse", name: "Modern Farmhouse", prompt: "rustic wood, shiplap, and comfortable neutral furniture", tags: ["rustic"], isColorCustomizable: false }
+            { id: "farmhouse", name: "Modern Farmhouse", prompt: "rustic wood, shiplap, and comfortable neutral furniture", tags: ["rustic"], isColorCustomizable: false },
+            { id: "maximalist", name: "Maximalist", prompt: "bold colors, patterns, and an abundance of decor items", tags: ["eclectic"], isColorCustomizable: true },
+            { id: "cyberpunk_room", name: "Cyberpunk Room", prompt: "dark room with neon lighting, computer screens, and futuristic furniture", tags: ["scifi"], isColorCustomizable: true }
         ]
     }
 ];
@@ -503,7 +556,9 @@ export const CATEGORIZED_LANDSCAPE_STYLES: StyleCategory[] = [
             { id: "tropical", name: "Tropical Oasis", prompt: "lush tropical plants, palms, ferns, and vibrant flowers", tags: ["nature"], isColorCustomizable: false },
             { id: "english", name: "English Cottage", prompt: "an unruly, blooming English cottage garden with roses and lavender", tags: ["classic"], isColorCustomizable: false },
             { id: "desert", name: "Desert Xeriscape", prompt: "a modern desert landscape with cactus, succulents, and gravel", tags: ["modern"], isColorCustomizable: false },
-            { id: "modern_pool", name: "Modern Poolside", prompt: "sleek concrete pavers, manicured grass, and a modern rectangular pool", tags: ["modern", "luxury"], isColorCustomizable: false }
+            { id: "modern_pool", name: "Modern Poolside", prompt: "sleek concrete pavers, manicured grass, and a modern rectangular pool", tags: ["modern", "luxury"], isColorCustomizable: false },
+            { id: "french_formal", name: "French Formal", prompt: "symmetrical hedges, topiaries, and gravel paths", tags: ["classic"], isColorCustomizable: false },
+            { id: "mediterranean", name: "Mediterranean", prompt: "olive trees, terracotta pots, lavender, and gravel", tags: ["classic"], isColorCustomizable: false }
         ]
     }
 ];
@@ -522,7 +577,9 @@ export const APPAREL_BACKGROUNDS: SimpleOption[] = [
     { name: 'Paris Street', prompt: 'a chic Parisian street with cafe' },
     { name: 'Tokyo Neon', prompt: 'a cyberpunk Tokyo street at night with neon signs' },
     { name: 'Beach Sunset', prompt: 'a serene beach at golden hour' },
-    { name: 'Garden', prompt: 'a lush green garden' }
+    { name: 'Garden', prompt: 'a lush green garden' },
+    { name: 'Private Jet', prompt: 'the interior of a luxury private jet' },
+    { name: 'Yacht Deck', prompt: 'the deck of a luxury yacht on the ocean' }
 ];
 export const BACKGROUND_OPTIONS = APPAREL_BACKGROUNDS; // Alias
 
@@ -534,7 +591,8 @@ export const VEHICLE_BACKGROUNDS: SimpleOption[] = [
     { name: 'Desert Road', prompt: 'an open desert highway' },
     { name: 'Race Track', prompt: 'a Formula 1 race track' },
     { name: 'Mountain Pass', prompt: 'a scenic mountain road' },
-    { name: 'Cyberpunk Garage', prompt: 'a futuristic high-tech garage' }
+    { name: 'Cyberpunk Garage', prompt: 'a futuristic high-tech garage' },
+    { name: 'Salt Flats', prompt: 'the white Bonneville Salt Flats' }
 ];
 
 export const INTERIOR_BACKGROUNDS: SimpleOption[] = [
@@ -560,7 +618,8 @@ export const APPAREL_LIGHTING: SimpleOption[] = [
     { name: 'Golden Hour', prompt: 'warm golden hour sunlight' },
     { name: 'Neon', prompt: 'colorful neon lighting (pink/blue)' },
     { name: 'Cinematic', prompt: 'cinematic teal and orange lighting' },
-    { name: 'Rembrandt', prompt: 'moody Rembrandt lighting' }
+    { name: 'Rembrandt', prompt: 'moody Rembrandt lighting' },
+    { name: 'Flash Photography', prompt: 'harsh direct flash photography style' }
 ];
 export const LIGHTING_OPTIONS = APPAREL_LIGHTING; // Alias
 
@@ -593,7 +652,8 @@ export const CATEGORIZED_SHOE_STYLES: StyleCategory[] = [
             { id: "oxfords_black", name: "Black Oxfords", prompt: "shiny black leather oxford shoes", tags: [], isColorCustomizable: false },
             { id: "oxfords_brown", name: "Brown Brogues", prompt: "brown leather brogue shoes", tags: [], isColorCustomizable: false },
             { id: "loafers", name: "Penny Loafers", prompt: "leather penny loafers", tags: [], isColorCustomizable: true },
-            { id: "monkstrap", name: "Double Monkstrap", prompt: "double monkstrap shoes", tags: [], isColorCustomizable: true }
+            { id: "monkstrap", name: "Double Monkstrap", prompt: "double monkstrap shoes", tags: [], isColorCustomizable: true },
+            { id: "velvet_slippers", name: "Velvet Slippers", prompt: "black velvet formal slippers", tags: [], isColorCustomizable: false }
         ]
     },
     {
@@ -601,7 +661,9 @@ export const CATEGORIZED_SHOE_STYLES: StyleCategory[] = [
         styles: [
             { id: "sneakers_white", name: "White Sneakers", prompt: "clean white minimalist sneakers", tags: [], isColorCustomizable: false },
             { id: "chelsea_boots", name: "Chelsea Boots", prompt: "suede chelsea boots", tags: [], isColorCustomizable: true },
-            { id: "jordan1", name: "High-Top Sneakers", prompt: "high-top basketball sneakers", tags: [], isColorCustomizable: true }
+            { id: "jordan1", name: "High-Top Sneakers", prompt: "high-top basketball sneakers", tags: [], isColorCustomizable: true },
+            { id: "boots_work", name: "Work Boots", prompt: "rugged leather work boots", tags: [], isColorCustomizable: false },
+            { id: "slides", name: "Slides", prompt: "casual slides", tags: [], isColorCustomizable: true }
         ]
     }
 ];
@@ -611,14 +673,17 @@ export const CATEGORIZED_WOMENS_SHOE_STYLES: StyleCategory[] = [
         styles: [
             { id: "stilettos_red", name: "Red Stilettos", prompt: "high red stiletto heels", tags: [], isColorCustomizable: false },
             { id: "pumps_nude", name: "Nude Pumps", prompt: "classic nude pumps", tags: [], isColorCustomizable: false },
-            { id: "heels_strappy", name: "Strappy Sandals", prompt: "strappy high heel sandals", tags: [], isColorCustomizable: true }
+            { id: "heels_strappy", name: "Strappy Sandals", prompt: "strappy high heel sandals", tags: [], isColorCustomizable: true },
+            { id: "platforms", name: "Platform Heels", prompt: "chunky platform heels", tags: [], isColorCustomizable: true }
         ]
     },
     {
         category: "Flats & Boots",
         styles: [
             { id: "boots_knee", name: "Knee High Boots", prompt: "leather knee high boots", tags: [], isColorCustomizable: true },
-            { id: "sneakers_chunky", name: "Chunky Sneakers", prompt: "chunky dad sneakers", tags: [], isColorCustomizable: false }
+            { id: "sneakers_chunky", name: "Chunky Sneakers", prompt: "chunky dad sneakers", tags: [], isColorCustomizable: false },
+            { id: "ballet_flats", name: "Ballet Flats", prompt: "simple ballet flats", tags: [], isColorCustomizable: true },
+            { id: "ankle_boots", name: "Ankle Boots", prompt: "stylish ankle boots", tags: [], isColorCustomizable: true }
         ]
     }
 ];
@@ -635,7 +700,9 @@ export const SHIRT_OPTIONS: SimpleOption[] = [
     { name: 'Blue Dress Shirt', prompt: 'a light blue dress shirt' },
     { name: 'Black Dress Shirt', prompt: 'a black dress shirt' },
     { name: 'Turtleneck', prompt: 'a turtleneck sweater' },
-    { name: 'T-Shirt', prompt: 'a plain white t-shirt' }
+    { name: 'T-Shirt', prompt: 'a plain white t-shirt' },
+    { name: 'Floral Shirt', prompt: 'a floral print shirt' },
+    { name: 'Denim Shirt', prompt: 'a denim western shirt' }
 ];
 
 export const DEFAULT_TIE_OPTION: SimpleOption = { name: 'None', prompt: '', value: 'none' };
@@ -646,7 +713,8 @@ export const CATEGORIZED_TIE_STYLES: StyleCategory[] = [
             { id: "red_tie", name: "Red Silk Tie", prompt: "a red silk necktie", tags: [], isColorCustomizable: false },
             { id: "black_tie", name: "Black Tie", prompt: "a black silk necktie", tags: [], isColorCustomizable: false },
             { id: "navy_tie", name: "Navy Tie", prompt: "a navy blue necktie", tags: [], isColorCustomizable: false },
-            { id: "bow_tie", name: "Bow Tie", prompt: "a black bow tie", tags: [], isColorCustomizable: false }
+            { id: "bow_tie", name: "Bow Tie", prompt: "a black bow tie", tags: [], isColorCustomizable: false },
+            { id: "knit_tie", name: "Knit Tie", prompt: "a textured knit square-end tie", tags: [], isColorCustomizable: true }
         ]
     }
 ];
@@ -659,7 +727,8 @@ export const CATEGORIZED_HANDBAG_STYLES: StyleCategory[] = [
             { id: "clutch", name: "Silver Clutch", prompt: "a silver evening clutch", tags: [], isColorCustomizable: false },
             { id: "tote", name: "Leather Tote", prompt: "a structured leather tote bag", tags: [], isColorCustomizable: true },
             { id: "chanel", name: "Quilted Bag", prompt: "a quilted chain strap shoulder bag", tags: [], isColorCustomizable: true },
-            { id: "birkin", name: "Luxury Handbag", prompt: "a high-end luxury leather handbag", tags: [], isColorCustomizable: true }
+            { id: "birkin", name: "Luxury Handbag", prompt: "a high-end luxury leather handbag", tags: [], isColorCustomizable: true },
+            { id: "crossbody", name: "Crossbody Bag", prompt: "a small crossbody camera bag", tags: [], isColorCustomizable: true }
         ]
     }
 ];
@@ -672,7 +741,8 @@ export const CATEGORIZED_EYEWEAR_STYLES: StyleCategory[] = [
             { id: "aviators", name: "Aviator Sunglasses", prompt: "classic gold aviator sunglasses", tags: [], isColorCustomizable: false },
             { id: "wayfarer", name: "Wayfarer", prompt: "black wayfarer sunglasses", tags: [], isColorCustomizable: false },
             { id: "round", name: "Round Wire", prompt: "round wire-frame glasses", tags: [], isColorCustomizable: false },
-            { id: "cat_eye", name: "Cat Eye", prompt: "cat eye sunglasses", tags: [], isColorCustomizable: false }
+            { id: "cat_eye", name: "Cat Eye", prompt: "cat eye sunglasses", tags: [], isColorCustomizable: false },
+            { id: "rimless", name: "Rimless", prompt: "minimalist rimless glasses", tags: [], isColorCustomizable: false }
         ]
     }
 ];
@@ -687,7 +757,9 @@ export const CATEGORIZED_HEADWEAR_STYLES: StyleCategory[] = [
             { id: "cap", name: "Baseball Cap", prompt: "a plain baseball cap", tags: [], isColorCustomizable: true },
             { id: "beanie", name: "Beanie", prompt: "a knit beanie", tags: [], isColorCustomizable: true },
             { id: "turban", name: "Turban", prompt: "a neatly wrapped turban", tags: [], isColorCustomizable: true },
-            { id: "gele", name: "Gele", prompt: "a large traditional Nigerian Gele headtie", tags: [], isColorCustomizable: true }
+            { id: "gele", name: "Gele", prompt: "a large traditional Nigerian Gele headtie", tags: [], isColorCustomizable: true },
+            { id: "beret", name: "Beret", prompt: "a wool beret", tags: [], isColorCustomizable: true },
+            { id: "bucket", name: "Bucket Hat", prompt: "a casual bucket hat", tags: [], isColorCustomizable: true }
         ]
     }
 ];
@@ -698,7 +770,9 @@ export const POSTURE_OPTIONS: SimpleOption[] = [
     { name: 'Arms Crossed', prompt: 'standing confidently with arms crossed' },
     { name: 'Walking', prompt: 'walking forward with purpose' },
     { name: 'Sitting', prompt: 'sitting comfortably' },
-    { name: 'Hand on Hip', prompt: 'posing with hand on hip' }
+    { name: 'Hand on Hip', prompt: 'posing with hand on hip' },
+    { name: 'Leaning', prompt: 'leaning casually against a wall' },
+    { name: 'Looking Away', prompt: 'looking away candidly' }
 ];
 
 
@@ -799,3 +873,4 @@ export const CAMPAIGN_MODS: SimpleOption[] = [
     { name: 'Flag Mounts', prompt: 'corner flag mounts', value: 'flags' },
     { name: 'Roof Rack', prompt: 'metal roof rack', value: 'roofrack' }
 ];
+
