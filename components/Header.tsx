@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MenuIcon } from './icons/MenuIcon.tsx';
 import { CloseIcon } from './icons/CloseIcon.tsx';
 import { GeoLogo } from './logo.tsx';
@@ -24,11 +24,6 @@ const MENU_ITEMS = [
 const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-    const [rotation, setRotation] = useState(0);
-    const [activeItemIndex, setActiveItemIndex] = useState(0);
-    
-    const touchStartY = useRef<number>(0);
-    const currentRotation = useRef<number>(0);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -38,46 +33,19 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Lock body scroll when menu is open to prevent interacting with background elements
     useEffect(() => {
-        const step = 360 / MENU_ITEMS.length;
-        let normalizedRot = Math.abs(rotation) % 360;
-        if (rotation > 0) normalizedRot = 360 - normalizedRot;
-        
-        const index = Math.round((rotation * -1) / step) % MENU_ITEMS.length;
-        const safeIndex = index < 0 ? MENU_ITEMS.length + index : index;
-        setActiveItemIndex(safeIndex);
-    }, [rotation]);
+        if (isMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => { document.body.style.overflow = 'unset'; };
+    }, [isMenuOpen]);
 
-    const handleNavClick = (page: string, e?: React.MouseEvent) => {
-        if (e) e.stopPropagation();
+    const handleNavClick = (page: string) => {
         onNavigate(page);
         setIsMenuOpen(false);
-    };
-
-    // --- Rotary Interaction Logic ---
-    const handleTouchStart = (e: React.TouchEvent) => {
-        touchStartY.current = e.touches[0].clientY;
-        currentRotation.current = rotation;
-    };
-
-    const handleTouchMove = (e: React.TouchEvent) => {
-        const deltaY = e.touches[0].clientY - touchStartY.current;
-        
-        // Add threshold to distinguish clicks from drags (prevents jitter)
-        if (Math.abs(deltaY) < 10) return;
-
-        const newRotation = currentRotation.current + (deltaY * 0.8);
-        setRotation(newRotation);
-        
-        const step = 360 / MENU_ITEMS.length;
-        if (Math.floor(newRotation / step) !== Math.floor(rotation / step)) {
-             if (navigator.vibrate) navigator.vibrate(5);
-        }
-    };
-    
-    const handleWheel = (e: React.WheelEvent) => {
-        const newRotation = rotation - (e.deltaY * 0.2);
-        setRotation(newRotation);
     };
 
     const NavLink = ({ page, label }: { page: string; label: string }) => (
@@ -103,13 +71,9 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                 <div className="flex items-center gap-4">
                     {/* Desktop Nav */}
                     <nav className="hidden lg:flex items-center gap-2 bg-white/50 dark:bg-zinc-900/50 p-1 rounded-full border border-zinc-200 dark:border-white/5 backdrop-blur-md z-50 shadow-sm dark:shadow-lg">
-                        <NavLink page="home" label="Studio" />
-                        <NavLink page="session" label="Session" />
-                        <NavLink page="campaign" label="Campaign" />
-                        <NavLink page="poster" label="Poster" />
-                        <NavLink page="animate" label="Cinema" />
-                        <NavLink page="gallery" label="Gallery" />
-                        <NavLink page="quiz" label="Quiz" />
+                        {MENU_ITEMS.filter(item => item.id !== 'landing').map(item => (
+                             <NavLink key={item.id} page={item.id} label={item.label} />
+                        ))}
                     </nav>
 
                     {/* Theme Toggle */}
@@ -123,11 +87,9 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                             <ThemeToggle />
                         </div>
                         <button 
-                            onClick={() => {
-                                setIsMenuOpen(true);
-                                setRotation(0);
-                            }} 
+                            onClick={() => setIsMenuOpen(true)} 
                             className="text-zinc-600 dark:text-zinc-300 hover:text-amber-500 dark:hover:text-amber-400 transition-colors p-2 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-full border border-zinc-200 dark:border-white/5 shadow-sm"
+                            aria-label="Open Menu"
                         >
                             <MenuIcon className="w-6 h-6" />
                         </button>
@@ -135,76 +97,48 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                 </div>
             </header>
 
-            {/* Mobile Rotary Menu Overlay */}
-            <div className={`fixed inset-0 z-[100] bg-zinc-100 dark:bg-zinc-950 flex flex-col justify-center items-center overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
+            {/* Mobile Minimalist Menu Overlay */}
+            <div className={`fixed inset-0 z-[100] bg-zinc-50/95 dark:bg-zinc-950/95 backdrop-blur-xl flex flex-col transition-all duration-300 ease-in-out ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
                 
-                <button 
-                    onClick={() => setIsMenuOpen(false)} 
-                    className="absolute top-6 right-6 p-4 text-zinc-500 hover:text-black dark:hover:text-white z-50"
-                >
-                    <CloseIcon className="w-8 h-8" />
-                </button>
-
-                {/* Title / Logo Area */}
-                <div className="absolute top-12 left-0 right-0 text-center z-10 pointer-events-none">
-                    <GeoLogo className="justify-center scale-75 mb-2" />
-                    <p className="text-[10px] uppercase tracking-[0.4em] text-zinc-500">System Navigation</p>
-                </div>
-
-                {/* The Rotary Dial Container */}
-                <div 
-                    className="relative w-full h-full flex items-center justify-end pr-4 md:pr-20 cursor-grab active:cursor-grabbing touch-none"
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
-                    onWheel={handleWheel}
-                >
-                    {/* Background Rings */}
-                    <div className="absolute right-[-30vh] h-[80vh] w-[80vh] rounded-full border border-zinc-300 dark:border-zinc-800/50 pointer-events-none"></div>
-                    <div className="absolute right-[-35vh] h-[90vh] w-[90vh] rounded-full border border-zinc-200 dark:border-zinc-800/30 pointer-events-none"></div>
-                    
-                    {/* Active Indicator */}
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 w-32 h-16 border-r-4 border-amber-500 bg-gradient-to-l from-amber-500/10 to-transparent pointer-events-none z-0"></div>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-amber-500 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.8)] z-20"></div>
-
-                    {/* Rotating Items Container */}
-                    <div 
-                        className="relative z-30 h-[60vh] w-[60vh] right-[-30vh] rounded-full transition-transform duration-75 ease-linear will-change-transform"
-                        style={{ transform: `rotate(${rotation}deg)` }}
+                {/* Header inside Menu */}
+                <div className="flex items-center justify-between px-6 h-16 border-b border-zinc-200/50 dark:border-white/5 shrink-0">
+                     <div className="opacity-50">
+                        <GeoLogo className="scale-75 origin-left" />
+                     </div>
+                     <button 
+                        onClick={() => setIsMenuOpen(false)} 
+                        className="p-2 text-zinc-500 hover:text-black dark:hover:text-white bg-black/5 dark:bg-white/5 rounded-full transition-colors"
+                        aria-label="Close Menu"
                     >
-                        {MENU_ITEMS.map((item, index) => {
-                            const angleStep = 360 / MENU_ITEMS.length;
-                            const itemAngle = index * angleStep;
-                            const isActive = index === activeItemIndex;
-                            
-                            return (
-                                <div
-                                    key={item.id}
-                                    className="absolute top-1/2 left-1/2 w-48 h-10 -mt-5 -ml-24 flex items-center justify-end pr-16 origin-center will-change-transform"
-                                    style={{ 
-                                        transform: `rotate(${itemAngle}deg) translate(-30vh) rotate(-${itemAngle}deg) rotate(${-rotation}deg)`
-                                    }}
-                                >
-                                    <button
-                                        onClick={(e) => handleNavClick(item.id, e)}
-                                        className={`text-right transition-all duration-300 ${isActive ? 'scale-150' : 'scale-100 opacity-40'} pointer-events-auto`}
-                                    >
-                                        <span className={`block text-3xl font-playfair font-bold ${isActive ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}`}>
-                                            {item.label}
-                                        </span>
-                                        {isActive && (
-                                            <span className="block text-[8px] uppercase tracking-[0.3em] text-amber-500 mt-1 animate-fade-in">
-                                                Enter Module
-                                            </span>
-                                        )}
-                                    </button>
-                                </div>
-                            );
-                        })}
-                    </div>
+                        <CloseIcon className="w-6 h-6" />
+                    </button>
                 </div>
 
-                <div className="absolute bottom-10 left-0 right-0 text-center pointer-events-none">
-                    <p className="text-zinc-500 text-[10px] animate-pulse">SCROLL KNOB TO SELECT</p>
+                {/* Menu List */}
+                <div className="flex-1 flex flex-col items-center justify-center gap-6 overflow-y-auto py-8">
+                    {MENU_ITEMS.map((item, index) => (
+                        <button
+                            key={item.id}
+                            onClick={() => handleNavClick(item.id)}
+                            className="group relative text-center p-2"
+                            style={{ 
+                                opacity: isMenuOpen ? 1 : 0, 
+                                transform: isMenuOpen ? 'translateY(0)' : 'translateY(20px)',
+                                transition: `all 0.4s ease ${index * 0.05 + 0.1}s` 
+                            }}
+                        >
+                            <span className="block text-3xl md:text-4xl font-playfair font-bold text-zinc-400 dark:text-zinc-600 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors duration-300">
+                                {item.label}
+                            </span>
+                            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-amber-500 transition-all duration-300 group-hover:w-1/2 opacity-0 group-hover:opacity-100"></span>
+                        </button>
+                    ))}
+                </div>
+
+                {/* Footer Info */}
+                <div className="p-8 text-center shrink-0">
+                    <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-400 dark:text-zinc-600 mb-2">Geo Studio AI</p>
+                    <p className="text-xs text-zinc-300 dark:text-zinc-700 font-mono">v2.4.0</p>
                 </div>
             </div>
         </>
