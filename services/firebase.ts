@@ -1,6 +1,5 @@
 
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 // Configuration using the keys provided
@@ -14,42 +13,19 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase variables
-let app: any = null;
-let auth: any = null;
-let db: any = null;
-let googleProvider: any = null;
+// Strictly initialize without fallback to mock mode
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-try {
-    // Prevent multiple initializations (Singleton pattern)
-    if (!getApps().length) {
-        app = initializeApp(firebaseConfig);
-    } else {
-        app = getApp();
-    }
-    
-    // Initialize services only if app is successfully created
-    if (app) {
-        // We wrap getAuth in try-catch specifically because it throws if versions mismatch or dependencies are missing
-        try {
-            auth = getAuth(app);
-            db = getFirestore(app);
-            googleProvider = new GoogleAuthProvider();
-            console.log("Firebase initialized successfully.");
-        } catch (innerError) {
-            console.error("Firebase Services Initialization Error:", innerError);
-            auth = null;
-            db = null;
-            googleProvider = null;
-        }
-    }
-} catch (error) {
-    console.warn("Firebase initialization failed. Falling back to Mock Mode.");
-    console.error("Firebase Error Details:", error);
-    // Ensure variables are null so AuthContext can switch to Mock Mode without crashing
-    app = null;
-    auth = null;
-    db = null;
-    googleProvider = null;
-}
+// Auth is currently disabled to support the landing->home flow without errors
+// const auth = getAuth(app); 
+// const googleProvider = new GoogleAuthProvider();
+
+const db = getFirestore(app);
+
+// Export dummy objects for auth to satisfy existing imports without breaking the app
+const auth = {}; 
+const googleProvider = {};
+
+console.log("Firebase initialized successfully (Auth Disabled).");
 
 export { auth, db, googleProvider };

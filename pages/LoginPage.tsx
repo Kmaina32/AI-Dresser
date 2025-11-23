@@ -113,10 +113,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Right Side - Form Area */}
-      <div className="flex-1 flex flex-col justify-center px-8 sm:px-16 lg:px-24 relative bg-white/50 dark:bg-zinc-950/50 backdrop-blur-xl">
+      <div className="flex-1 flex flex-col justify-center px-6 sm:px-16 lg:px-24 relative bg-white/50 dark:bg-zinc-950/50 backdrop-blur-xl pt-24 pb-12 lg:py-0">
         <button 
+            type="button"
             onClick={() => onNavigate('landing')}
-            className="absolute top-8 left-8 sm:left-16 lg:left-12 p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-2 group"
+            className="absolute top-20 left-6 sm:top-8 sm:left-16 lg:left-12 p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-2 group z-30"
         >
             <ArrowLeftIcon className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             <span className="text-xs font-bold uppercase tracking-widest">Back</span>
@@ -195,6 +196,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
 
             {isResetting ? (
                 <button 
+                    type="button"
                     onClick={() => { setIsResetting(false); setError(''); }}
                     className="w-full mt-6 py-3 text-xs font-bold uppercase tracking-widest text-zinc-500 hover:text-black dark:hover:text-white border border-transparent hover:border-zinc-200 dark:hover:border-white/10 rounded-sm transition-all"
                 >
@@ -209,6 +211,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
                     </div>
 
                     <button 
+                        type="button"
                         onClick={handleGoogleLogin}
                         disabled={isLoading}
                         className="w-full py-3 bg-white dark:bg-black/20 border border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-white font-medium text-sm rounded-sm hover:bg-zinc-50 dark:hover:bg-white/5 transition-all flex items-center justify-center gap-3 hover:border-amber-500/30"
@@ -222,6 +225,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
                             New to Geo Studio?
                         </p>
                         <button 
+                            type="button"
                             onClick={() => onNavigate('signup')}
                             className="w-full py-4 bg-transparent border border-zinc-300 dark:border-white/10 text-zinc-700 dark:text-zinc-300 font-bold text-xs uppercase tracking-[0.2em] rounded-sm hover:bg-white hover:border-amber-500 dark:hover:bg-white/5 dark:hover:text-white dark:hover:border-white transition-all duration-300 group"
                         >
