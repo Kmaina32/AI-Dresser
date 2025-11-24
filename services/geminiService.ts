@@ -1,4 +1,5 @@
 
+
 import { GoogleGenAI, Modality } from "@google/genai";
 import { fileToBase64 } from "../utils/fileUtils.ts";
 import { PoliticalParty } from "../constants.ts";
@@ -268,7 +269,8 @@ export async function generateCampaignMaterial(
     position: string,
     slogan: string,
     wrapStyle?: string,
-    campaignMods?: string[]
+    campaignMods?: string[],
+    templatePrompt?: string
 ): Promise<string> {
     const base64Data = await fileToBase64(imageFile);
     
@@ -284,16 +286,19 @@ export async function generateCampaignMaterial(
         - Position: ${position}.
         - Slogan: "${slogan}".
         
-        **Design Theme:**
-        - **Colors:** Dominant theme colors MUST be ${party.colors}.
+        **Design Language (STRICT ADHERENCE REQUIRED):**
+        - **Style Directive:** ${templatePrompt || "Modern Minimalist, Swiss Style typography, clean layout"}.
+        - **Color Palette:** Dominant theme colors MUST be ${party.colors}. Use these colors to drive the aesthetic defined above.
         - **Symbol:** Prominently feature the party symbol: ${party.symbol}.
-        - **Style:** Patriotic, bold typography, professional portrait blending, Kenyan political poster aesthetic.
-        - **Background:** Subtle gradient or crowd using party colors.
         
-        **Directives:**
-        - PRESERVE the candidate's face and identity 100%.
-        - Place the candidate centrally and heroically.
-        - Text should be legible and bold.
+        **Composition:**
+        - Make the candidate look heroic, professional, and approachable.
+        - Typography should be legible, bold, and integrated into the design (not just floating text).
+        - Ensure the slogan and position are clearly visible.
+        
+        **Core Directives:**
+        - **PRESERVE IDENTITY:** You MUST preserve the candidate's face and identity 100%. Do not alter their facial features.
+        - **Professionalism:** The output must look like a finished, printed campaign poster.
         `;
     } else {
         prompt = `

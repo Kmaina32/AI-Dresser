@@ -1,9 +1,10 @@
 
+
 import React, { useState, useCallback } from 'react';
 import SimpleImageUploader from '../components/SimpleImageUploader.tsx';
 import ResultDisplay from '../components/ResultDisplay.tsx';
 import DropdownSelector from '../components/DropdownSelector.tsx';
-import { KENYAN_PARTIES, CAMPAIGN_POSITIONS, CAMPAIGN_WRAP_STYLES, CAMPAIGN_MODS } from '../constants.ts';
+import { KENYAN_PARTIES, CAMPAIGN_POSITIONS, CAMPAIGN_WRAP_STYLES, CAMPAIGN_MODS, CATEGORIZED_CAMPAIGN_TEMPLATES } from '../constants.ts';
 import { generateCampaignMaterial } from '../services/geminiService.ts';
 import { CampaignIcon } from '../components/icons/CampaignIcon.tsx';
 import { SlidersIcon } from '../components/icons/SlidersIcon.tsx';
@@ -31,6 +32,9 @@ const CampaignPage: React.FC = () => {
     const [slogan, setSlogan] = useState<string>('Maendeleo kwa Wote');
     const [wrapStyle, setWrapStyle] = useState<string>(CAMPAIGN_WRAP_STYLES[0].value || 'full');
     const [selectedCampaignMods, setSelectedCampaignMods] = useState<string[]>([]);
+    
+    // New Template Selection
+    const [selectedTemplate, setSelectedTemplate] = useState<string>(CATEGORIZED_CAMPAIGN_TEMPLATES[0].styles[0].prompt);
 
     const [generatedImage, setGeneratedImage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -72,7 +76,8 @@ const CampaignPage: React.FC = () => {
                 position,
                 slogan,
                 mode === 'vehicle' ? wrapStyle : undefined,
-                mode === 'vehicle' ? selectedCampaignMods : undefined
+                mode === 'vehicle' ? selectedCampaignMods : undefined,
+                mode === 'poster' ? selectedTemplate : undefined
             );
             setGeneratedImage(result);
         } catch (e) {
@@ -81,7 +86,7 @@ const CampaignPage: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [imageFile, mode, selectedParty, position, slogan, wrapStyle, selectedCampaignMods]);
+    }, [imageFile, mode, selectedParty, position, slogan, wrapStyle, selectedCampaignMods, selectedTemplate]);
 
     const partyOptions = KENYAN_PARTIES.map(p => ({ label: p.name, value: p.id }));
     const positionOptions = CAMPAIGN_POSITIONS.map(p => ({ label: p.name, value: p.value }));
@@ -195,6 +200,18 @@ const CampaignPage: React.FC = () => {
                              </div>
                         </div>
                     </CollapsibleSection>
+
+                    {mode === 'poster' && (
+                        <CollapsibleSection title="Poster Design" isOpen={true}>
+                            <DropdownSelector 
+                                label="Design Language" 
+                                optionGroups={CATEGORIZED_CAMPAIGN_TEMPLATES} 
+                                selectedValue={selectedTemplate} 
+                                onSelect={setSelectedTemplate} 
+                                valueProp="prompt"
+                            />
+                        </CollapsibleSection>
+                    )}
 
                     {mode === 'vehicle' && (
                         <CollapsibleSection title="Vehicle Wrap Config" isOpen={true}>

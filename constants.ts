@@ -23,6 +23,17 @@ export interface StyleCategory {
     styles: StyleOption[];
 }
 
+export interface TemplateOption {
+    id: string;
+    name: string;
+    prompt: string;
+}
+
+export interface OptionGroup {
+    category: string;
+    styles: TemplateOption[];
+}
+
 export interface QualityOption {
     name: string;
     value: string;
@@ -204,7 +215,7 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
             { id: "hypebeast", name: "Hypebeast Luxury", prompt: "a designer luxury streetwear outfit with logos, bomber jacket and sneakers", tags: ["modern", "street"], isColorCustomizable: true },
             { id: "denim_on_denim", name: "Double Denim", prompt: "a stylish denim jacket and jeans combination (Canadian Tuxedo)", tags: ["casual", "street"], isColorCustomizable: false },
             { id: "leather_biker", name: "Leather Biker", prompt: "a black leather biker jacket with skinny jeans and boots", tags: ["casual", "edgy"], isColorCustomizable: false },
-            { id: "tracksuit_luxury", name: "Luxury Tracksuit", prompt: "a matching velour luxury tracksuit", tags: ["casual", "street"], isColorCustomizable: true },
+            { id: "tracksuit_luxury", name: "Luxury Tracksuit", prompt: "a matching luxury velour tracksuit", tags: ["casual", "street"], isColorCustomizable: true },
             { id: "grunge", name: "90s Grunge", prompt: "a flannel shirt, band tee, and ripped jeans", tags: ["casual", "retro"], isColorCustomizable: false },
             { id: "met_gala", name: "Met Gala Avant-Garde", prompt: "an avant-garde high fashion ornate suit with cape and embroidery", tags: ["fashion", "costume"], isColorCustomizable: true },
             { id: "sequin_suit", name: "Full Sequin Suit", prompt: "a suit entirely covered in sequins", tags: ["fashion", "party"], isColorCustomizable: true },
@@ -686,7 +697,7 @@ export const CATEGORIZED_WOMENS_SHOE_STYLES: StyleCategory[] = [
             { id: "boots_knee", name: "Knee High Boots", prompt: "leather knee high boots", tags: [], isColorCustomizable: true },
             { id: "sneakers_chunky", name: "Chunky Sneakers", prompt: "chunky dad sneakers", tags: [], isColorCustomizable: false },
             { id: "ballet_flats", name: "Ballet Flats", prompt: "simple ballet flats", tags: [], isColorCustomizable: true },
-            { id: "ankle_boots", name: "Ankle Boots", prompt: "stylish ankle boots", tags: [], isColorCustomizable: true }
+            { id: "ankle_boots", name: "Ankle Boots", prompt: "stylish ankle boots", tags: ["casual"], isColorCustomizable: true }
         ]
     }
 ];
@@ -875,4 +886,82 @@ export const CAMPAIGN_MODS: SimpleOption[] = [
     { name: 'Bullbar', prompt: 'front metal bullbar', value: 'bullbar' },
     { name: 'Flag Mounts', prompt: 'corner flag mounts', value: 'flags' },
     { name: 'Roof Rack', prompt: 'metal roof rack', value: 'roofrack' }
+];
+
+export const CATEGORIZED_CAMPAIGN_TEMPLATES: OptionGroup[] = [
+    {
+        category: "Modern & Minimalist",
+        styles: [
+            { id: "swiss_style", name: "Swiss International", prompt: "Swiss International Style graphic design, clean grid layout, sans-serif bold typography, generous negative space, minimalist aesthetic" },
+            { id: "geometric_flat", name: "Geometric Flat", prompt: "Modern flat design with bold geometric shapes overlay, vector art style, clean lines, solid color blocks" },
+            { id: "corporate_clean", name: "Corporate Clean", prompt: "Professional corporate aesthetic, trustworthy deep blues and greys, structured layout, modern serif typography" },
+            { id: "minimal_focus", name: "Focus Minimal", prompt: "Ultra-minimalist design, subject isolated on solid background, small centered elegant typography, high-end editorial look" },
+            { id: "glassmorphism", name: "Glassmorphism", prompt: "Trendy glassmorphism style, frosted glass overlay effects, soft gradients, floating elements, modern UI aesthetic" },
+            { id: "duotone_modern", name: "Modern Duotone", prompt: "Sleek duotone color effect using party colors, high contrast, modern art direction" },
+            { id: "typographic_hero", name: "Typographic Hero", prompt: "Massive bold typography interacting with the subject, text behind and in front of candidate, magazine cover style" },
+            { id: "abstract_gradient", name: "Abstract Gradient", prompt: "Soft, flowing abstract color gradients in background, modern, hopeful, uplifting vibe" },
+            { id: "tech_future", name: "Tech Future", prompt: "Digital tech aesthetic, subtle circuit patterns, glow effects, progressive and futuristic look" },
+            { id: "monochrome_accent", name: "Monochrome Accent", prompt: "Black and white photography with a single bold accent color for text and symbols, dramatic and sharp" }
+        ]
+    },
+    {
+        category: "Bold & High Impact",
+        styles: [
+            { id: "constructivist", name: "Constructivist", prompt: "Russian Constructivist inspired, bold red and black angles, striking geometric composition, revolutionary vibe" },
+            { id: "block_text", name: "Blockbuster", prompt: "Heavy, massive block text filling the frame, high energy, action movie poster aesthetic" },
+            { id: "grunge_street", name: "Street Grunge", prompt: "Urban street art style, distressed textures, spray paint effects, raw and authentic look" },
+            { id: "pop_art_bold", name: "Pop Art Bold", prompt: "Bold Pop Art style, halftone patterns, thick outlines, vibrant primary colors, comic book impact" },
+            { id: "neon_night", name: "Neon Night", prompt: "Dark background with bright neon glowing text and outlines, cyber aesthetic, high contrast" },
+            { id: "collage_punk", name: "Punk Collage", prompt: "Ripped paper collage effect, mixed media textures, bold marker scribbles, rebellious spirit" },
+            { id: "propaganda_retro", name: "Retro Propaganda", prompt: "Vintage propaganda poster style, sunburst background, heroic angle, illustrated filter effect" },
+            { id: "warning_sign", name: "Hazard Bold", prompt: "Industrial hazard sign aesthetic, yellow and black stripes, stencil typography, urgent message" },
+            { id: "glitch_art", name: "Digital Glitch", prompt: "Data moshing and glitch art effects, distorted text, digital noise, disruptive aesthetic" },
+            { id: "high_contrast_bw", name: "Stark Contrast", prompt: "Extremely high contrast black and white noir style, dramatic shadows, serious tone" }
+        ]
+    },
+    {
+        category: "Creative & Artistic",
+        styles: [
+            { id: "double_exposure", name: "Double Exposure", prompt: "Artistic double exposure effect, blending candidate silhouette with city skyline or crowd scene" },
+            { id: "watercolor_splash", name: "Watercolor Dream", prompt: "Soft watercolor paint splashes, artistic brush strokes, dreamy and hopeful atmosphere" },
+            { id: "oil_painting", name: "Presidential Portrait", prompt: "Classic oil painting texture, dignified and historical museum quality portrait style" },
+            { id: "pencil_sketch", name: "Architectural Sketch", prompt: "Technical pencil sketch style fading into realism, blueprint background, 'building the future' theme" },
+            { id: "paper_cutout", name: "Paper Cutout", prompt: "Layered paper cutout art style, depth and shadows, playful yet sophisticated craft aesthetic" },
+            { id: "mosaic_tile", name: "Community Mosaic", prompt: "Mosaic tile effect where the portrait is made of smaller images of people, symbolizing unity" },
+            { id: "vaporwave", name: "Vaporwave", prompt: "Vaporwave aesthetic, pastel pinks and teals, greek statues, retro 90s computer graphics" },
+            { id: "low_poly", name: "Low Poly", prompt: "Low poly geometric 3D art style, faceted crystalline look, modern digital art" },
+            { id: "stencil_graffiti", name: "Stencil Art", prompt: "Banksy-style stencil graffiti art on a concrete wall texture, urban and gritty" },
+            { id: "engraving", name: "Currency Engraving", prompt: "Banknote engraving style, detailed line work, official and valuable look" }
+        ]
+    },
+    {
+        category: "Classic & Traditional",
+        styles: [
+            { id: "vintage_campaign", name: "Vintage 1960s", prompt: "1960s Kennedy era campaign poster style, red white and blue, retro fonts, grain texture" },
+            { id: "art_deco", name: "Art Deco Luxury", prompt: "1920s Art Deco style, gold geometric borders, elegant fonts, Great Gatsby luxury vibe" },
+            { id: "newspaper_front", name: "Newspaper Headline", prompt: "Old school newspaper front page layout, monochrome, headline typography, historic moment" },
+            { id: "wanted_poster", name: "Wanted / Hero", prompt: "Old West wanted poster aesthetic but framed as a 'Hero Needed' narrative, parchment texture" },
+            { id: "academic_formal", name: "Academic Formal", prompt: "University crest style, serif fonts, parchment background, intellectual and serious" },
+            { id: "patriotic_flag", name: "Flag Drape", prompt: "Subject draped in or blending with the national flag, intense patriotism, fabric textures" },
+            { id: "boxing_poster", name: "Fight Night", prompt: "Vintage boxing match poster style, distressed paper, 'The Main Event' typography" },
+            { id: "seal_official", name: "Official Seal", prompt: "Design centered around a grand official seal or emblem, formal certificate aesthetic" },
+            { id: "letterpress", name: "Letterpress", prompt: "Letterpress printing texture, indented text, clean ink on thick paper look" },
+            { id: "campaign_pin", name: "Campaign Button", prompt: "Design framed within a classic round campaign button pin, metallic edges" }
+        ]
+    },
+    {
+        category: "Themed & Niche",
+        styles: [
+            { id: "movie_blockbuster", name: "Cinema Poster", prompt: "Hollywood blockbuster movie poster style, dramatic lighting, credit block at bottom" },
+            { id: "sports_card", name: "Trading Card", prompt: "Sports trading card layout, stats and team colors, dynamic action shot vibe" },
+            { id: "album_cover", name: "Album Cover", prompt: "Square format vinyl album cover aesthetic, artistic and cool, musical vibe" },
+            { id: "magazine_cover", name: "Time Magazine", prompt: "Iconic news magazine cover layout with red border and bold headline" },
+            { id: "social_media", name: "Viral Post", prompt: "Designed specifically for Instagram/TikTok, square layout, large text, emoji elements" },
+            { id: "eco_green", name: "Eco Warrior", prompt: "Nature themes, leaves and vines, fresh greens, environmental protection vibe" },
+            { id: "industrial_strength", name: "Industrial Strength", prompt: "Metal textures, bolts, steel beams, 'Strong Leadership' construction theme" },
+            { id: "cyber_security", name: "Cyber Security", prompt: "Matrix code background, lock icons, digital shield, 'Security' theme" },
+            { id: "space_exploration", name: "Visionary Future", prompt: "Starry space background, rocket or planet motifs, 'Launch' theme" },
+            { id: "youth_vibe", name: "Youth Culture", prompt: "Gen Z aesthetic, stickers, doodles, vibrant mismatched colors, authentic and raw" }
+        ]
+    }
 ];
