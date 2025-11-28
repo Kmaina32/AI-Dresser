@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { SparklesIcon } from './icons/SparklesIcon.tsx';
 import { DownloadIcon } from './icons/DownloadIcon.tsx';
@@ -28,6 +29,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   const [showGenerated, setShowGenerated] = useState(true);
   const [addLogo, setAddLogo] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  const [downloadFormat, setDownloadFormat] = useState<'jpg' | 'png'>('jpg');
 
   useEffect(() => {
     // When a new image is generated, always show it.
@@ -36,7 +38,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
     }
   }, [generatedImage]);
   
-  const prepareImageForExport = async (): Promise<string> => {
+  const prepareImageForExport = async (format: 'image/jpeg' | 'image/png'): Promise<string> => {
       if (!generatedImage) throw new Error("No image");
 
       const canvas = document.createElement('canvas');
@@ -74,15 +76,16 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
           ctx.globalAlpha = 1.0;
       }
       
-      return canvas.toDataURL('image/jpeg', 0.95);
+      return canvas.toDataURL(format, format === 'image/jpeg' ? 0.95 : 1.0);
   };
 
   const handleDownload = async () => {
     if (!generatedImage) return;
 
     try {
-        const finalDataUrl = await prepareImageForExport();
-        await downloadResource(finalDataUrl, `geo-studio-look${addLogo ? '-watermarked' : ''}.jpeg`);
+        const mimeType = downloadFormat === 'png' ? 'image/png' : 'image/jpeg';
+        const finalDataUrl = await prepareImageForExport(mimeType);
+        await downloadResource(finalDataUrl, `geo-studio-look${addLogo ? '-watermarked' : ''}.${downloadFormat}`);
     } catch (err) {
         console.error("Failed during download process:", err);
         // Fallback to downloading the original generated image data
@@ -97,7 +100,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
       setIsSharing(true);
 
       try {
-          const finalDataUrl = await prepareImageForExport();
+          const finalDataUrl = await prepareImageForExport('image/jpeg');
           const file = await dataUrlToFile(finalDataUrl, `geo-look.jpg`);
           
           if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -195,16 +198,35 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
 
         {generatedImage && !isLoading && (
           <div className="absolute bottom-4 right-4 flex flex-col items-end gap-3 z-20">
-             {/* Watermark Toggle */}
-             <div className="flex items-center gap-2 bg-white/60 dark:bg-black/60 backdrop-blur-md rounded-full py-2 pl-3 pr-4 border border-zinc-200 dark:border-white/10 mb-2">
-              <input 
-                type="checkbox" 
-                id="addLogoToggle" 
-                checked={addLogo} 
-                onChange={(e) => setAddLogo(e.target.checked)}
-                className="h-4 w-4 rounded bg-zinc-100 dark:bg-zinc-800 border-zinc-400 dark:border-zinc-600 text-amber-500 focus:ring-amber-500 cursor-pointer accent-amber-500"
-              />
-              <label htmlFor="addLogoToggle" className="text-zinc-900 dark:text-white text-[10px] font-bold uppercase tracking-wider cursor-pointer select-none">Watermark</label>
+             
+             {/* Format & Watermark Group */}
+             <div className="flex flex-col items-end gap-2 mb-2">
+                <p className="text-[9px] font-bold uppercase text-zinc-400 mb-0.5 tracking-wider hidden group-hover:block transition-all">Download As</p>
+                <div className="flex items-center gap-1 bg-white/60 dark:bg-black/60 backdrop-blur-md rounded-lg p-1 border border-zinc-200 dark:border-white/10">
+                    <button 
+                        onClick={() => setDownloadFormat('jpg')} 
+                        className={`px-3 py-1.5 text-[9px] font-bold uppercase rounded-md transition-colors ${downloadFormat === 'jpg' ? 'bg-amber-500 text-black shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/5'}`}
+                    >
+                        JPG
+                    </button>
+                    <button 
+                        onClick={() => setDownloadFormat('png')} 
+                        className={`px-3 py-1.5 text-[9px] font-bold uppercase rounded-md transition-colors ${downloadFormat === 'png' ? 'bg-amber-500 text-black shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/5'}`}
+                    >
+                        PNG
+                    </button>
+                </div>
+
+                <div className="flex items-center gap-2 bg-white/60 dark:bg-black/60 backdrop-blur-md rounded-full py-1.5 pl-3 pr-3 border border-zinc-200 dark:border-white/10 mt-1">
+                    <input 
+                        type="checkbox" 
+                        id="addLogoToggle" 
+                        checked={addLogo} 
+                        onChange={(e) => setAddLogo(e.target.checked)}
+                        className="h-3 w-3 rounded bg-zinc-100 dark:bg-zinc-800 border-zinc-400 dark:border-zinc-600 text-amber-500 focus:ring-amber-500 cursor-pointer accent-amber-500"
+                    />
+                    <label htmlFor="addLogoToggle" className="text-zinc-900 dark:text-white text-[9px] font-bold uppercase tracking-wider cursor-pointer select-none">Watermark</label>
+                </div>
             </div>
 
             <div className="flex items-center gap-2">
@@ -240,7 +262,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
                 <button
                 onClick={handleDownload}
                 className="bg-amber-500 text-black p-3 rounded-full hover:bg-amber-400 hover:scale-110 transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.4)] btn-tech"
-                title="Download Image"
+                title={`Download as ${downloadFormat.toUpperCase()}`}
                 >
                 <DownloadIcon className="w-6 h-6" />
                 </button>

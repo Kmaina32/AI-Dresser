@@ -1,6 +1,8 @@
 
+
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import CreatorDisplay from '../components/ImageUploader.tsx';
+import SimpleImageUploader from '../components/SimpleImageUploader.tsx';
 import { 
   CATEGORIZED_SUIT_STYLES, 
   CATEGORIZED_WOMENS_STYLES,
@@ -80,6 +82,10 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
   const [selectedLighting, setSelectedLighting] = useState<string>('');
   const [selectedQuality, setSelectedQuality] = useState<string>(QUALITY_OPTIONS[0].value);
   const [isLockEnabled, setIsLockEnabled] = useState<boolean>(true);
+
+  // Custom Environment Image State
+  const [envImageFile, setEnvImageFile] = useState<File | null>(null);
+  const [envImageUrl, setEnvImageUrl] = useState<string | null>(null);
 
   const [targetPerson, setTargetPerson] = useState<string>('');
   const [selectedPosture, setSelectedPosture] = useState<string>(DEFAULT_POSTURE_OPTION.prompt);
@@ -185,6 +191,13 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
     setError(null);
   };
 
+  const handleEnvImageUpload = (file: File, dataUrl: string) => {
+      setEnvImageFile(file);
+      setEnvImageUrl(dataUrl);
+      // Automatically clear background selection to indicate custom mode
+      setSelectedBackground('');
+  };
+
   const handleGenerateClick = useCallback(async () => {
     if (!originalImageFile) {
       setError('Please upload an image first.');
@@ -215,7 +228,8 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
         selectedTie, selectedHandbag, selectedEyewear, selectedHeadwear,
         effectiveTargetPerson, selectedPosture, isLockEnabled, selectedQuality,
         mode,
-        selectedRims, selectedAero, selectedVehicleInterior, selectedVehicleLighting
+        selectedRims, selectedAero, selectedVehicleInterior, selectedVehicleLighting,
+        envImageFile || undefined // Pass the environment image if exists
       );
       setGeneratedImage(result);
     } catch (e) {
@@ -229,7 +243,8 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
     selectedLighting, selectedShoe, selectedShirt, selectedTie, selectedHandbag, 
     selectedEyewear, selectedHeadwear, targetPerson, selectedPosture, 
     isLockEnabled, selectedQuality, mode, attireType,
-    selectedRims, selectedAero, selectedVehicleInterior, selectedVehicleLighting
+    selectedRims, selectedAero, selectedVehicleInterior, selectedVehicleLighting,
+    envImageFile
   ]);
 
   const backgroundOptions = useMemo(() => currentBackgrounds.map(option => ({ label: option.name, value: option.prompt })), [currentBackgrounds]);
@@ -326,9 +341,30 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
                     />
                 </CollapsibleSection>
 
-                <CollapsibleSection title="Environment">
+                <CollapsibleSection title="Environment" isOpen={true}>
                     <div className="space-y-6">
-                        <DropdownSelector label="Background" options={backgroundOptions} selectedValue={selectedBackground} onSelect={setSelectedBackground} />
+                        {mode === 'apparel' && (
+                            <div>
+                                <label className="block text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2 pl-1">
+                                    Upload Custom Scene (Overrides Background)
+                                </label>
+                                <SimpleImageUploader 
+                                    label="Custom Environment" 
+                                    imageUrl={envImageUrl} 
+                                    onImageUpload={handleEnvImageUpload} 
+                                />
+                                {envImageUrl && (
+                                    <p className="text-[10px] text-amber-500 mt-2 font-medium">
+                                        Using custom environment image. AI will place the subject into this scene.
+                                    </p>
+                                )}
+                            </div>
+                        )}
+                        
+                        {!envImageUrl && (
+                             <DropdownSelector label="Background" options={backgroundOptions} selectedValue={selectedBackground} onSelect={setSelectedBackground} />
+                        )}
+
                         <DropdownSelector label="Lighting" options={lightingOptions} selectedValue={selectedLighting} onSelect={setSelectedLighting} />
                     </div>
                 </CollapsibleSection>

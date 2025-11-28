@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import SimpleImageUploader from '../components/SimpleImageUploader.tsx';
 import ResultDisplay from '../components/ResultDisplay.tsx';
@@ -9,6 +8,7 @@ import { LockClosedIcon } from '../components/icons/LockClosedIcon.tsx';
 import { UsersIcon } from '../components/icons/UsersIcon.tsx';
 import { SlidersIcon } from '../components/icons/SlidersIcon.tsx';
 import { CloseIcon } from '../components/icons/CloseIcon.tsx';
+import { UserPlusIcon } from '../components/icons/UserPlusIcon.tsx';
 import CollapsibleSection from '../components/CollapsibleSection.tsx';
 
 const StudioSessionPage: React.FC = () => {
@@ -23,6 +23,7 @@ const StudioSessionPage: React.FC = () => {
     const [selectedBackground, setSelectedBackground] = useState<string>(APPAREL_BACKGROUNDS[0].prompt);
     const [selectedLighting, setSelectedLighting] = useState<string>(APPAREL_LIGHTING[0].prompt);
     const [selectedAspectRatio, setSelectedAspectRatio] = useState<string>(POSTER_ASPECT_RATIOS[2].value); // Default to Landscape
+    const [additionalPrompt, setAdditionalPrompt] = useState<string>('');
 
     const [generatedImage, setGeneratedImage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -57,7 +58,8 @@ const StudioSessionPage: React.FC = () => {
                 selectedPose,
                 selectedBackground,
                 selectedLighting,
-                selectedAspectRatio
+                selectedAspectRatio,
+                additionalPrompt
             );
             setGeneratedImage(result);
         } catch (e) {
@@ -66,7 +68,7 @@ const StudioSessionPage: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [person1File, person2File, selectedScenario, selectedPose, selectedBackground, selectedLighting, selectedAspectRatio]);
+    }, [person1File, person2File, selectedScenario, selectedPose, selectedBackground, selectedLighting, selectedAspectRatio, additionalPrompt]);
 
     const scenarioOptions = STUDIO_SCENARIOS.map(s => ({ label: s.name, value: s.prompt }));
     const poseOptions = STUDIO_POSES.map(p => ({ label: p.name, value: p.prompt }));
@@ -111,25 +113,42 @@ const StudioSessionPage: React.FC = () => {
                 {/* Scrollable Controls */}
                  <div className="flex-grow overflow-y-auto custom-scrollbar pb-32 lg:pb-0">
                     <div className="p-6 space-y-6">
-                        <div className="grid grid-cols-2 gap-4">
-                            <SimpleImageUploader
-                                label="Person A"
-                                imageUrl={person1Url}
-                                onImageUpload={handlePerson1Upload}
-                            />
-                                <SimpleImageUploader
-                                label="Person B"
-                                imageUrl={person2Url}
-                                onImageUpload={handlePerson2Upload}
-                            />
+                        <div className="flex flex-col gap-4 relative">
+                            <div className="flex gap-4 items-stretch">
+                                <div className="flex-1">
+                                    <SimpleImageUploader
+                                        label="Person A"
+                                        imageUrl={person1Url}
+                                        onImageUpload={handlePerson1Upload}
+                                    />
+                                </div>
+                                
+                                {/* Connector */}
+                                <div className="flex flex-col items-center justify-center">
+                                    <div className="w-[1px] h-full bg-zinc-200 dark:bg-white/10 absolute top-0 bottom-0 left-1/2 -translate-x-1/2 z-0"></div>
+                                    <div className="w-8 h-8 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 flex items-center justify-center relative z-10 shadow-sm">
+                                        <UserPlusIcon className="w-4 h-4 text-zinc-400" />
+                                    </div>
+                                </div>
+
+                                <div className="flex-1">
+                                    <SimpleImageUploader
+                                        label="Person B"
+                                        imageUrl={person2Url}
+                                        onImageUpload={handlePerson2Upload}
+                                    />
+                                </div>
+                            </div>
                         </div>
                         
-                        <div className="px-4 py-3 bg-zinc-100 dark:bg-zinc-900/50 border border-amber-500/30 rounded-sm flex flex-col gap-1">
+                        <div className="px-4 py-3 bg-amber-500/10 border border-amber-500/20 rounded-sm flex flex-col gap-1">
                             <div className="flex items-center gap-2">
-                                <LockClosedIcon className="w-4 h-4 text-amber-400" />
-                                <span className="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest">Identity & Physique Lock</span>
+                                <LockClosedIcon className="w-4 h-4 text-amber-500" />
+                                <span className="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest">Enhanced Identity Lock v2.0</span>
                             </div>
-                            <p className="text-[10px] text-zinc-600 dark:text-zinc-500 pl-6">AI is instructed to strictly maintain facial features and body build.</p>
+                            <p className="text-[10px] text-zinc-600 dark:text-zinc-400 pl-6 leading-tight">
+                                AI is strictly instructed to preserve facial features. Ensure source photos are high quality and faces are clearly visible.
+                            </p>
                         </div>
                     </div>
 
@@ -137,6 +156,16 @@ const StudioSessionPage: React.FC = () => {
                          <div className="grid grid-cols-1 gap-6">
                                 <DropdownSelector label="Scenario" options={scenarioOptions} selectedValue={selectedScenario} onSelect={setSelectedScenario} />
                                 <DropdownSelector label="Pose / Action" options={poseOptions} selectedValue={selectedPose} onSelect={setSelectedPose} />
+                                <div>
+                                    <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1 mb-2">Custom Details (Optional)</label>
+                                    <textarea 
+                                        value={additionalPrompt}
+                                        onChange={(e) => setAdditionalPrompt(e.target.value)}
+                                        placeholder="E.g., Person A is wearing a blue suit, Person B is in a red dress. They are looking at the camera..."
+                                        rows={3}
+                                        className="w-full bg-white dark:bg-zinc-950/50 border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 text-xs rounded-sm px-3 py-3 focus:ring-0 focus:border-amber-500 focus:outline-none transition-all placeholder-zinc-400 resize-none"
+                                    />
+                                </div>
                         </div>
                     </CollapsibleSection>
 
