@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Modality } from "@google/genai";
 import { fileToBase64 } from "../utils/fileUtils.ts";
 import { PoliticalParty } from "../constants.ts";
@@ -72,15 +73,15 @@ export async function editImageWithGemini(
       if (headwearPrompt) promptParts.push(`- **Headwear:** ${targetPrefix}add headwear: ${headwearPrompt}.`);
   } 
   else if (mode === 'vehicle') {
-      promptParts.push(`- **Vehicle Modification:** Transform the vehicle in the image. Apply the following style(s): ${stylePrompt}.`);
+      promptParts.push(`- **Vehicle Modification:** Transform the vehicle in the image. Apply the following BASE STYLE: ${stylePrompt}.`);
       if (color && color !== 'automatic') {
           promptParts.push(`- **Paint Color:** The vehicle paint should be the hex color ${color}.`);
       }
       
-      if (rimsPrompt) promptParts.push(`- **Wheels/Rims:** Change wheels to: ${rimsPrompt}. Ensure proper fitment.`);
+      if (rimsPrompt) promptParts.push(`- **Wheels/Rims:** Change wheels to: ${rimsPrompt}. Ensure proper fitment and perspective.`);
       if (aeroPrompt) promptParts.push(`- **Body Aero:** Install ${aeroPrompt}.`);
       if (vehicleInteriorPrompt) promptParts.push(`- **Interior:** Update visible interior to: ${vehicleInteriorPrompt}.`);
-      if (vehicleLightingPrompt) promptParts.push(`- **Lighting/Grill:** Modify lighting/grill: ${vehicleLightingPrompt}.`);
+      if (vehicleLightingPrompt) promptParts.push(`- **Lighting & Accessories:** Apply the following modifications (e.g. window tint, underglow, lights): ${vehicleLightingPrompt}.`);
 
       promptParts.push(`- **NUMBER PLATES:** RETAIN THE ORIGINAL NUMBER PLATES / LICENSE PLATES EXACTLY. DO NOT BLUR OR ALTER TEXT.`);
   }

@@ -202,12 +202,66 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
   {
     category: 'Western Classics',
     styles: [
-        { id: 'black-tuxedo', name: 'Black Tuxedo', prompt: 'a classic black tuxedo with a crisp white shirt, black bow tie, and satin lapels', tags: ['formal', 'classic', 'wedding'] },
-        { id: 'white-dinner-jacket', name: 'White Dinner Jacket', prompt: 'an elegant white dinner jacket with black tuxedo trousers, a white shirt, and a black bow tie, embodying classic James Bond style', tags: ['formal', 'classic', 'event'] },
-        { id: 'pinstripe-suit', name: 'Pinstripe Suit', prompt: 'a powerful navy blue pinstripe suit with a tie', tags: ['business', 'classic', 'formal'] },
-        { id: 'modern-fit-suit', name: 'Modern Fit Suit', prompt: 'a modern slim-fit suit in charcoal grey', tags: ['business', 'modern', 'everyday'] },
-        { id: 'tweed-suit', name: 'Tweed Suit', prompt: 'a classic brown tweed suit, perfect for a vintage, academic look', tags: ['classic', 'vintage', 'business', 'everyday'] },
-        { id: 'double-breasted-suit', name: 'Double-Breasted Suit', prompt: 'a sharp, powerful double-breasted suit in navy blue', tags: ['formal', 'business', 'classic'] },
+        { id: 'grey-three-piece-suit', name: 'Grey Three-Piece Suit', prompt: 'a tailored grey three-piece suit with matching vest and a sleek tie', tags: ['formal', 'classic', 'business'] },
+        { id: 'brown-three-piece-suit', name: 'Brown Three-Piece Suit', prompt: 'a vintage brown three-piece suit with a patterned tie and polished shoes', tags: ['vintage', 'classic', 'formal'] },
+        { id: 'tan-suit', name: 'Tan Suit', prompt: 'a light tan suit with a white shirt and brown leather shoes for a modern classic look', tags: ['modern', 'classic', 'business'] },
+        { id: 'midnight-blue-suit', name: 'Midnight Blue Suit', prompt: 'a luxurious midnight blue suit with a black satin tie', tags: ['formal', 'classic', 'event'] },
+        { id: 'charcoal-business-suit', name: 'Charcoal Business Suit', prompt: 'a sharp charcoal business suit ideal for corporate settings', tags: ['business', 'formal'] },
+        { id: 'light-grey-summer-suit', name: 'Light Grey Summer Suit', prompt: 'a breathable light grey suit perfect for summer events', tags: ['summer', 'classic', 'event'] },
+        { id: 'khaki-smart-casual', name: 'Khaki Smart Casual', prompt: 'a khaki blazer with navy chinos and loafers', tags: ['casual', 'classic', 'everyday'] },
+        { id: 'camel-coat-style', name: 'Camel Coat Look', prompt: 'a stylish camel long coat over a turtleneck and trousers', tags: ['classic', 'winter', 'fashion'] },
+        { id: 'navy-blazer-jeans', name: 'Navy Blazer + Jeans', prompt: 'a timeless navy blazer paired with denim jeans and a white button-down shirt', tags: ['smart-casual', 'classic', 'everyday'] },
+        { id: 'oxford-shirt-look', name: 'Oxford Shirt Look', prompt: 'a crisp blue Oxford shirt tucked into tailored chinos', tags: ['classic', 'everyday', 'casual'] },
+        { id: 'white-oxford-suit', name: 'White Oxford Suit', prompt: 'a clean white oxford cloth suit perfect for sunny outdoor events', tags: ['formal', 'classic'] },
+        { id: 'black-shirt-suit', name: 'Black Shirt Suit', prompt: 'a bold black shirt paired with a fitted grey suit', tags: ['modern', 'stylish', 'event'] },
+        { id: 'burgundy-suit', name: 'Burgundy Suit', prompt: 'a deep burgundy slim-fit suit for elegant events', tags: ['formal', 'event', 'classic'] },
+        { id: 'olive-green-suit', name: 'Olive Green Suit', prompt: 'a unique olive green suit styled with brown leather accessories', tags: ['classic', 'modern', 'fashion'] },
+        { id: 'cream-linen-suit', name: 'Cream Linen Suit', prompt: 'a lightweight cream linen suit perfect for summer weddings', tags: ['summer', 'wedding', 'classic'] },
+        { id: 'linen-blazer-chinos', name: 'Linen Blazer + Chinos', prompt: 'a soft linen blazer paired with tailored chinos and loafers', tags: ['summer', 'casual', 'classic'] },
+        { id: 'herringbone-blazer', name: 'Herringbone Blazer', prompt: 'a vintage herringbone blazer styled with a turtleneck', tags: ['vintage', 'classic', 'winter'] },
+        { id: 'houndstooth-suit', name: 'Houndstooth Suit', prompt: 'a patterned houndstooth suit for a strong vintage aesthetic', tags: ['vintage', 'formal'] },
+        { id: 'glenn-plaid-suit', name: 'Glenn Plaid Suit', prompt: 'a glenn plaid patterned suit with classic wide lapels', tags: ['classic', 'vintage', 'business'] },
+        { id: 'windowpane-suit', name: 'Windowpane Suit', prompt: 'a bold windowpane check suit with complementary tie', tags: ['classic', 'fashion', 'formal'] },
+        { id: 'rust-suit', name: 'Rust Suit', prompt: 'a modern rust-colored suit perfect for fashion-forward men', tags: ['modern', 'event'] },
+        { id: 'light-blue-suit', name: 'Light Blue Suit', prompt: 'a soft pastel blue suit suitable for daytime events', tags: ['formal', 'event'] },
+        { id: 'forest-green-suit', name: 'Forest Green Suit', prompt: 'a deep forest green formal suit with gold accents', tags: ['event', 'classic'] },
+        { id: 'all-black-outfit', name: 'All Black Outfit', prompt: 'a sleek all-black outfit with a black turtleneck and coat', tags: ['modern', 'fashion', 'everyday'] },
+        { id: 'black-turtleneck-blazer', name: 'Black Turtleneck + Blazer', prompt: 'a premium black turtleneck layered under a fitted black blazer', tags: ['winter', 'classic'] },
+        { id: 'trench-coat-classic', name: 'Trench Coat Classic', prompt: 'a beige trench coat over a suit for a London gentleman style', tags: ['classic', 'formal'] },
+        { id: 'peacoat-style', name: 'Peacoat Style', prompt: 'a navy peacoat layered over a sweater', tags: ['winter', 'classic'] },
+        { id: 'black-overcoat-suit', name: 'Black Overcoat Suit', prompt: 'a long black overcoat layered over a tailored suit', tags: ['formal', 'winter'] },
+        { id: 'brown-overcoat', name: 'Brown Overcoat', prompt: 'a rich brown overcoat worn with a grey turtleneck and slacks', tags: ['classic', 'winter'] },
+        { id: 'lightweight-blazer', name: 'Lightweight Blazer', prompt: 'a soft unstructured blazer for everyday casual elegance', tags: ['casual', 'modern'] },
+        { id: 'navy-cardigan-look', name: 'Navy Cardigan Layered Look', prompt: 'a navy cardigan layered over a button-down shirt', tags: ['classic', 'casual'] },
+        { id: 'white-shirt-jeans', name: 'White Shirt + Jeans', prompt: 'a crisp white shirt tucked into blue jeans with a belt', tags: ['classic', 'everyday'] },
+        { id: 'polo-shirt-chinos', name: 'Polo Shirt + Chinos', prompt: 'a fitted polo shirt with chinos for a casual classic look', tags: ['casual', 'everyday'] },
+        { id: 'turtleneck-coat', name: 'Turtleneck + Coat', prompt: 'a dark turtleneck under a heavy wool coat', tags: ['winter', 'classic'] },
+        { id: 'blue-blazer-khaki', name: 'Blue Blazer + Khaki', prompt: 'a navy blazer worn with khaki trousers', tags: ['smart-casual', 'classic'] },
+        { id: 'casual-suit-no-tie', name: 'Casual Suit No Tie', prompt: 'a relaxed-fit suit worn with no tie and loafers', tags: ['casual', 'classic'] },
+        { id: 'loafers-chinos', name: 'Loafers + Chinos', prompt: 'brown loafers worn with chinos and a button-down shirt', tags: ['everyday', 'classic'] },
+        { id: 'formal-waistcoat-look', name: 'Formal Waistcoat Look', prompt: 'a waistcoat paired with a crisp shirt and trousers', tags: ['formal', 'classic'] },
+        { id: 'blue-pinstripe-modern', name: 'Blue Pinstripe Modern', prompt: 'a modern slim pinstripe suit with wide lapels', tags: ['business', 'classic'] },
+        { id: 'corduroy-blazer', name: 'Corduroy Blazer', prompt: 'a vintage corduroy blazer paired with dark trousers', tags: ['vintage', 'classic'] },
+        { id: 'tweed-blazer-casual', name: 'Tweed Blazer Casual', prompt: 'a tweed blazer worn with jeans and a turtleneck', tags: ['vintage', 'classic'] },
+        { id: 'chocolate-brown-suit', name: 'Chocolate Brown Suit', prompt: 'a rich chocolate brown suit with a matching tie', tags: ['formal', 'classic'] },
+        { id: 'executive-navy-suit', name: 'Executive Navy Suit', prompt: 'a powerful executive navy blue suit', tags: ['business', 'formal'] },
+        { id: 'white-casual-linen', name: 'White Casual Linen', prompt: 'a white linen shirt tucked into beige trousers', tags: ['summer', 'casual'] },
+        { id: 'checked-sport-coat', name: 'Checked Sport Coat', prompt: 'a check-pattern sport coat with dark jeans', tags: ['smart-casual', 'classic'] },
+        { id: 'business-travel-look', name: 'Business Travel Look', prompt: 'a tailored blazer worn with a turtleneck and travel trousers', tags: ['business', 'modern'] },
+        { id: 'vintage-70s-suit', name: 'Vintage 70s Suit', prompt: 'a retro 1970s-style suit with wide lapels and earth tones', tags: ['vintage', 'classic'] }
+    ]
+  },
+  {
+    category: 'Rugged & Street',
+    styles: [
+        { id: 'brown-leather-jacket', name: 'Brown Leather Jacket', prompt: 'a rugged brown leather jacket over a white tee and jeans', tags: ['casual', 'classic', 'everyday'] },
+        { id: 'denim-jacket-style', name: 'Denim Jacket Style', prompt: 'a denim jacket worn over a flannel shirt and black jeans', tags: ['casual', 'classic'] },
+        { id: 'bomber-jacket-look', name: 'Bomber Jacket Look', prompt: 'a modern bomber jacket styled with fitted trousers', tags: ['casual', 'modern'] },
+        { id: 'rugged-workwear', name: 'Rugged Workwear', prompt: 'a workwear jacket paired with denim and boots', tags: ['casual', 'vintage'] },
+        { id: 'western-denim-shirt', name: 'Western Denim Shirt', prompt: 'a snap-button denim shirt styled with boots', tags: ['casual', 'western'] },
+        { id: 'lumberjack-plaid', name: 'Lumberjack Plaid', prompt: 'a red plaid flannel shirt with rugged jeans', tags: ['casual', 'classic'] },
+        { id: 'safari-jacket-style', name: 'Safari Jacket Style', prompt: 'a beige safari jacket with earth-tone trousers', tags: ['classic', 'outdoors'] },
+        { id: 'western-boots-outfit', name: 'Western Boots Outfit', prompt: 'a western outfit featuring cowboy boots and denim', tags: ['western', 'casual'] }
     ]
   },
   {
@@ -406,19 +460,139 @@ export const CATEGORIZED_KIDS_STYLES: StyleCategory[] = [
 
 export const CATEGORIZED_VEHICLE_STYLES: StyleCategory[] = [
     {
-        category: "Wraps & Paint",
+        category: "Racing Specs",
         styles: [
-            { id: "matte_black", name: "Stealth Matte Black", prompt: "A high-quality satin matte black vinyl wrap covering the entire vehicle, stealth look", tags: ["modern", "stealth"] },
-            { id: "racing_livery", name: "Racing Livery", prompt: "A dynamic racing livery with bold stripes, sponsor decals, and racing numbers", tags: ["sport", "racing"] },
-            { id: "cyberpunk", name: "Cyberpunk", prompt: "A futuristic cyberpunk aesthetic wrap with neon accents, circuit patterns, and metallic textures", tags: ["futuristic"] },
-            { id: "camo_urban", name: "Urban Camo", prompt: "A geometric urban camouflage wrap in shades of grey, white, and black", tags: ["tactical"] }
+            { id: "wrc_rally", name: "WRC Rally Spec", prompt: "Full WRC rally specification, mud flaps, roof scoop, white rally wheels, roll cage, aggressive aero", tags: ["rally", "racing"] },
+            { id: "drift_missile", name: "Drift Missile", prompt: "Drift missile style, exposed intercooler, zip ties, mismatched panels, extreme lowered stance, negative camber", tags: ["drift", "street"] },
+            { id: "drag_strip", name: "Drag Strip Beast", prompt: "Drag racing setup, massive rear slick tires, skinny front runner wheels, parachute pack on rear", tags: ["drag", "racing"] }
         ]
     },
     {
-        category: "Body Kits",
+        category: "Street Culture",
+        styles: [
+            { id: "midnight_racer", name: "Midnight Racer", prompt: "Japanese highway racer style (Wangan), dark tint, large wing, underglow, clean street look", tags: ["street", "jdm"] },
+            { id: "vip_style", name: "VIP Style (Bippu)", prompt: "Japanese VIP style, deep black paint, extreme lowering, deep dish wheels, curtains in windows, luxury stance", tags: ["luxury", "stance"] },
+            { id: "lowrider", name: "Classic Lowrider", prompt: "Custom hydraulic suspension lowrider, vibrant candy paint with pinstriping, wire wheels with whitewall tires, chrome plating", tags: ["classic", "lowrider"] }
+        ]
+    },
+    {
+        category: "Super Gloss Colors",
+        styles: [
+            { id: "gloss_red", name: "Gloss Ferrari Red", prompt: "High gloss Rosso Corsa red paint", tags: ["gloss", "red"] },
+            { id: "gloss_blue", name: "Gloss Deep Blue", prompt: "High gloss deep ocean blue paint", tags: ["gloss", "blue"] },
+            { id: "gloss_white", name: "Gloss Arctic White", prompt: "High gloss arctic white paint", tags: ["gloss", "white"] },
+            { id: "gloss_black", name: "Gloss Piano Black", prompt: "High gloss piano black paint", tags: ["gloss", "black"] },
+            { id: "gloss_yellow", name: "Gloss Speed Yellow", prompt: "High gloss speed yellow paint", tags: ["gloss", "yellow"] },
+            { id: "gloss_orange", name: "Gloss Sunset Orange", prompt: "High gloss sunset orange paint", tags: ["gloss", "orange"] },
+            { id: "gloss_green", name: "Gloss British Racing Green", prompt: "High gloss British racing green paint", tags: ["gloss", "green"] },
+            { id: "gloss_purple", name: "Gloss Royal Purple", prompt: "High gloss royal purple paint", tags: ["gloss", "purple"] },
+            { id: "gloss_pink", name: "Gloss Hot Pink", prompt: "High gloss hot pink paint", tags: ["gloss", "pink"] },
+            { id: "gloss_grey", name: "Gloss Nardo Grey", prompt: "High gloss Nardo grey paint", tags: ["gloss", "grey"] },
+        ]
+    },
+    {
+        category: "Matte & Satin",
+        styles: [
+            { id: "matte_black", name: "Stealth Matte Black", prompt: "Satin matte black vinyl wrap, stealth look", tags: ["matte", "black"] },
+            { id: "matte_white", name: "Matte Frozen White", prompt: "Satin matte frozen white vinyl wrap", tags: ["matte", "white"] },
+            { id: "matte_military", name: "Matte Military Green", prompt: "Matte olive drab military green paint", tags: ["matte", "green"] },
+            { id: "satin_grey", name: "Satin Dark Grey", prompt: "Satin dark gunmetal grey wrap", tags: ["satin", "grey"] },
+            { id: "matte_blue", name: "Matte Electric Blue", prompt: "Matte electric blue vinyl wrap", tags: ["matte", "blue"] },
+            { id: "matte_red", name: "Matte Crimson Red", prompt: "Matte crimson red vinyl wrap", tags: ["matte", "red"] },
+            { id: "satin_gold", name: "Satin Gold Dust", prompt: "Satin gold dust metallic wrap", tags: ["satin", "gold"] },
+        ]
+    },
+    {
+        category: "Chrome & Metals",
+        styles: [
+            { id: "chrome_silver", name: "Mirror Chrome Silver", prompt: "Highly reflective mirror chrome silver wrap", tags: ["chrome"] },
+            { id: "chrome_gold", name: "Mirror Gold", prompt: "Highly reflective gold chrome wrap", tags: ["chrome", "gold"] },
+            { id: "chrome_blue", name: "Blue Chrome", prompt: "Blue tinted mirror chrome wrap", tags: ["chrome", "blue"] },
+            { id: "chrome_red", name: "Red Chrome", prompt: "Red tinted mirror chrome wrap", tags: ["chrome", "red"] },
+            { id: "chrome_rose", name: "Rose Gold Chrome", prompt: "Rose gold tinted mirror chrome wrap", tags: ["chrome", "rose"] },
+            { id: "brushed_steel", name: "Brushed Steel", prompt: "Brushed stainless steel texture wrap", tags: ["metal"] },
+            { id: "brushed_black", name: "Brushed Black Metallic", prompt: "Brushed black metallic texture wrap", tags: ["metal"] },
+            { id: "brushed_alum", name: "Brushed Aluminium", prompt: "Brushed aluminium texture wrap", tags: ["metal"] },
+        ]
+    },
+    {
+        category: "Color Shift / Chameleon",
+        styles: [
+            { id: "cham_purple_blue", name: "Midnight Purple/Blue", prompt: "Color shifting chameleon paint fading from midnight purple to deep blue", tags: ["color-shift"] },
+            { id: "cham_cyan_purple", name: "Cyan/Purple Flip", prompt: "Iridescent color flip wrap changing from cyan to purple", tags: ["color-shift"] },
+            { id: "cham_red_gold", name: "Red/Gold Volcanic", prompt: "Volcanic color shift paint changing from dark red to gold", tags: ["color-shift"] },
+            { id: "cham_green_purple", name: "Green/Purple Alien", prompt: "Alien green to purple color shifting paint", tags: ["color-shift"] },
+            { id: "pearl_white", name: "Pearlescent White", prompt: "White paint with a pink/green pearlescent shimmer", tags: ["pearl"] },
+            { id: "holographic", name: "Holographic Prismatic", prompt: "Silver holographic prismatic rainbow effect wrap", tags: ["holo"] },
+        ]
+    },
+    {
+        category: "Camouflage Patterns",
+        styles: [
+            { id: "camo_arctic", name: "Arctic Camo", prompt: "White, grey, and black geometric arctic camouflage pattern", tags: ["camo"] },
+            { id: "camo_digital", name: "Digital Desert", prompt: "Pixelated digital desert camouflage pattern (tan, brown)", tags: ["camo"] },
+            { id: "camo_woodland", name: "Classic Woodland", prompt: "Classic green, brown, and black woodland camouflage pattern", tags: ["camo"] },
+            { id: "camo_urban", name: "Urban Geometric", prompt: "Grey, black, and white sharp geometric urban camo", tags: ["camo"] },
+            { id: "camo_blue", name: "Naval Blue Camo", prompt: "Blue, light blue, and white naval camouflage pattern", tags: ["camo"] },
+            { id: "camo_pink", name: "Pink Fashion Camo", prompt: "Pink, white, and grey fashion camouflage pattern", tags: ["camo"] },
+            { id: "camo_red", name: "Red Tiger Camo", prompt: "Red and black aggressive tiger stripe camouflage", tags: ["camo"] },
+        ]
+    },
+    {
+        category: "Racing Liveries",
+        styles: [
+            { id: "livery_martini", name: "Martini Racing", prompt: "Classic white racing livery with blue and red Martini stripes", tags: ["racing"] },
+            { id: "livery_gulf", name: "Gulf Oil", prompt: "Iconic powder blue and orange Gulf Oil racing livery", tags: ["racing"] },
+            { id: "livery_jps", name: "Black & Gold Lotus", prompt: "Classic John Player Special style black livery with gold pinstriping", tags: ["racing"] },
+            { id: "livery_rally", name: "Castrol Rally", prompt: "White, red, and green Castrol rally livery with mud splatters", tags: ["racing"] },
+            { id: "livery_drift", name: "Neon Drift", prompt: "Aggressive drift livery with neon splatter and jagged shapes on black", tags: ["racing", "drift"] },
+            { id: "livery_nascar", name: "Stock Car Numbers", prompt: "Bright stock car racing livery with massive numbers on the door and many sponsor decals", tags: ["racing"] },
+            { id: "livery_f1", name: "Silver Arrows", prompt: "Silver and teal modern Formula 1 style livery", tags: ["racing"] },
+        ]
+    },
+    {
+        category: "Itasha & Anime",
+        styles: [
+            { id: "itasha_girl", name: "Anime Character Full", prompt: "Full side Itasha wrap featuring a cute anime girl character with colorful background", tags: ["anime"] },
+            { id: "itasha_manga", name: "Manga Pages", prompt: "Black and white manga comic book pages collage wrap covering the car", tags: ["anime"] },
+            { id: "itasha_cyber", name: "Cyber Anime", prompt: "Futuristic anime mecha style wrap with neon panel lines", tags: ["anime"] },
+            { id: "itasha_kawaii", name: "Kawaii Pink", prompt: "Pink pastel wrap with cute mascots, stars, and hearts", tags: ["anime"] },
+        ]
+    },
+    {
+        category: "Art & Graphic",
+        styles: [
+            { id: "art_graffiti", name: "Street Graffiti", prompt: "Colorful street art graffiti tags and mural covering the car", tags: ["art"] },
+            { id: "art_stickerbomb", name: "Stickerbomb", prompt: "JDM Stickerbomb wrap, hundreds of overlapping stickers on the fender and bumper", tags: ["art"] },
+            { id: "art_galaxy", name: "Galaxy Space", prompt: "Deep space nebula and stars galaxy print wrap", tags: ["art"] },
+            { id: "art_fire", name: "Realistic Flames", prompt: "Realistic fire flames licking up the front of the car from the grill", tags: ["art"] },
+            { id: "art_tribal", name: "Tribal Tattoos", prompt: "Black tribal tattoo graphics on the side of the car", tags: ["art"] },
+            { id: "art_splatter", name: "Paint Splatter", prompt: "White car with multi-colored chaotic paint splatter effects", tags: ["art"] },
+            { id: "art_tron", name: "Tron Lines", prompt: "Matte black car with glowing neon blue edges and contour lines", tags: ["art", "scifi"] },
+            { id: "wrap_outline", name: "Blueprint Outline", prompt: "A technical wireframe outline sketch of the car model applied as a wrap, white lines on dark background, blueprint aesthetic", tags: ["art", "sketch"] },
+        ]
+    },
+    {
+        category: "Cyberpunk & Sci-Fi",
+        styles: [
+            { id: "cyber_distressed", name: "Distressed Future", prompt: "Dirty, worn sci-fi spacecraft look, industrial grey with caution stripes", tags: ["scifi"] },
+            { id: "cyber_synthwave", name: "Synthwave Sunset", prompt: "Retro 80s synthwave sunset grid gradient, purple to orange", tags: ["scifi"] },
+            { id: "cyber_circuit", name: "Circuit Board", prompt: "Green circuit board pattern on black background", tags: ["scifi"] },
+        ]
+    },
+    {
+        category: "Emergency & Utility",
+        styles: [
+            { id: "theme_police", name: "Police Interceptor", prompt: "Black and white police interceptor livery with police lights", tags: ["theme"] },
+            { id: "theme_taxi", name: "NYC Taxi", prompt: "Yellow cab taxi livery with checkerboard stripe", tags: ["theme"] },
+            { id: "theme_biohazard", name: "Zombie Response", prompt: "Umbrella corp style zombie response vehicle, white with red umbrella logo and blood splatter", tags: ["theme"] },
+        ]
+    },
+    {
+        category: "Body Kits & Stance",
         styles: [
             { id: "widebody", name: "Widebody Kit", prompt: "An aggressive widebody kit with flared fenders, lowered suspension, and a front splitter", tags: ["sport", "aggressive"] },
-            { id: "offroad", name: "Offroad Ready", prompt: "Lifted suspension, off-road tires, roof rack with lights, bullbar", tags: ["utility", "rugged"] }
+            { id: "offroad", name: "Offroad Ready", prompt: "Lifted suspension, off-road tires, roof rack with lights, bullbar", tags: ["utility", "rugged"] },
         ]
     }
 ];
@@ -627,17 +801,122 @@ export const CATEGORIZED_HEADWEAR_STYLES: StyleCategory[] = [
 // --- VEHICLE MODS ---
 
 export const DEFAULT_VEHICLE_MOD_OPTION = { name: 'Keep Original', prompt: '' };
+
 export const CATEGORIZED_VEHICLE_RIMS: OptionGroup[] = [
-    { category: 'Street', styles: [{ id: 'alloy_silver', name: 'Silver Alloys', prompt: 'multi-spoke silver alloy performance wheels', tags: [] }, { id: 'black_rims', name: 'Gloss Black', prompt: 'gloss black racing rims', tags: [] }] }
+    { 
+        category: 'Street', 
+        styles: [
+            { id: 'alloy_silver', name: 'Silver Alloys', prompt: 'multi-spoke silver alloy performance wheels', tags: [] }, 
+            { id: 'black_rims', name: 'Gloss Black', prompt: 'gloss black racing rims', tags: [] }
+        ] 
+    },
+    {
+        category: 'JDM Legends',
+        styles: [
+            { id: 'te37_bronze', name: 'Volk Bronze', prompt: 'iconic bronze 6-spoke racing wheels (TE37 style), performance look', tags: [] },
+            { id: 'te37_white', name: 'Volk White', prompt: 'iconic white 6-spoke racing wheels (TE37 style)', tags: [] },
+            { id: 'work_meister', name: 'Work Meister S1', prompt: 'deep dish 3-piece 5-spoke wheels (Work Meister S1 style) with polished lip', tags: [] },
+            { id: 'ce28n', name: 'Volk CE28N', prompt: 'Volk CE28N style multi-spoke lightweight bronze wheels', tags: [] },
+            { id: 'rpf1', name: 'Enkei RPF1', prompt: 'Enkei RPF1 silver split-spoke lightweight racing wheels', tags: [] },
+            { id: 'advan_gt', name: 'Advan GT', prompt: 'Advan GT style 5-spoke racing wheels', tags: [] },
+        ]
+    },
+    {
+        category: 'Euro Stance',
+        styles: [
+            { id: 'bbs_rs', name: 'BBS RS Mesh', prompt: 'Classic BBS RS mesh wheels with polished lips, gold centers', tags: [] },
+            { id: 'bbs_lm', name: 'BBS LM', prompt: 'BBS LM style multi-spoke mesh wheels', tags: [] },
+            { id: 'rotiform_blq', name: 'Rotiform BLQ', prompt: 'Rotiform BLQ intricate mesh design wheels', tags: [] },
+            { id: 'rotiform_aerodisc', name: 'Aero Disc', prompt: 'Rotiform white Aerodiscs on the front wheels', tags: [] },
+            { id: 'oz_superturismo', name: 'OZ Superturismo', prompt: 'OZ Racing Superturismo white multi-spoke rally wheels', tags: [] },
+        ]
+    },
+    {
+        category: 'American Muscle',
+        styles: [
+            { id: 'cragar_ss', name: 'Cragar S/S', prompt: 'Classic chrome Cragar S/S 5-spoke muscle car wheels', tags: [] },
+            { id: 'torque_thrust', name: 'Torque Thrust', prompt: 'American Racing Torque Thrust wheels, gunmetal spokes with polished lip', tags: [] },
+            { id: 'weld_racing', name: 'Weld Drag', prompt: 'Polished Weld Racing drag wheels, skinnies in front, beadlocks in rear', tags: [] },
+        ]
+    },
+    {
+        category: 'Luxury & VIP',
+        styles: [
+            { id: 'maybach_dish', name: 'Maybach Dish', prompt: 'Polished solid dish Maybach style luxury wheels', tags: [] },
+            { id: 'vossen_cvt', name: 'Vossen CVT', prompt: 'Vossen CVT directional multi-spoke luxury wheels', tags: [] },
+            { id: 'forgiato', name: 'Forgiato', prompt: 'Oversized Forgiato custom painted luxury wheels', tags: [] },
+        ]
+    },
+    {
+        category: 'Rally & Offroad',
+        styles: [
+            { id: 'oz_rally_white', name: 'White Rally Turbofans', prompt: 'white rally racing wheels, turbofan style, durable look', tags: [] },
+            { id: 'beadlock_offroad', name: 'Beadlock Offroad', prompt: 'heavy duty beadlock offroad wheels with chunky tires', tags: [] },
+            { id: 'steelies', name: 'Black Steelies', prompt: 'Basic black steel wheels, utilitarian rugged look', tags: [] },
+        ]
+    }
 ];
+
 export const CATEGORIZED_VEHICLE_AERO: OptionGroup[] = [
-    { category: 'Aero', styles: [{ id: 'spoiler', name: 'Rear Spoiler', prompt: 'a large carbon fiber rear wing spoiler', tags: [] }, { id: 'splitter', name: 'Front Splitter', prompt: 'an aggressive front bumper splitter', tags: [] }] }
+    { 
+        category: 'Spoilers & Wings', 
+        styles: [
+            { id: 'spoiler_gt', name: 'Big GT Wing', prompt: 'a massive carbon fiber GT racing wing mounted on the trunk', tags: [] },
+            { id: 'spoiler_ducktail', name: 'Ducktail Spoiler', prompt: 'an aggressive ducktail trunk spoiler integrated into the body lines', tags: [] },
+            { id: 'spoiler_chassis', name: 'Chassis Mount Wing', prompt: 'a huge chassis-mounted rear wing extending behind the bumper', tags: [] },
+            { id: 'spoiler_lip', name: 'Subtle Lip Spoiler', prompt: 'a subtle body-color lip spoiler on the trunk', tags: [] },
+        ] 
+    },
+    {
+        category: 'Body Work',
+        styles: [
+            { id: 'widebody_rocket', name: 'Rocket Bunny Widebody', prompt: 'Rocket Bunny style widebody kit with exposed rivets and fender flares', tags: [] },
+            { id: 'widebody_liberty', name: 'Liberty Walk', prompt: 'Liberty Walk style aggressive widebody kit with bolt-on fenders', tags: [] },
+            { id: 'widebody_smooth', name: 'Smooth Widebody', prompt: 'Molded, smooth widebody fender widening without visible rivets', tags: [] },
+            { id: 'hood_carbon', name: 'Vented Carbon Hood', prompt: 'exposed carbon fiber hood with cooling vents', tags: [] },
+            { id: 'roof_scoop', name: 'Roof Scoop', prompt: 'a rally-style roof air scoop', tags: [] },
+            { id: 'diffuser', name: 'Rear Diffuser', prompt: 'aggressive rear bumper diffuser with aero fins', tags: [] },
+            { id: 'canards', name: 'Front Canards', prompt: 'carbon fiber dive planes/canards on the front bumper', tags: [] },
+            { id: 'roof_box', name: 'Thule Roof Box', prompt: 'aerodynamic roof cargo box carrier', tags: [] }
+        ]
+    }
 ];
+
 export const CATEGORIZED_VEHICLE_INTERIOR: OptionGroup[] = [
     { category: 'Seats', styles: [{ id: 'bucket_seats', name: 'Racing Seats', prompt: 'red leather racing bucket seats', tags: [] }, { id: 'tan_leather', name: 'Tan Leather', prompt: 'luxury tan leather upholstery', tags: [] }] }
 ];
+
 export const CATEGORIZED_VEHICLE_LIGHTING_GRILL: OptionGroup[] = [
-    { category: 'Lights', styles: [{ id: 'led_halo', name: 'LED Halo Rings', prompt: 'custom LED halo ring headlights', tags: [] }, { id: 'blackout', name: 'Smoked Lights', prompt: 'tinted smoked headlights and taillights', tags: [] }] }
+    { 
+        category: 'Headlights', 
+        styles: [
+            { id: 'led_halo', name: 'LED Halo Rings', prompt: 'custom LED halo ring headlights (Angel Eyes)', tags: [] }, 
+            { id: 'demon_eyes', name: 'Red Demon Eyes', prompt: 'headlights with glowing red projector lenses (Demon Eyes)', tags: [] },
+            { id: 'yellow_jdm', name: 'Yellow JDM Lens', prompt: 'yellow tinted JDM style headlight lenses', tags: [] },
+            { id: 'blackout_lights', name: 'Smoked Lights', prompt: 'tinted smoked headlights and taillights', tags: [] }
+        ] 
+    },
+    {
+        category: 'Glass & Tint',
+        styles: [
+            { id: 'tint_5', name: '5% Limo Tint', prompt: 'completely opaque 5% black window tint on all windows', tags: [] },
+            { id: 'tint_35', name: '35% Smoke Tint', prompt: 'standard 35% smoke window tint', tags: [] },
+            { id: 'tint_red', name: 'Red Mirror Tint', prompt: 'reflective red mirror window tint', tags: [] },
+            { id: 'tint_blue', name: 'Blue Mirror Tint', prompt: 'reflective blue mirror window tint', tags: [] },
+            { id: 'tint_gold', name: 'Gold Mirror Tint', prompt: 'reflective gold mirror window tint', tags: [] },
+            { id: 'chameleon_tint', name: 'Chameleon Windshield', prompt: 'iridescent chameleon purple-green window tint', tags: [] },
+        ]
+    },
+    {
+        category: 'Underglow',
+        styles: [
+            { id: 'neon_green', name: 'Green Underglow', prompt: 'vibrant green neon underglow lighting beneath the chassis', tags: [] },
+            { id: 'neon_purple', name: 'Purple Underglow', prompt: 'vibrant purple neon underglow lighting', tags: [] },
+            { id: 'neon_blue', name: 'Blue Underglow', prompt: 'cool blue neon underglow lighting', tags: [] },
+            { id: 'neon_red', name: 'Red Underglow', prompt: 'aggressive red neon underglow lighting', tags: [] },
+            { id: 'neon_white', name: 'White Underglow', prompt: 'bright white LED underglow lighting', tags: [] },
+        ]
+    }
 ];
 
 // --- POSTER / STUDIO CONFIGS ---

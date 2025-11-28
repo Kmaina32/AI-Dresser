@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from 'react';
 import { SparklesIcon } from '../components/icons/SparklesIcon.tsx';
 import { ArrowRightIcon } from '../components/icons/ArrowRightIcon.tsx';
@@ -9,10 +8,42 @@ interface LandingPageProps {
   onNavigate: (page: string) => void;
 }
 
-const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=1780&auto=format&fit=crop", // Sharp grey check suit
-  "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop", // Classic suit
-  "https://images.unsplash.com/photo-1593030761757-71bd90dbe364?q=80&w=2069&auto=format&fit=crop"  // Green/Dark suit
+const HERO_SLIDES = [
+  {
+    id: 'apparel',
+    title: "Apparel Studio",
+    subtitle: "3D Fabric Simulation & Style Transfer",
+    image: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=2000&auto=format&fit=crop", 
+    color: "from-amber-400 to-orange-500"
+  },
+  {
+    id: 'vehicle',
+    title: "Vehicle Wraps",
+    subtitle: "Automotive Geometry & Livery Engine",
+    image: "https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=2070&auto=format&fit=crop", 
+    color: "from-blue-400 to-cyan-500"
+  },
+  {
+    id: 'session',
+    title: "Studio Sessions",
+    subtitle: "Virtual Environment Compositing",
+    image: "https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=2000&auto=format&fit=crop",
+    color: "from-purple-400 to-pink-500"
+  },
+  {
+    id: 'campaign',
+    title: "Campaign Bureau",
+    subtitle: "High-Fidelity Branding & Posters",
+    image: "https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop",
+    color: "from-red-500 to-rose-500"
+  },
+  {
+    id: 'cinema',
+    title: "Veo Cinema",
+    subtitle: "Generative Motion Synthesis",
+    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2000&auto=format&fit=crop",
+    color: "from-emerald-400 to-teal-500"
+  }
 ];
 
 const FeatureCard = ({ title, description, icon, delay }: { title: string, description: string, icon: React.ReactNode, delay: string }) => (
@@ -29,62 +60,99 @@ const FeatureCard = ({ title, description, icon, delay }: { title: string, descr
 );
 
 const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
       const interval = setInterval(() => {
-          setCurrentImageIndex((prev) => (prev + 1) % HERO_IMAGES.length);
+          setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
       }, 5000);
       return () => clearInterval(interval);
   }, []);
 
+  const slide = HERO_SLIDES[currentSlide];
+
   return (
     <div className="min-h-screen overflow-y-auto custom-scrollbar bg-zinc-50 dark:bg-zinc-950 relative">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex flex-col items-center justify-center px-4 py-20 overflow-hidden">
+        <section className="relative h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
             
             {/* Background Slideshow */}
-            <div className="absolute inset-0 overflow-hidden">
-                {HERO_IMAGES.map((img, index) => (
+            <div className="absolute inset-0 overflow-hidden bg-zinc-950">
+                {HERO_SLIDES.map((s, index) => (
                     <div 
-                        key={index}
-                        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? 'opacity-100 scale-105' : 'opacity-0 scale-100'}`}
-                        style={{ backgroundImage: `url(${img})` }}
-                    />
+                        key={s.id}
+                        className={`absolute inset-0 bg-cover bg-center transition-all duration-[1500ms] ease-in-out transform will-change-transform ${
+                            index === currentSlide ? 'opacity-100 scale-105 saturate-100' : 'opacity-0 scale-100 saturate-0'
+                        }`}
+                        style={{ backgroundImage: `url(${s.image})` }}
+                    >
+                        <div className="absolute inset-0 bg-black/50 dark:bg-black/60"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-50 dark:from-zinc-950 via-transparent to-transparent"></div>
+                    </div>
                 ))}
-                <div className="absolute inset-0 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-sm"></div> 
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-50/50 dark:via-zinc-950/50 to-zinc-50 dark:to-zinc-950"></div>
             </div>
             
-            <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8 animate-fade-in">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/40 dark:bg-white/5 border border-zinc-200 dark:border-white/10 backdrop-blur-md mb-4 shadow-sm dark:shadow-none">
-                    <SparklesIcon className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-300">The Next Gen Design Engine</span>
+            <div className="relative z-10 max-w-6xl mx-auto text-center space-y-8 animate-fade-in flex flex-col items-center">
+                
+                {/* 3D Badge */}
+                <div className="mb-6 perspective-[500px]">
+                    <div className="transform rotate-x-12 px-6 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md shadow-[0_10px_20px_rgba(0,0,0,0.3)] animate-float">
+                        <span className="text-xs font-bold uppercase tracking-[0.3em] text-white flex items-center gap-2">
+                            <SparklesIcon className="w-4 h-4" />
+                            Next-Gen Neural Engine
+                        </span>
+                    </div>
                 </div>
                 
-                <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-zinc-900 dark:text-white font-playfair tracking-tighter leading-none">
-                    Design <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-yellow-400 dark:from-amber-400 dark:to-yellow-200">Reality</span>
-                </h1>
+                {/* Dynamic Title */}
+                <div className="min-h-[200px] flex flex-col items-center justify-center">
+                     <h1 
+                        key={slide.title}
+                        className="text-6xl md:text-8xl lg:text-9xl font-bold text-white font-playfair tracking-tighter leading-none animate-fade-in"
+                    >
+                        {slide.title.split(' ').map((word, i) => (
+                            <span key={i} className={i === 0 ? `text-transparent bg-clip-text bg-gradient-to-r ${slide.color} mr-4` : ''}>
+                                {word}{' '}
+                            </span>
+                        ))}
+                    </h1>
+                    <p 
+                        key={slide.subtitle}
+                        className="text-lg md:text-2xl text-zinc-300 font-light mt-6 tracking-wide animate-fade-in"
+                        style={{ animationDelay: '200ms' }}
+                    >
+                        {slide.subtitle}
+                    </p>
+                </div>
                 
-                <p className="text-lg md:text-2xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto font-light leading-relaxed">
-                    Experience the world's most advanced AI customization studio. 
-                    From bespoke fashion to automotive engineering, visualize your imagination instantly.
-                </p>
-                
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
+                {/* Slide Indicators */}
+                <div className="flex items-center gap-3 mt-8">
+                    {HERO_SLIDES.map((s, index) => (
+                        <button
+                            key={s.id}
+                            onClick={() => setCurrentSlide(index)}
+                            className={`h-1 rounded-full transition-all duration-500 ${
+                                index === currentSlide ? 'w-16 bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'w-2 bg-white/20 hover:bg-white/40'
+                            }`}
+                            aria-label={`Go to slide ${index + 1}`}
+                        />
+                    ))}
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-12">
                     <button 
                         onClick={() => onNavigate('home')}
-                        className="group relative px-8 py-4 bg-amber-500 text-black font-bold text-sm uppercase tracking-[0.2em] rounded-sm overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(245,158,11,0.4)]"
+                        className="group relative px-8 py-4 bg-white text-black font-bold text-sm uppercase tracking-[0.2em] rounded-sm overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.4)]"
                     >
                         <span className="relative z-10 flex items-center gap-2">
                             Launch Studio <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </span>
-                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        <div className="absolute inset-0 bg-zinc-200 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                     </button>
                     
                     <button 
                         onClick={() => onNavigate('gallery')}
-                        className="px-8 py-4 bg-white/50 dark:bg-black/20 border border-zinc-300 dark:border-white/20 text-zinc-700 dark:text-white font-bold text-sm uppercase tracking-[0.2em] rounded-sm hover:bg-zinc-100 dark:hover:bg-white/5 hover:border-zinc-400 dark:hover:border-white transition-all backdrop-blur-md"
+                        className="px-8 py-4 bg-black/30 border border-white/20 text-white font-bold text-sm uppercase tracking-[0.2em] rounded-sm hover:bg-white/10 hover:border-white transition-all backdrop-blur-md"
                     >
                         View Gallery
                     </button>
@@ -93,8 +161,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             
             {/* Scroll Indicator */}
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-50">
-                <div className="w-6 h-10 rounded-full border-2 border-zinc-400 dark:border-zinc-600 flex items-start justify-center p-1">
-                    <div className="w-1 h-2 bg-amber-500 rounded-full"></div>
+                <div className="w-6 h-10 rounded-full border-2 border-zinc-500 flex items-start justify-center p-1">
+                    <div className="w-1 h-2 bg-zinc-400 rounded-full"></div>
                 </div>
             </div>
         </section>

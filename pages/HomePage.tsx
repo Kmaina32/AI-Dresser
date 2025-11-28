@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import CreatorDisplay from '../components/ImageUploader.tsx';
 import SimpleImageUploader from '../components/SimpleImageUploader.tsx';
@@ -393,7 +394,7 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
                         <div className="space-y-6">
                             <DropdownSelector label="Wheels & Rims" options={[{ label: DEFAULT_VEHICLE_MOD_OPTION.name, value: DEFAULT_VEHICLE_MOD_OPTION.prompt }]} optionGroups={CATEGORIZED_VEHICLE_RIMS} selectedValue={selectedRims} onSelect={setSelectedRims} valueProp="prompt" />
                             <DropdownSelector label="Aero & Body" options={[{ label: DEFAULT_VEHICLE_MOD_OPTION.name, value: DEFAULT_VEHICLE_MOD_OPTION.prompt }]} optionGroups={CATEGORIZED_VEHICLE_AERO} selectedValue={selectedAero} onSelect={setSelectedAero} valueProp="prompt" />
-                            <DropdownSelector label="Lighting & Grill" options={[{ label: DEFAULT_VEHICLE_MOD_OPTION.name, value: DEFAULT_VEHICLE_MOD_OPTION.prompt }]} optionGroups={CATEGORIZED_VEHICLE_LIGHTING_GRILL} selectedValue={selectedVehicleLighting} onSelect={setSelectedVehicleLighting} valueProp="prompt" />
+                            <DropdownSelector label="Lights, Glass & Tint" options={[{ label: DEFAULT_VEHICLE_MOD_OPTION.name, value: DEFAULT_VEHICLE_MOD_OPTION.prompt }]} optionGroups={CATEGORIZED_VEHICLE_LIGHTING_GRILL} selectedValue={selectedVehicleLighting} onSelect={setSelectedVehicleLighting} valueProp="prompt" />
                             <DropdownSelector label="Interior (Visible)" options={[{ label: DEFAULT_VEHICLE_MOD_OPTION.name, value: DEFAULT_VEHICLE_MOD_OPTION.prompt }]} optionGroups={CATEGORIZED_VEHICLE_INTERIOR} selectedValue={selectedVehicleInterior} onSelect={setSelectedVehicleInterior} valueProp="prompt" />
                         </div>
                     </CollapsibleSection>
