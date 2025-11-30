@@ -1,7 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header.tsx';
+import Header from './Header.tsx';
 import HomePage from './pages/HomePage.tsx';
+import VehiclePage from './pages/VehiclePage.tsx';
+import InteriorPage from './pages/InteriorPage.tsx';
+import LandscapePage from './pages/LandscapePage.tsx';
 import GalleryPage from './pages/GalleryPage.tsx';
 import AboutPage from './pages/AboutPage.tsx';
 import AnimatePage from './pages/AnimatePage.tsx';
@@ -84,6 +87,9 @@ const App: React.FC = () => {
     switch (currentPage) {
       case 'landing': return <LandingPage onNavigate={handleNavigate} />;
       case 'home': return <HomePage initialRemixConfig={remixConfig} clearRemixConfig={() => setRemixConfig(null)} />;
+      case 'vehicle': return <VehiclePage />;
+      case 'interior': return <InteriorPage />;
+      case 'landscape': return <LandscapePage />;
       case 'session': return <StudioSessionPage />;
       case 'campaign': return <CampaignPage />;
       case 'poster': return <MusicPosterPage />;

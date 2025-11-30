@@ -1,10 +1,9 @@
-
 import React, { useState, useCallback, useEffect } from 'react';
 import SimpleImageUploader from '../components/SimpleImageUploader.tsx';
 import ResultDisplay from '../components/ResultDisplay.tsx';
 import DropdownSelector from '../components/DropdownSelector.tsx';
 import QualitySelector from '../components/QualitySelector.tsx';
-import { KENYAN_PARTIES, CAMPAIGN_POSITIONS, CAMPAIGN_WRAP_STYLES, CAMPAIGN_MODS, CATEGORIZED_CAMPAIGN_TEMPLATES, CATEGORIZED_MANIFESTO_TEMPLATES, QUALITY_OPTIONS, MANIFESTO_FORMATS } from '../constants.ts';
+import { KENYAN_PARTIES, CAMPAIGN_POSITIONS, CAMPAIGN_WRAP_STYLES, CAMPAIGN_MODS, CATEGORIZED_CAMPAIGN_TEMPLATES, CATEGORIZED_MANIFESTO_TEMPLATES, QUALITY_OPTIONS, MANIFESTO_FORMATS, VALID_ASPECT_RATIOS } from '../constants.ts';
 import { generateCampaignMaterial, generateManifestoText } from '../services/geminiService.ts';
 import { CampaignIcon } from '../components/icons/CampaignIcon.tsx';
 import { SlidersIcon } from '../components/icons/SlidersIcon.tsx';
@@ -53,6 +52,7 @@ const CampaignPage: React.FC = () => {
     const [wrapStyle, setWrapStyle] = useState<string>(CAMPAIGN_WRAP_STYLES[0].value || 'full');
     const [selectedCampaignMods, setSelectedCampaignMods] = useState<string[]>([]);
     const [selectedQuality, setSelectedQuality] = useState<string>(QUALITY_OPTIONS[0].value);
+    const [selectedAspectRatio, setSelectedAspectRatio] = useState<string>(VALID_ASPECT_RATIOS[0].value); // Default 16:9
     const [manifestoPoints, setManifestoPoints] = useState<string>('');
     const [isGeneratingText, setIsGeneratingText] = useState(false);
     
@@ -175,7 +175,8 @@ const CampaignPage: React.FC = () => {
                 (mode === 'poster' || mode === 'manifesto') ? backgroundOpacity : undefined,
                 selectedQuality,
                 mode === 'manifesto' ? manifestoPoints : undefined,
-                mode === 'manifesto' ? selectedManifestoFormat : undefined
+                mode === 'manifesto' ? selectedManifestoFormat : undefined,
+                selectedAspectRatio
             );
             setGeneratedImage(result);
         } catch (e: unknown) {
@@ -189,12 +190,13 @@ const CampaignPage: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [imageFile, mode, selectedParty, position, slogan, wrapStyle, selectedCampaignMods, selectedTemplate, selectedManifestoTemplate, candidateName, location, partyLogoFile, backgroundColor, backgroundOpacity, selectedQuality, manifestoPoints, selectedManifestoFormat]);
+    }, [imageFile, mode, selectedParty, position, slogan, wrapStyle, selectedCampaignMods, selectedTemplate, selectedManifestoTemplate, candidateName, location, partyLogoFile, backgroundColor, backgroundOpacity, selectedQuality, manifestoPoints, selectedManifestoFormat, selectedAspectRatio]);
 
     const partyOptions = KENYAN_PARTIES.map(p => ({ label: p.name, value: p.id }));
     const positionOptions = CAMPAIGN_POSITIONS.map(p => ({ label: p.name, value: p.value }));
     const wrapStyleOptions = CAMPAIGN_WRAP_STYLES.map(w => ({ label: w.name, value: w.value || w.name }));
     const manifestoFormatOptions = MANIFESTO_FORMATS.map(f => ({ label: f.name, value: f.prompt }));
+    const aspectRatioOptions = VALID_ASPECT_RATIOS.map(r => ({ label: r.name, value: r.value }));
 
     const shareText = `Vote for ${candidateName || 'Me'} for ${position}: "${slogan}". Proudly supporting ${selectedParty.name}!`;
     const shareTitle = `Vote for ${selectedParty.name}`;
@@ -297,7 +299,13 @@ const CampaignPage: React.FC = () => {
 
                     <CollapsibleSection title="Party Identity" isOpen={true}>
                         <div className="space-y-6">
-                            <DropdownSelector label="Political Party" options={partyOptions} selectedValue={selectedPartyId} onSelect={setSelectedPartyId} />
+                            {/* Party Selector */}
+                            <DropdownSelector 
+                                label="Political Party" 
+                                options={partyOptions} 
+                                selectedValue={selectedPartyId} 
+                                onSelect={setSelectedPartyId} 
+                            />
                             
                             {/* Dynamic Party Info Display */}
                             <div className="p-4 bg-zinc-100 dark:bg-black/40 rounded-sm border-l-4 border-amber-500 flex items-start gap-4 transition-all relative">
@@ -317,19 +325,18 @@ const CampaignPage: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Logo Uploader */}
+                            {/* Logo Uploader - Fixed Layout to prevent flex collapse */}
                             <div>
-                                <label className="block text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2 pl-1">Official Logo (Optional)</label>
-                                <div className="flex items-center gap-4">
+                                <div className="mb-2">
                                     <SimpleImageUploader 
-                                        label="" 
+                                        label="Official Logo (Optional)" 
                                         imageUrl={partyLogoUrl} 
                                         onImageUpload={handleLogoUpload} 
                                     />
-                                    <p className="text-[10px] text-zinc-400 leading-tight max-w-[150px]">
-                                        Upload SVG/PNG for highest accuracy. This overrides the default symbol.
-                                    </p>
                                 </div>
+                                <p className="text-[10px] text-zinc-400 leading-tight pl-1">
+                                    Upload SVG/PNG for highest accuracy. This overrides the default symbol.
+                                </p>
                             </div>
                         </div>
                     </CollapsibleSection>
@@ -510,12 +517,18 @@ const CampaignPage: React.FC = () => {
                         </CollapsibleSection>
                     )}
 
-                    <CollapsibleSection title="Final Output">
+                    <CollapsibleSection title="Final Output" isOpen={true}>
                         <div className="space-y-6">
                             <QualitySelector 
                                 options={QUALITY_OPTIONS} 
                                 selectedQuality={selectedQuality} 
                                 onSelectQuality={setSelectedQuality} 
+                            />
+                            <DropdownSelector 
+                                label="Aspect Ratio" 
+                                options={aspectRatioOptions}
+                                selectedValue={selectedAspectRatio} 
+                                onSelect={setSelectedAspectRatio} 
                             />
                         </div>
                     </CollapsibleSection>

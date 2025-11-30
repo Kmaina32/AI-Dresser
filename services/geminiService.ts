@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Modality } from "@google/genai";
 import { fileToBase64 } from "../utils/fileUtils.ts";
 import { PoliticalParty } from "../constants.ts";
@@ -358,10 +357,13 @@ export async function generateCampaignMaterial(
     backgroundOpacity?: number,
     quality: string = 'standard',
     manifestoPoints?: string,
-    manifestoFormat?: string
+    manifestoFormat?: string,
+    aspectRatio: string = '1:1'
 ): Promise<string> {
-    // UPGRADE: Use Gemini 3 Pro for campaign materials to ensure High Text Fidelity
-    const modelName = 'gemini-3-pro-image-preview';
+    // Determine the base model
+    const primaryModel = 'gemini-3-pro-image-preview';
+    const fallbackModel = 'gemini-2.5-flash-image';
+    const imageSize = quality === 'high' ? '4K' : '2K';
     
     const base64Data = await fileToBase64(imageFile);
     
@@ -378,7 +380,6 @@ export async function generateCampaignMaterial(
     }
     
     let prompt = "";
-    // Force high quality instruction for this model
     const qualityInstruction = "**RESOLUTION: 4K ULTRA HD.** Text must be razor-sharp and perfectly legible. No artifacts.";
     
     let backgroundInstruction = "";
@@ -422,7 +423,6 @@ export async function generateCampaignMaterial(
         `;
     } else if (mode === 'manifesto') {
          const nameText = candidateName ? candidateName.toUpperCase() : "THE CANDIDATE";
-         // Clean points: Remove existing bullets (*, -, •) to avoid duplication, then add standard dots
          const rawPoints = manifestoPoints || "Dedicated to service.\nIntegrity.\nDevelopment.";
          const pointsCleaned = rawPoints.replace(/\*/g, '•');
 
@@ -496,18 +496,43 @@ export async function generateCampaignMaterial(
     
     parts.push({ text: prompt });
 
-    const response = await ai.models.generateContent({
-        model: modelName, // Using Pro model
-        contents: {
-            parts: parts
-        },
-        config: { responseModalities: [Modality.IMAGE] }
-    });
+    try {
+        // Attempt 1: Try High Quality Pro Model
+        const response = await ai.models.generateContent({
+            model: primaryModel, 
+            contents: { parts: parts },
+            config: { 
+                imageConfig: {
+                    aspectRatio: aspectRatio,
+                    imageSize: imageSize
+                }
+            }
+        });
 
-    for (const part of response.candidates[0].content.parts) {
-        if (part.inlineData) return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+        for (const part of response.candidates[0].content.parts) {
+            if (part.inlineData) return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+        }
+        throw new Error("Pro model returned no image.");
+
+    } catch (error) {
+        console.warn("Primary model failed, attempting fallback to Flash...", error);
+        
+        // Attempt 2: Fallback to Flash Model (More robust for image-to-image)
+        // Note: Flash does not support 'imageConfig', uses 'responseModalities'
+        const response = await ai.models.generateContent({
+            model: fallbackModel,
+            contents: { parts: parts },
+            config: { 
+                responseModalities: [Modality.IMAGE]
+            }
+        });
+
+        for (const part of response.candidates[0].content.parts) {
+            if (part.inlineData) return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+        }
+        
+        throw new Error("No image generated (Fallback failed).");
     }
-    throw new Error("No image generated");
 }
 
 function getWrapStyleDescription(style: string): string {

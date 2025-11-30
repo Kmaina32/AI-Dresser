@@ -1,32 +1,12 @@
 
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import CreatorDisplay from '../components/ImageUploader.tsx';
-import SimpleImageUploader from '../components/SimpleImageUploader.tsx';
 import { 
-  CATEGORIZED_SUIT_STYLES, 
-  CATEGORIZED_WOMENS_STYLES,
-  CATEGORIZED_KIDS_STYLES,
-  APPAREL_BACKGROUNDS,
-  APPAREL_LIGHTING,
-  CATEGORIZED_SHOE_STYLES, 
-  CATEGORIZED_WOMENS_SHOE_STYLES,
-  CATEGORIZED_KIDS_SHOE_STYLES,
-  DEFAULT_SHOE_OPTION, 
-  QUALITY_OPTIONS, 
-  SHIRT_OPTIONS,
-  DEFAULT_SHIRT_OPTION,
-  CATEGORIZED_TIE_STYLES,
-  DEFAULT_TIE_OPTION,
-  CATEGORIZED_HANDBAG_STYLES,
-  DEFAULT_HANDBAG_OPTION,
-  POSTURE_OPTIONS,
-  DEFAULT_POSTURE_OPTION,
-  DEFAULT_EYEWEAR_OPTION,
-  CATEGORIZED_EYEWEAR_STYLES,
-  DEFAULT_HEADWEAR_OPTION,
-  CATEGORIZED_HEADWEAR_STYLES,
-  StyleOption,
-  RemixConfig
+  CATEGORIZED_INTERIOR_STYLES,
+  INTERIOR_BACKGROUNDS,
+  INTERIOR_LIGHTING,
+  QUALITY_OPTIONS,
+  StyleOption
 } from '../constants.ts';
 import { editImageWithGemini } from '../services/geminiService.ts';
 import { SparklesIcon } from '../components/icons/SparklesIcon.tsx';
@@ -37,44 +17,20 @@ import StyleSelector from '../components/StyleSelector.tsx';
 import CollapsibleSection from '../components/CollapsibleSection.tsx';
 import { CloseIcon } from '../components/icons/CloseIcon.tsx';
 import { SlidersIcon } from '../components/icons/SlidersIcon.tsx';
-import { UserIcon } from '../components/icons/UserIcon.tsx';
 
-type AttireType = 'menswear' | 'womenswear' | 'kidswear';
+const HomeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>;
 
-interface HomePageProps {
-  initialRemixConfig: RemixConfig | null;
-  clearRemixConfig: () => void;
-}
-
-const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfig }) => {
-  const [attireType, setAttireType] = useState<AttireType>('menswear');
-
+const InteriorPage: React.FC = () => {
   const [originalImageFile, setOriginalImageFile] = useState<File | null>(null);
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   
   const [selectedStyleIds, setSelectedStyleIds] = useState<string[]>([]);
-  
   const [selectedColor, setSelectedColor] = useState<string>('automatic');
   const [selectedBackground, setSelectedBackground] = useState<string>('');
   const [selectedLighting, setSelectedLighting] = useState<string>('');
   const [selectedQuality, setSelectedQuality] = useState<string>(QUALITY_OPTIONS[0].value);
   const [isLockEnabled, setIsLockEnabled] = useState<boolean>(true);
-
-  // Custom Environment Image State
-  const [envImageFile, setEnvImageFile] = useState<File | null>(null);
-  const [envImageUrl, setEnvImageUrl] = useState<string | null>(null);
-
-  const [targetPerson, setTargetPerson] = useState<string>('');
-  const [selectedPosture, setSelectedPosture] = useState<string>(DEFAULT_POSTURE_OPTION.prompt);
-  
-  // Apparel Accessories
-  const [selectedShoe, setSelectedShoe] = useState<string>(DEFAULT_SHOE_OPTION.prompt);
-  const [selectedShirt, setSelectedShirt] = useState<string>(DEFAULT_SHIRT_OPTION.prompt);
-  const [selectedTie, setSelectedTie] = useState<string>(DEFAULT_TIE_OPTION.prompt);
-  const [selectedHandbag, setSelectedHandbag] = useState<string>(DEFAULT_HANDBAG_OPTION.prompt);
-  const [selectedEyewear, setSelectedEyewear] = useState<string>(DEFAULT_EYEWEAR_OPTION.prompt);
-  const [selectedHeadwear, setSelectedHeadwear] = useState<string>(DEFAULT_HEADWEAR_OPTION.prompt);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -82,39 +38,18 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); 
 
-  const currentStylesSource = useMemo(() => {
-        if (attireType === 'kidswear') return CATEGORIZED_KIDS_STYLES;
-        return attireType === 'menswear' ? CATEGORIZED_SUIT_STYLES : CATEGORIZED_WOMENS_STYLES;
-  }, [attireType]);
+  const currentStylesSource = CATEGORIZED_INTERIOR_STYLES;
+  const currentBackgrounds = INTERIOR_BACKGROUNDS;
+  const currentLighting = INTERIOR_LIGHTING;
 
-  const currentBackgrounds = APPAREL_BACKGROUNDS;
-  const currentLighting = APPAREL_LIGHTING;
-
-  // Handle Remix Config
-  useEffect(() => {
-      if (initialRemixConfig) {
-          setAttireType(initialRemixConfig.attireType as AttireType);
-          const foundStyle = currentStylesSource.flatMap(c => c.styles).find(s => s.prompt === initialRemixConfig.stylePrompt);
-          if (foundStyle) {
-              setSelectedStyleIds([foundStyle.id]);
-          }
-          
-          setSelectedBackground(initialRemixConfig.backgroundPrompt);
-          setSelectedLighting(initialRemixConfig.lightingPrompt);
-          
-          if (initialRemixConfig.shoePrompt) setSelectedShoe(initialRemixConfig.shoePrompt);
-          if (initialRemixConfig.shirtPrompt) setSelectedShirt(initialRemixConfig.shirtPrompt);
-          if (initialRemixConfig.tiePrompt) setSelectedTie(initialRemixConfig.tiePrompt);
-          
-          clearRemixConfig();
-      } else {
-          if (selectedStyleIds.length === 0 && currentStylesSource[0]?.styles[0]) {
-              setSelectedStyleIds([currentStylesSource[0].styles[0].id]);
-              setSelectedBackground(currentBackgrounds[0]?.prompt || '');
-              setSelectedLighting(currentLighting[0]?.prompt || '');
-          }
+  // Initialize defaults
+  useState(() => {
+      if (selectedStyleIds.length === 0 && currentStylesSource[0]?.styles[0]) {
+          setSelectedStyleIds([currentStylesSource[0].styles[0].id]);
+          setSelectedBackground(currentBackgrounds[0]?.prompt || '');
+          setSelectedLighting(currentLighting[0]?.prompt || '');
       }
-  }, [initialRemixConfig, currentStylesSource, currentBackgrounds, currentLighting, clearRemixConfig]);
+  });
 
   const lastSelectedStyleId = selectedStyleIds[selectedStyleIds.length - 1];
   const selectedStyleObject: StyleOption | undefined = useMemo(() => 
@@ -141,16 +76,9 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
     setError(null);
   };
 
-  const handleEnvImageUpload = (file: File, dataUrl: string) => {
-      setEnvImageFile(file);
-      setEnvImageUrl(dataUrl);
-      // Automatically clear background selection to indicate custom mode
-      setSelectedBackground('');
-  };
-
   const handleGenerateClick = useCallback(async () => {
     if (!originalImageFile) {
-      setError('Please upload an image first.');
+      setError('Please upload a room photo first.');
       return;
     }
     
@@ -169,17 +97,15 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
     setError(null);
     setIsSidebarOpen(false);
 
-    const effectiveTargetPerson = targetPerson || (attireType === 'kidswear' ? 'child' : '');
-
     try {
       const result = await editImageWithGemini(
         originalImageFile, combinedStylePrompt, selectedColor,
-        selectedBackground, selectedLighting, selectedShoe, selectedShirt,
-        selectedTie, selectedHandbag, selectedEyewear, selectedHeadwear,
-        effectiveTargetPerson, selectedPosture, isLockEnabled, selectedQuality,
-        'apparel', // Fixed mode
-        undefined, undefined, undefined, undefined, // Vehicle params
-        envImageFile || undefined // Pass the environment image if exists
+        selectedBackground, selectedLighting, 
+        '', '', '', '', '', '', // Apparel prompts empty
+        '', '', // Target person / posture empty
+        isLockEnabled, selectedQuality,
+        'interior', 
+        undefined, undefined, undefined, undefined // Vehicle params
       );
       setGeneratedImage(result);
     } catch (e) {
@@ -190,23 +116,11 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
     }
   }, [
     originalImageFile, selectedStyleIds, currentStylesSource, selectedColor, selectedBackground, 
-    selectedLighting, selectedShoe, selectedShirt, selectedTie, selectedHandbag, 
-    selectedEyewear, selectedHeadwear, targetPerson, selectedPosture, 
-    isLockEnabled, selectedQuality, attireType,
-    envImageFile
+    selectedLighting, isLockEnabled, selectedQuality
   ]);
 
   const backgroundOptions = useMemo(() => currentBackgrounds.map(option => ({ label: option.name, value: option.prompt })), [currentBackgrounds]);
   const lightingOptions = useMemo(() => currentLighting.map(option => ({ label: option.name, value: option.prompt })), [currentLighting]);
-  
-  const shoeOptions = [{ label: DEFAULT_SHOE_OPTION.name, value: DEFAULT_SHOE_OPTION.prompt }];
-  const shirtOptionsList = [DEFAULT_SHIRT_OPTION, ...SHIRT_OPTIONS].map(o => ({ label: o.name, value: o.prompt }));
-  const postureOptionsList = [DEFAULT_POSTURE_OPTION, ...POSTURE_OPTIONS].map(o => ({ label: o.name, value: o.prompt }));
-  
-  const currentShoeStyles = useMemo(() => {
-      if (attireType === 'kidswear') return CATEGORIZED_KIDS_SHOE_STYLES;
-      return attireType === 'menswear' ? CATEGORIZED_SHOE_STYLES : CATEGORIZED_WOMENS_SHOE_STYLES;
-  }, [attireType]);
 
   return (
     <div className="flex flex-col lg:flex-row h-full lg:h-[calc(100vh-4rem)] relative overflow-hidden">
@@ -231,9 +145,9 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
             <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-zinc-50 dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
                 <div className="flex items-center gap-3">
                      <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
-                        <UserIcon className="w-5 h-5 text-amber-400" />
+                        <HomeIcon />
                      </div>
-                     <span className="font-playfair text-xl text-zinc-900 dark:text-white font-bold tracking-wide">Apparel Studio</span>
+                     <span className="font-playfair text-xl text-zinc-900 dark:text-white font-bold tracking-wide">Interior Design</span>
                 </div>
                 <button 
                     onClick={() => setIsSidebarOpen(false)} 
@@ -245,15 +159,7 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
 
             {/* Scrollable Controls */}
             <div className="flex-grow overflow-y-auto custom-scrollbar pb-32 lg:pb-0">
-                <div className="p-6 border-b border-zinc-200 dark:border-white/5">
-                    <div className="grid grid-cols-3 gap-2 p-1 bg-zinc-100 dark:bg-black/40 rounded-lg border border-zinc-200 dark:border-white/5">
-                        <button onClick={() => setAttireType('menswear')} className={`py-2 text-[9px] font-bold uppercase tracking-wider rounded-md transition-all ${attireType === 'menswear' ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm dark:shadow-lg border border-zinc-200 dark:border-white/10' : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300'}`}>Men</button>
-                        <button onClick={() => setAttireType('womenswear')} className={`py-2 text-[9px] font-bold uppercase tracking-wider rounded-md transition-all ${attireType === 'womenswear' ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm dark:shadow-lg border border-zinc-200 dark:border-white/10' : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300'}`}>Women</button>
-                        <button onClick={() => setAttireType('kidswear')} className={`py-2 text-[9px] font-bold uppercase tracking-wider rounded-md transition-all ${attireType === 'kidswear' ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm dark:shadow-lg border border-zinc-200 dark:border-white/10' : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300'}`}>Kids</button>
-                    </div>
-                </div>
-
-                <CollapsibleSection title="Style Selection" isOpen={true}>
+                <CollapsibleSection title="Design Style" isOpen={true}>
                     <StyleSelector 
                         categories={currentStylesSource}
                         selectedStyleIds={selectedStyleIds}
@@ -271,52 +177,15 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
 
                 <CollapsibleSection title="Environment" isOpen={true}>
                     <div className="space-y-6">
-                        <div>
-                            <label className="block text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2 pl-1">
-                                Upload Custom Scene (Overrides Background)
-                            </label>
-                            <SimpleImageUploader 
-                                label="Custom Environment" 
-                                imageUrl={envImageUrl} 
-                                onImageUpload={handleEnvImageUpload} 
-                            />
-                            {envImageUrl && (
-                                <p className="text-[10px] text-amber-500 mt-2 font-medium">
-                                    Using custom environment image. AI will place the subject into this scene.
-                                </p>
-                            )}
-                        </div>
-                        
-                        {!envImageUrl && (
-                             <DropdownSelector label="Background" options={backgroundOptions} selectedValue={selectedBackground} onSelect={setSelectedBackground} />
-                        )}
-
+                        <DropdownSelector label="View" options={backgroundOptions} selectedValue={selectedBackground} onSelect={setSelectedBackground} />
                         <DropdownSelector label="Lighting" options={lightingOptions} selectedValue={selectedLighting} onSelect={setSelectedLighting} />
-                    </div>
-                </CollapsibleSection>
-                
-                <CollapsibleSection title="Accessories">
-                    <div className="space-y-6">
-                        <DropdownSelector label="Footwear" options={shoeOptions} optionGroups={currentShoeStyles} selectedValue={selectedShoe} onSelect={setSelectedShoe} valueProp="prompt" />
-                        {attireType === 'menswear' && (
-                            <>
-                                <DropdownSelector label="Shirt" options={shirtOptionsList} selectedValue={selectedShirt} onSelect={setSelectedShirt} />
-                                <DropdownSelector label="Neckwear" options={[{ label: DEFAULT_TIE_OPTION.name, value: DEFAULT_TIE_OPTION.prompt }]} optionGroups={CATEGORIZED_TIE_STYLES} selectedValue={selectedTie} onSelect={setSelectedTie} valueProp="prompt" />
-                            </>
-                        )}
-                        {attireType === 'womenswear' && (
-                            <DropdownSelector label="Handbag" options={[{ label: DEFAULT_HANDBAG_OPTION.name, value: DEFAULT_HANDBAG_OPTION.prompt }]} optionGroups={CATEGORIZED_HANDBAG_STYLES} selectedValue={selectedHandbag} onSelect={setSelectedHandbag} valueProp="prompt" />
-                        )}
-                        <DropdownSelector label="Eyewear" options={[{ label: DEFAULT_EYEWEAR_OPTION.name, value: DEFAULT_EYEWEAR_OPTION.prompt }]} optionGroups={CATEGORIZED_EYEWEAR_STYLES} selectedValue={selectedEyewear} onSelect={setSelectedEyewear} valueProp="prompt" />
-                        <DropdownSelector label="Headwear" options={[{ label: DEFAULT_HEADWEAR_OPTION.name, value: DEFAULT_HEADWEAR_OPTION.prompt }]} optionGroups={CATEGORIZED_HEADWEAR_STYLES} selectedValue={selectedHeadwear} onSelect={setSelectedHeadwear} valueProp="prompt" />
                     </div>
                 </CollapsibleSection>
 
                 <CollapsibleSection title="Settings">
                    <div className="space-y-6">
                         <QualitySelector options={QUALITY_OPTIONS} selectedQuality={selectedQuality} onSelectQuality={setSelectedQuality} />
-                        <FaceLockToggle isEnabled={isLockEnabled} onToggle={setIsLockEnabled} mode="apparel" />
-                        <DropdownSelector label="Posture" options={postureOptionsList} selectedValue={selectedPosture} onSelect={setSelectedPosture} />
+                        <FaceLockToggle isEnabled={isLockEnabled} onToggle={setIsLockEnabled} mode="interior" />
                     </div>
                 </CollapsibleSection>
             </div>
@@ -333,7 +202,7 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
                             <span className="animate-pulse">Processing...</span>
                         ) : (
                             <>
-                                <span>Generate Design</span>
+                                <span>Redesign Room</span>
                                 <SparklesIcon className="w-4 h-4 group-hover:rotate-12 transition-transform" />
                             </>
                         )}
@@ -370,7 +239,7 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
                 disabled={!originalImage || isLoading || selectedStyleIds.length === 0}
                 className="w-full px-8 py-4 bg-amber-500 text-black font-bold text-xs tracking-[0.2em] uppercase rounded-sm shadow-lg disabled:opacity-50 btn-tech"
             >
-                {isLoading ? 'Processing...' : 'Generate Design'}
+                {isLoading ? 'Processing...' : 'Redesign Room'}
             </button>
             {error && <p className="text-red-500 dark:text-red-400 mt-2 text-center text-xs">{error}</p>}
         </div>
@@ -378,4 +247,4 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
   );
 };
 
-export default HomePage;
+export default InteriorPage;

@@ -1,5 +1,4 @@
 
-
 export interface SimpleOption {
     name: string;
     prompt: string;
@@ -51,7 +50,7 @@ export interface PoliticalParty {
 }
 
 export const QUALITY_OPTIONS: QualityOption[] = [
-    { name: 'Standard', value: 'standard' },
+    { name: 'Standard (2K)', value: 'standard' },
     { name: 'High Res (4K)', value: 'high' }
 ];
 
@@ -61,7 +60,8 @@ export const KENYAN_PARTIES: PoliticalParty[] = [
     { id: 'uda', name: 'UDA', fullName: 'United Democratic Alliance', symbol: 'Wheelbarrow', colors: 'Yellow and Green', hexColor: '#FFD700', defaultSlogan: 'Kazi ni Kazi' },
     { id: 'odm', name: 'ODM', fullName: 'Orange Democratic Movement', symbol: 'Orange', colors: 'Orange and White', hexColor: '#FFA500', defaultSlogan: 'Inawezekana' },
     { id: 'jubilee', name: 'Jubilee', fullName: 'Jubilee Party', symbol: 'Dove', colors: 'Red and White', hexColor: '#FF0000', defaultSlogan: 'Tuko Pamoja' },
-    { id: 'wiper', name: 'Wiper', fullName: 'Wiper Democratic Movement', symbol: 'Umbrella', colors: 'Blue and White', hexColor: '#0000FF', defaultSlogan: 'One Kenya' }
+    { id: 'wiper', name: 'Wiper', fullName: 'Wiper Democratic Movement', symbol: 'Umbrella', colors: 'Blue and White', hexColor: '#0000FF', defaultSlogan: 'One Kenya' },
+    { id: 'walalahoi', name: 'Walalahoi', fullName: 'Walalahoi Party', symbol: 'Two Open Hands', colors: 'Red and Black', hexColor: '#D32F2F', defaultSlogan: 'The Walalahoi Alliance' }
 ];
 
 export const CAMPAIGN_POSITIONS = [
@@ -81,10 +81,18 @@ export const CAMPAIGN_WRAP_STYLES = [
 ];
 
 export const CAMPAIGN_MODS = [
-    { name: 'PA System', prompt: 'roof mounted PA system speakers', value: 'pa_system' },
+    { name: 'PA System', prompt: 'roof mounted PA system with 4 big speakers, arranged to face all directions: one facing front, one facing back, one facing left, and one facing right', value: 'pa_system' },
     { name: 'Flag Mounts', prompt: 'political party flags mounted on hood', value: 'flags' },
-    { name: 'Bullbar', prompt: 'heavy duty front bullbar', value: 'bullbar' },
+    { name: 'Bullbar & Antenna', prompt: 'replace the entire front bumper with a heavy-duty black TM-equipped offroad bumper featuring a mounted long-range radio antenna', value: 'bullbar' },
     { name: 'Floodlights', prompt: 'roof mounted floodlights', value: 'lights' }
+];
+
+export const VALID_ASPECT_RATIOS = [
+    { name: 'Landscape (16:9)', value: '16:9' },
+    { name: 'Wide (4:3)', value: '4:3' },
+    { name: 'Square (1:1)', value: '1:1' },
+    { name: 'Tall (3:4)', value: '3:4' },
+    { name: 'Portrait (9:16)', value: '9:16' }
 ];
 
 export const MANIFESTO_FORMATS = [
@@ -98,19 +106,153 @@ export const MANIFESTO_FORMATS = [
 
 export const CATEGORIZED_CAMPAIGN_TEMPLATES: OptionGroup[] = [
     {
-        category: "Modern & Minimalist",
+        category: "Presidential & Corporate",
         styles: [
-            { id: "swiss_style", name: "Swiss International", prompt: "Swiss International Style graphic design, clean grid layout, sans-serif bold typography, generous negative space, minimalist aesthetic", tags: ['modern'] },
-            { id: "geometric_flat", name: "Geometric Flat", prompt: "Modern flat design with bold geometric shapes overlay, vector art style, clean lines, solid color blocks", tags: ['modern'] },
-            { id: "corporate_clean", name: "Corporate Clean", prompt: "Professional corporate aesthetic, trustworthy deep blues and greys, structured layout, modern serif typography", tags: ['professional'] }
+            { id: "presidential_classic", name: "The Oval Office", prompt: "Classic presidential aesthetics, deep navy blue background, serif typography (Times New Roman), gold accents, trustworthy and authoritative.", tags: ['classic', 'formal'] },
+            { id: "corporate_blue", name: "Corporate Trust", prompt: "Modern corporate design, slate blue and grey palette, clean sans-serif fonts, structured grid, professional headshot integration.", tags: ['corporate'] },
+            { id: "executive_slate", name: "Executive Slate", prompt: "Dark grey slate background, white bold text, minimalist layout, focus on leadership and stability.", tags: ['corporate'] },
+            { id: "diplomat_white", name: "The Diplomat", prompt: "Clean white background, elegant black serif text, understated and sophisticated, high-end editorial feel.", tags: ['formal'] },
+            { id: "statesman_gold", name: "Statesman Gold", prompt: "Rich gold and black theme, premium feel, laurel wreath motifs, traditional political branding.", tags: ['classic'] },
+            { id: "modern_democrat", name: "Modern Democrat", prompt: "Bright blue and white, circular geometric motifs, Gotham font, optimistic and forward-looking.", tags: ['modern'] },
+            { id: "conservative_red", name: "Conservative Red", prompt: "Bold red and navy, strong borders, traditional block layout, patriotic feel.", tags: ['classic'] },
+            { id: "senate_floor", name: "Senate Floor", prompt: "Marble texture background, roman columns inspiration, dignified and legislative look.", tags: ['formal'] },
+            { id: "fortune_500", name: "Fortune 500 CEO", prompt: "Aesthetic of a high-end business magazine cover, sharp focus, professional lighting, 'Man of the Year' vibes.", tags: ['corporate'] },
+            { id: "trust_teal", name: "Trust Teal", prompt: "Teal and charcoal color scheme, approachable yet professional, modern medical or educational leadership vibe.", tags: ['modern'] }
         ]
     },
     {
-        category: "Bold & High Impact",
+        category: "Swiss & Minimalist",
         styles: [
-            { id: "constructivist", name: "Constructivist", prompt: "Russian Constructivist inspired, bold red and black angles, striking geometric composition, revolutionary vibe", tags: ['bold'] },
-            { id: "block_text", name: "Blockbuster", prompt: "Heavy, massive block text filling the frame, high energy, action movie poster aesthetic", tags: ['bold'] },
-            { id: "pop_art_bold", name: "Pop Art Bold", prompt: "Bold Pop Art style, halftone patterns, thick outlines, vibrant primary colors, comic book impact", tags: ['artistic'] }
+            { id: "swiss_international", name: "Swiss International", prompt: "Swiss International Style, rigid grid system, Helvetica Bold, asymmetrical layout, massive negative space, red accent.", tags: ['minimalist'] },
+            { id: "helvetica_hero", name: "Helvetica Hero", prompt: "Pure typography focus, massive black Helvetica font on white, candidate image cut-out interacting with text.", tags: ['minimalist'] },
+            { id: "bauhaus_geo", name: "Bauhaus Geometric", prompt: "Bauhaus inspired, primary colors (red, blue, yellow), simple geometric shapes, clean lines, artistic minimalism.", tags: ['artistic'] },
+            { id: "clean_slate", name: "Clean Slate", prompt: "Off-white background, thin dark grey text, ultra-minimalist, plenty of breathing room, sophisticated.", tags: ['minimalist'] },
+            { id: "mono_type", name: "Monospaced", prompt: "Typewriter or code-style monospaced font, raw and honest aesthetic, black and white only.", tags: ['minimalist'] },
+            { id: "mid_century_mod", name: "Mid-Century Poster", prompt: "1950s modernist poster style, muted pastel colors, simple shapes, retro-modern typography.", tags: ['retro'] },
+            { id: "nordic_design", name: "Nordic Clean", prompt: "Scandinavian minimalism, cool grey tones, icy blue accents, sharp geometric lines.", tags: ['minimalist'] },
+            { id: "architectural_grid", name: "Architectural Grid", prompt: "Blueprint style layout, fine white lines on blueprint blue, precise and structural.", tags: ['technical'] },
+            { id: "gallery_wall", name: "Gallery Wall", prompt: "Museum exhibition poster style, large margins, elegant caption text, focus on the image as art.", tags: ['artistic'] },
+            { id: "typographic_shout", name: "Typographic Shout", prompt: "Text fills the entire frame edge-to-edge, candidate image overlay with transparency modes, bold impact.", tags: ['bold'] }
+        ]
+    },
+    {
+        category: "Bold & Revolutionary",
+        styles: [
+            { id: "constructivist_red", name: "Constructivist Red", prompt: "Russian Constructivist art style, diagonal dynamic lines, red, black and cream colors, revolutionary energy.", tags: ['revolutionary'] },
+            { id: "shepard_fairey", name: "Hope Style", prompt: "Iconic high-contrast stencil portrait style, red, beige, and light blue color palette, vector art look.", tags: ['artistic'] },
+            { id: "impact_yellow", name: "Impact Yellow", prompt: "Hazard yellow background, massive black bold text, urgent and attention-grabbing, grassroots warning.", tags: ['urgent'] },
+            { id: "street_stencil", name: "Street Stencil", prompt: "Spray paint stencil aesthetic, gritty texture, urban wall background, rebellious vibe.", tags: ['urban'] },
+            { id: "propaganda_retro", name: "Retro Propaganda", prompt: "WPA poster style, sunrays in background, hero pose, optimistic looking up, vintage texture.", tags: ['retro'] },
+            { id: "black_power", name: "Power & Fist", prompt: "High contrast black and white, red accents, strong fist iconography, bold slab serif fonts.", tags: ['revolutionary'] },
+            { id: "punk_zine", name: "Punk Zine", prompt: "Cut-and-paste collage style, ransom note letters, photocopier texture, raw energy.", tags: ['urban'] },
+            { id: "guerrilla_marketing", name: "Guerrilla Paste-Up", prompt: "Wheatpaste poster look, slightly torn edges, layered over other posters, urban street context.", tags: ['urban'] },
+            { id: "industrial_revolution", name: "Industrial Strength", prompt: "Steel and rust textures, heavy blocky gears motifs, strong orange and grey, worker focused.", tags: ['industrial'] },
+            { id: "blockbuster_movie", name: "Action Hero", prompt: "Action movie poster grading, teal and orange contrast, lens flares, dramatic clouds, cinematic text.", tags: ['cinematic'] }
+        ]
+    },
+    {
+        category: "Digital & Future",
+        styles: [
+            { id: "cyber_neon", name: "Cyber Neon", prompt: "Cyberpunk aesthetic, glowing neon pink and blue text, dark grid background, glitch effects.", tags: ['futuristic'] },
+            { id: "glassmorphism_ui", name: "Glass UI", prompt: "Frosted glass panels, soft blurred colored orbs in background, white text, modern app interface look.", tags: ['tech'] },
+            { id: "gradient_mesh", name: "Gradient Mesh", prompt: "Fluid liquid gradient background, vibrant purple, pink and blue blends, clean white typography.", tags: ['modern'] },
+            { id: "tech_startup", name: "Tech Startup", prompt: "Silicon Valley startup branding, friendly rounded sans-serif, illustration style, vibrant flat colors.", tags: ['modern'] },
+            { id: "data_stream", name: "Data Stream", prompt: "Matrix code rain or data visualization graphics in background, tech-focused, analytic vibe.", tags: ['tech'] },
+            { id: "holographic_foil", name: "Holographic Foil", prompt: "Iridescent holographic metal texture background, silver text, futuristic luxury.", tags: ['futuristic'] },
+            { id: "metaverse_avatar", name: "Metaverse", prompt: "3D rendered style environment, smooth plastic textures, vibrant virtual world lighting.", tags: ['futuristic'] },
+            { id: "solar_punk", name: "Solar Punk", prompt: "Green technology aesthetic, plants mixed with futuristic glass buildings, bright sunlight, optimistic future.", tags: ['eco'] },
+            { id: "social_story", name: "Viral Story", prompt: "Instagram Story aesthetic, stickers, emojis, gradient background, vertical layout focused.", tags: ['social'] },
+            { id: "dark_mode_app", name: "Dark Mode App", prompt: "Matte black interface, vibrant accent buttons, clean iOS style typography.", tags: ['tech'] }
+        ]
+    },
+    {
+        category: "Artistic & Expressive",
+        styles: [
+            { id: "oil_painting", name: "Presidential Portrait", prompt: "Classic oil painting style, visible brushstrokes, canvas texture, dignified and timeless.", tags: ['artistic'] },
+            { id: "watercolor_splash", name: "Watercolor Hope", prompt: "Soft watercolor splashes in background, artistic and gentle, bleeding ink edges, dreamy.", tags: ['artistic'] },
+            { id: "comic_book_hero", name: "Comic Hero", prompt: "Halftone dot pattern, thick black outlines, speech bubbles, vibrant primary colors.", tags: ['fun'] },
+            { id: "collage_art", name: "Mixed Media Collage", prompt: "Artistic collage of vintage photos, torn paper, and paint strokes, eclectic and creative.", tags: ['artistic'] },
+            { id: "double_exposure", name: "Double Exposure", prompt: "Double exposure effect, candidate silhouette filled with city skyline or crowd of people.", tags: ['artistic'] },
+            { id: "pencil_sketch", name: "Charcoal Sketch", prompt: "Black and white charcoal sketch, rough paper texture, hand-drawn typography.", tags: ['artistic'] },
+            { id: "pop_art_warhol", name: "Warhol Pop", prompt: "Andy Warhol style, four-panel repetition (if possible) or vibrant unnatural colors, high contrast.", tags: ['artistic'] },
+            { id: "art_deco", name: "Art Deco Great Gatsby", prompt: "Gold geometric patterns on black, intricate borders, luxury 1920s font.", tags: ['retro'] },
+            { id: "graffiti_mural", name: "City Mural", prompt: "Large scale wall mural look, vibrant spray paint colors, urban community feel.", tags: ['urban'] },
+            { id: "paper_cutout", name: "Paper Cutout", prompt: "Layered paper craft style, depth and shadows, flat colors, playful and tactile.", tags: ['craft'] }
+        ]
+    },
+    {
+        category: "Grassroots & Community",
+        styles: [
+            { id: "organic_green", name: "Organic Roots", prompt: "Natural earth tones, kraft paper texture, green leaf motifs, eco-friendly vibe.", tags: ['eco'] },
+            { id: "community_chalkboard", name: "Chalkboard", prompt: "Green chalkboard background, white chalk typography, hand-drawn doodles, educational vibe.", tags: ['community'] },
+            { id: "polaroid_cluster", name: "Polaroid Wall", prompt: "Candidate photo looks like a pinned polaroid, corkboard background, approachable and nostalgic.", tags: ['casual'] },
+            { id: "farmers_market", name: "Farmers Market", prompt: "Rustic wood texture, hand-painted sign style, warm and welcoming.", tags: ['rustic'] },
+            { id: "union_strong", name: "Union Strong", prompt: "Solid blue background, white block text, gear icons, solidarity styling.", tags: ['community'] },
+            { id: "volunteer_vest", name: "Volunteer Vest", prompt: "Bright neon orange or yellow safety vest aesthetic, reflective strips, 'At Work' vibe.", tags: ['community'] },
+            { id: "town_hall", name: "Town Hall Flyer", prompt: "Simple flyer aesthetic, photocopied look on colored paper, very local and direct.", tags: ['local'] },
+            { id: "unity_hands", name: "Unity Hands", prompt: "Illustration of diverse hands holding up the candidate or text, community support focus.", tags: ['community'] },
+            { id: "sunrise_hope", name: "Sunrise Hope", prompt: "Warm sunrise gradient (orange to yellow), silhouette of landscape, inspirational.", tags: ['hope'] },
+            { id: "blueprint_future", name: "Blueprint for Future", prompt: "Literal blueprint background, white lines, 'Plan for the City' text overlay.", tags: ['technical'] }
+        ]
+    },
+    {
+        category: "Texture & Material",
+        styles: [
+            { id: "denim_jeans", name: "Denim & Stitch", prompt: "Dark blue denim texture background, white stitched text, working class appeal.", tags: ['texture'] },
+            { id: "leather_gold", name: "Leather & Gold", prompt: "Black leather texture background with embossed gold foil text, luxury and tough.", tags: ['texture'] },
+            { id: "concrete_urban", name: "Urban Concrete", prompt: "Grey concrete wall texture, spray painted text, brutalist and strong.", tags: ['texture'] },
+            { id: "linen_paper", name: "Fine Linen", prompt: "High quality linen paper texture, elegant serif text, invitation style.", tags: ['texture'] },
+            { id: "corrugated_metal", name: "Corrugated Metal", prompt: "Silver corrugated metal background, industrial bold text, manufacturing vibe.", tags: ['industrial'] },
+            { id: "cork_board", name: "Notice Board", prompt: "Cork texture, pinned notes style, community information vibe.", tags: ['casual'] },
+            { id: "fabric_flag", name: "Waving Flag", prompt: "Texture of a waving fabric flag, patriotic colors, dynamic folds.", tags: ['texture'] },
+            { id: "sand_beach", name: "Coastal Sand", prompt: "Sand texture, written in sand style or breezy coastal colors, tourism vibe.", tags: ['nature'] },
+            { id: "chalk_pavement", name: "Pavement Chalk", prompt: "Asphalt texture, colorful chalk drawings and text, playful and temporary.", tags: ['urban'] },
+            { id: "old_newsprint", name: "Vintage Newspaper", prompt: "Yellowed vintage newspaper texture background, headline typography.", tags: ['retro'] }
+        ]
+    },
+    {
+        category: "Global & Cultural",
+        styles: [
+            { id: "pan_african", name: "Pan-African", prompt: "Red, black, and green color scheme, geometric tribal patterns, bold and empowering.", tags: ['cultural'] },
+            { id: "asian_modern", name: "Asian Modern", prompt: "Red and gold palette, vertical typography alignment, minimal circular motifs.", tags: ['cultural'] },
+            { id: "latin_fiesta", name: "Latin Vibrance", prompt: "Bright turquoise, yellow, and pink, festive energy, dynamic curved shapes.", tags: ['cultural'] },
+            { id: "nordic_wood", name: "Scandi Wood", prompt: "Light blonde wood texture, white minimalism, simple nature motifs.", tags: ['cultural'] },
+            { id: "middle_eastern_geo", name: "Islamic Geometric", prompt: "Intricate geometric tessellations in gold and azure, elegant calligraphy style fonts.", tags: ['cultural'] },
+            { id: "indian_festive", name: "Indian Festive", prompt: "Vibrant marigold orange and fuchsia, mandala patterns, celebratory feel.", tags: ['cultural'] },
+            { id: "indigenous_art", name: "Indigenous Earth", prompt: "Earth tones (ochre, rust, clay), dot painting or traditional line art motifs.", tags: ['cultural'] },
+            { id: "caribbean_breeze", name: "Caribbean Breeze", prompt: "Aquamarine and sunny yellow, palm leaf shadows, relaxed and warm.", tags: ['cultural'] },
+            { id: "slavic_folk", name: "Slavic Folk", prompt: "Red and white floral embroidery patterns, traditional font style.", tags: ['cultural'] },
+            { id: "celtic_knot", name: "Celtic Heritage", prompt: "Green background, intricate Celtic knotwork borders, serif typeface.", tags: ['cultural'] }
+        ]
+    },
+    {
+        category: "Monochrome & Noir",
+        styles: [
+            { id: "noir_film", name: "Film Noir", prompt: "High contrast black and white, dramatic shadows, venetian blind lighting shadows, mystery.", tags: ['cinematic'] },
+            { id: "silver_screen", name: "Silver Screen", prompt: "Soft glowing silver black and white, glamorous 1940s Hollywood lighting.", tags: ['cinematic'] },
+            { id: "ink_blot", name: "Ink Blot", prompt: "Stark white background with exploding black ink effects, Rorschach style.", tags: ['artistic'] },
+            { id: "newspaper_headline", name: "Front Page", prompt: "Simulates a newspaper front page layout, halftone photo, bold headline text.", tags: ['classic'] },
+            { id: "silhouette_city", name: "City Silhouette", prompt: "Black silhouette of city skyline against a white or grey sky, clean and urban.", tags: ['urban'] },
+            { id: "minimal_dark", name: "Dark Minimalist", prompt: "Matte black background, dark grey text (low contrast), mysterious and sleek.", tags: ['modern'] },
+            { id: "minimal_light", name: "High Key", prompt: "Blown out white background, high key lighting, ethereal and pure.", tags: ['modern'] },
+            { id: "carbon_fiber", name: "Carbon Fiber", prompt: "Black carbon fiber weave texture, techy and sporty.", tags: ['texture'] },
+            { id: "graphite_drawing", name: "Graphite", prompt: "Soft grey graphite shading, pencil texture, artistic realism.", tags: ['artistic'] },
+            { id: "sin_city", name: "Sin City Style", prompt: "Black and white high contrast with a single color isolation (e.g., red tie).", tags: ['cinematic'] }
+        ]
+    },
+    {
+        category: "Typography Focused",
+        styles: [
+            { id: "big_bold_type", name: "Big Bold Type", prompt: "Text is the main image, letters cropped by frame, massive impact.", tags: ['bold'] },
+            { id: "serif_elegance", name: "Serif Elegance", prompt: "High-contrast serif font (Didot/Bodoni), editorial fashion magazine layout.", tags: ['fashion'] },
+            { id: "script_signature", name: "Signature Script", prompt: "Focus on a handwritten signature style logo, personal and authentic.", tags: ['personal'] },
+            { id: "vertical_type", name: "Vertical Type", prompt: "Typography running vertically up the side, modern art poster vibe.", tags: ['modern'] },
+            { id: "outline_stroke", name: "Outline Stroke", prompt: "Transparent text with thick colored outlines, overlapping image.", tags: ['modern'] },
+            { id: "3d_typography", name: "3D Typography", prompt: "Text rendered in 3D with shadows and depth, popping off the page.", tags: ['tech'] },
+            { id: "kinetic_type", name: "Kinetic Motion", prompt: "Blurred motion text effect, sense of speed and movement.", tags: ['dynamic'] },
+            { id: "retro_future_type", name: "Retro Future Type", prompt: "Chrome gradient text, 80s grid background, synthwave font.", tags: ['retro'] },
+            { id: "grunge_type", name: "Grunge Type", prompt: "Distressed, eroded font style, gritty background, alternative vibe.", tags: ['urban'] },
+            { id: "minimal_sans", name: "Minimal Sans", prompt: "Tiny, widely spaced sans-serif text, surrounded by vast empty space.", tags: ['minimalist'] }
         ]
     }
 ];
@@ -199,6 +341,325 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
       },
     ],
   },
+  {
+    category: 'Royal & Ceremonial',
+    styles: [
+        { id: 'prince_ceremonial', name: 'Prince Ceremonial', prompt: 'a regal ceremonial prince uniform inspired by European royalty, featuring a high-collar tunic with gold embroidery, epaulettes, a sash across the chest, and medals', tags: ['royal', 'formal', 'costume'] },
+        { id: 'military_general', name: 'Military General', prompt: 'a highly decorated military general dress uniform, olive drab or dark blue, with a chest full of ribbons and medals, gold shoulder boards, and a peaked cap', tags: ['military', 'uniform', 'authority'] },
+        { id: 'grand_marshal', name: 'Grand Marshal', prompt: 'an ornate military ceremonial uniform with excessive gold embroidery, a sash, and a high collar, authoritative style', tags: ['military', 'regal', 'costume'] },
+        { id: 'admiral_white', name: 'Naval Admiral', prompt: 'a pristine white naval dress uniform with gold shoulder boards and a peaked cap', tags: ['military', 'uniform', 'white'] }
+    ]
+  },
+  {
+  category: 'Paramilitary & Combat Wear',
+  styles: [
+    // 1
+    { id: 'tactical-black-ops', name: 'Tactical Black Ops', 
+      prompt: 'full black tactical uniform with MOLLE vest, reinforced combat pants, black gloves and balaclava', 
+      tags: ['combat', 'tactical', 'black-ops'] },
+
+    // 2
+    { id: 'urban-swat', name: 'Urban SWAT Gear', 
+      prompt: 'SWAT-style uniform with dark navy tactical vest, elbow pads, knee pads, and utility belt', 
+      tags: ['swat', 'urban', 'tactical'] },
+
+    // 3
+    { id: 'desert-camo', name: 'Desert Camo Soldier', 
+      prompt: 'desert camouflage uniform with tan combat boots and tactical backpack', 
+      tags: ['desert', 'military', 'combat'] },
+
+    // 4
+    { id: 'jungle-camo', name: 'Jungle Camo', 
+      prompt: 'green jungle camouflage with leaf-pattern ghillie elements and heavy-duty boots', 
+      tags: ['jungle', 'camouflage', 'sniper'] },
+
+    // 5
+    { id: 'ghillie-sniper', name: 'Ghillie Sniper Suit', 
+      prompt: 'full-body ghillie suit with natural foliage textures for stealth operations', 
+      tags: ['sniper', 'stealth', 'forest'] },
+
+    // 6
+    { id: 'navy-seal', name: 'Navy SEAL Gear', 
+      prompt: 'navy seal combat uniform with amphibious gear and tactical vest', 
+      tags: ['navy-seal', 'elite', 'combat'] },
+
+    // 7
+    { id: 'marine-corps', name: 'Marine Corps Combat', 
+      prompt: 'US marine corps digital camo uniform with plate carrier', 
+      tags: ['marine', 'us-military', 'combat'] },
+
+    // 8
+    { id: 'airborne-paratrooper', name: 'Airborne Paratrooper', 
+      prompt: 'airborne paratrooper gear with harness, helmet, and tactical uniform', 
+      tags: ['airborne', 'paratrooper', 'military'] },
+
+    // 9
+    { id: 'royal-commandos', name: 'Royal Commandos', 
+      prompt: 'UK commando uniform with beret, utility vest and tactical boots', 
+      tags: ['uk', 'commandos', 'military'] },
+
+    // 10
+    { id: 'ranger-green', name: 'US Ranger Green', 
+      prompt: 'ranger green tactical uniform with minimalistic chest rig', 
+      tags: ['ranger', 'us-army', 'tactical'] },
+
+    // 11
+    { id: 'armored-riot-police', name: 'Armored Riot Police', 
+      prompt: 'riot police armor with heavy padding, transparent shield and baton', 
+      tags: ['riot', 'police', 'armor'] },
+
+    // 12
+    { id: 'winter-whiteout', name: 'Winter Whiteout Camo', 
+      prompt: 'snow camouflage uniform with thermal jacket and white balaclava', 
+      tags: ['winter', 'snow', 'camo'] },
+
+    // 13
+    { id: 'spec-ops-grey', name: 'Special Ops Grey', 
+      prompt: 'matte grey tactical gear with drop-leg holster and reinforced boots', 
+      tags: ['special-ops', 'tactical', 'combat'] },
+
+    // 14
+    { id: 'hostage-rescue', name: 'Hostage Rescue Team', 
+      prompt: 'HRT-style uniform with tactical helmet, visor and sleek black gear', 
+      tags: ['HRT', 'swat', 'elite'] },
+
+    // 15
+    { id: 'pilot-flight-suit', name: 'Military Flight Suit', 
+      prompt: 'green aviation flight suit with chest pockets and flight gloves', 
+      tags: ['pilot', 'aviation', 'military'] },
+
+    // 16
+    { id: 'tank-crew', name: 'Tank Crew Suit', 
+      prompt: 'fire-resistant tank crew coverall with padded helmet', 
+      tags: ['tank', 'crew', 'military'] },
+
+    // 17
+    { id: 'naval-uniform', name: 'Naval Operations Uniform', 
+      prompt: 'navy blue maritime tactical outfit with waterproof boots', 
+      tags: ['navy', 'water', 'tactical'] },
+
+    // 18
+    { id: 'anti-poaching-unit', name: 'Anti-Poaching Tactical', 
+      prompt: 'rugged African bush tactical uniform with khaki camo and ranger vest', 
+      tags: ['ranger', 'africa', 'conservation'] },
+
+    // 19
+    { id: 'border-patrol', name: 'Border Patrol Unit', 
+      prompt: 'dark green tactical outfit with patrol patches and combat boots', 
+      tags: ['border', 'patrol', 'tactical'] },
+
+    // 20
+    { id: 'undercover-tactical', name: 'Undercover Tactical', 
+      prompt: 'casual civilian clothing layered with concealed tactical gear', 
+      tags: ['undercover', 'covert', 'tactical'] },
+
+    // 21
+    { id: 'riot-gear-light', name: 'Light Riot Gear', 
+      prompt: 'lightweight riot uniform with flexible armor and helmet', 
+      tags: ['riot', 'police', 'urban'] },
+
+    // 22
+    { id: 'mountain-trooper', name: 'Mountain Trooper', 
+      prompt: 'cold-weather climbing uniform with reinforced knees and tactical parka', 
+      tags: ['mountain', 'snow', 'elite'] },
+
+    // 23
+    { id: 'jungle-guerilla', name: 'Jungle Guerilla Outfit', 
+      prompt: 'lightweight guerilla-style uniform with green fatigues and bandana', 
+      tags: ['guerilla', 'jungle', 'combat'] },
+
+    // 24
+    { id: 'cyber-tactical', name: 'Cyber Tactical Suit', 
+      prompt: 'futuristic tactical suit with armored plates and neon accents', 
+      tags: ['futuristic', 'tactical', 'sci-fi'] },
+
+    // 25
+    { id: 'mercenary-style', name: 'Private Military Contractor', 
+      prompt: 'PMC outfit with tan cargo pants, plate carrier and baseball cap', 
+      tags: ['pmc', 'contractor', 'tactical'] },
+
+    // 26
+    { id: 'desert-operator', name: 'Desert Operator', 
+      prompt: 'tan tactical uniform with dust goggles and reinforced gloves', 
+      tags: ['desert', 'operator', 'military'] },
+
+    // 27
+    { id: 'forest-ranger', name: 'Forest Ranger Tactical', 
+      prompt: 'deep green ranger uniform with practical gear for forest operations', 
+      tags: ['forest', 'ranger', 'conservation'] },
+
+    // 28
+    { id: 'motorized-infantry', name: 'Motorized Infantry', 
+      prompt: 'combat uniform with armored vest and helmet suited for vehicle crews', 
+      tags: ['infantry', 'military', 'armor'] },
+
+    // 29
+    { id: 'black-urban-ops', name: 'Black Urban Ops', 
+      prompt: 'sleek black uniform with urban tactical vest and combat gloves', 
+      tags: ['urban', 'stealth', 'black-ops'] },
+
+    // 30
+    { id: 'peacekeeping-blue', name: 'UN Peacekeeping Blue', 
+      prompt: 'UN peacekeeping sky-blue beret, vest and uniform', 
+      tags: ['un', 'peacekeeping', 'military'] },
+
+    // 31
+    { id: 'anti-terror-unit', name: 'Anti-Terror Unit', 
+      prompt: 'elite anti-terror uniform with heavy armor and tactical helmet', 
+      tags: ['anti-terror', 'elite', 'tactical'] },
+
+    // 32
+    { id: 'high-altitude-soldier', name: 'High Altitude Gear', 
+      prompt: 'oxygen-ready combat suit with insulated layers for extreme altitudes', 
+      tags: ['altitude', 'snow', 'military'] },
+
+    // 33
+    { id: 'stealth-night-ops', name: 'Night Stealth Ops', 
+      prompt: 'night camouflage uniform with blackout gear and NVG mount', 
+      tags: ['night', 'stealth', 'elite'] },
+
+    // 34
+    { id: 'armored-explosive-tech', name: 'Explosive Ordnance Suit', 
+      prompt: 'heavy bomb-disposal armored suit with reinforced plating', 
+      tags: ['bomb', 'EOD', 'armor'] },
+
+    // 35
+    { id: 'tactical-civilian', name: 'Tactical Civilian Wear', 
+      prompt: 'civilian clothing upgraded with tactical pockets and covert vest', 
+      tags: ['covert', 'civilian', 'tactical'] },
+
+    // 36
+    { id: 'airforce-blue', name: 'Air Force Combat Uniform', 
+      prompt: 'airforce blue camouflage with flight-ready gear', 
+      tags: ['airforce', 'military', 'camo'] },
+
+    // 37
+    { id: 'wildlands-operator', name: 'Wildlands Operator', 
+      prompt: 'outdoor tactical uniform for rugged terrains with hydration pack', 
+      tags: ['outdoor', 'terrain', 'tactical'] },
+
+    // 38
+    { id: 'contractor-black', name: 'Black Contractor Fit', 
+      prompt: 'PMC black uniform with plate carrier and tactical gloves', 
+      tags: ['pmc', 'black', 'tactical'] },
+
+    // 39
+    { id: 'police-k9-unit', name: 'K9 Tactical Handler', 
+      prompt: 'police K9 handler tactical uniform with padded sleeves', 
+      tags: ['k9', 'police', 'tactical'] },
+
+    // 40
+    { id: 'rapid-response', name: 'Rapid Response Unit', 
+      prompt: 'light, fast-response tactical uniform with soft armor', 
+      tags: ['rapid', 'urban', 'tactical'] },
+
+    // 41
+    { id: 'border-scout', name: 'Border Scout Uniform', 
+      prompt: 'camouflage field scout uniform with binocular harness', 
+      tags: ['scout', 'border', 'field'] },
+
+    // 42
+    { id: 'field-medic', name: 'Combat Medic Uniform', 
+      prompt: 'combat medic tactical outfit with medical patches and bag', 
+      tags: ['medic', 'combat', 'tactical'] },
+
+    // 43
+    { id: 'PMC-tan', name: 'PMC Desert Tan', 
+      prompt: 'private contractor desert tan uniform and tactical sunglasses', 
+      tags: ['contractor', 'desert', 'tactical'] },
+
+    // 44
+    { id: 'parade-military', name: 'Military Parade Dress', 
+      prompt: 'ceremonial military outfit with medals and highly polished boots', 
+      tags: ['ceremony', 'uniform', 'formal'] },
+
+    // 45
+    { id: 'royal-guard', name: 'Royal Guard Uniform', 
+      prompt: 'elite royal guard combat uniform with beret', 
+      tags: ['royal', 'elite', 'guard'] },
+
+    // 46
+    { id: 'armor-lightweight', name: 'Light Tactical Armor', 
+      prompt: 'light armor plates with breathable combat shirt and modular vest', 
+      tags: ['armor', 'lightweight', 'tactical'] },
+
+    // 47
+    { id: 'special-police', name: 'Special Police Taskforce', 
+      prompt: 'special police tactical uniform with minimal design', 
+      tags: ['police', 'special', 'tactical'] },
+
+    // 48
+    { id: 'night-patrol', name: 'Night Patrol', 
+      prompt: 'dark tactical uniform with reflective stripes for patrol duties', 
+      tags: ['patrol', 'night', 'police'] },
+
+    // 49
+    { id: 'covert-ops', name: 'Deep Covert Ops', 
+      prompt: 'all-black minimal gear with concealed weapons', 
+      tags: ['covert', 'black-ops', 'stealth'] },
+
+    // 50
+    { id: 'marine-diver', name: 'Combat Diver Suit', 
+      prompt: 'marine amphibious diving suit with tactical fins and waterproof kit', 
+      tags: ['diver', 'marine', 'water'] },
+
+    // 51
+    { id: 'anti-drug-unit', name: 'Anti-Narcotics Unit', 
+      prompt: 'dark green tactical uniform with anti-drug patches', 
+      tags: ['narcotics', 'police', 'tactical'] },
+
+    // 52
+    { id: 'wildlife-patrol', name: 'Wildlife Protection Officer', 
+      prompt: 'khaki outfit with chest rig for field patrols', 
+      tags: ['wildlife', 'ranger', 'field'] },
+
+    // 53
+    { id: 'black-ops-armored', name: 'Armored Black Ops', 
+      prompt: 'heavily armored black ops suit with tactical helmet and plates', 
+      tags: ['armor', 'elite', 'tactical'] },
+
+    // 54
+    { id: 'special-recon', name: 'Recon Operator', 
+      prompt: 'stealth-focused recon uniform with minimal loadout', 
+      tags: ['recon', 'stealth', 'elite'] },
+
+    // 55
+    { id: 'PMC-jungle', name: 'PMC Jungle Gear', 
+      prompt: 'contractor style with green fatigues and tactical cap', 
+      tags: ['jungle', 'pmc', 'combat'] },
+
+    // 56
+    { id: 'rural-patrol', name: 'Rural Patrol Officer', 
+      prompt: 'khaki uniform with tactical elements designed for rural landscapes', 
+      tags: ['rural', 'police', 'field'] },
+
+    // 57
+    { id: 'high-threat', name: 'High Threat Response', 
+      prompt: 'heavy armor tactical suit for high-risk missions', 
+      tags: ['armor', 'threat', 'tactical'] },
+
+    // 58
+    { id: 'special-mountain', name: 'Special Mountain Ops', 
+      prompt: 'mountain combat gear with climbing harness and camo jacket', 
+      tags: ['mountain', 'elite', 'tactical'] },
+
+    // 59
+    { id: 'PMC-blackout', name: 'PMC Night Blackout', 
+      prompt: 'contractor black tactical outfit optimized for night missions', 
+      tags: ['pmc', 'night', 'stealth'] },
+
+    // 60
+    { id: 'tactical-athleisure', name: 'Tactical Athleisure', 
+      prompt: 'sporty clothing mixed with tactical pockets and covert belts', 
+      tags: ['civilian', 'athletic', 'tactical'] },
+
+    // 61
+    { id: 'stealth-camo-grey', name: 'Stealth Grey Camo', 
+      prompt: 'urban grey camouflage uniform for city operations', 
+      tags: ['urban', 'camo', 'stealth'] }
+  ]
+}
+
   {
     category: 'Western Classics',
     styles: [
@@ -570,6 +1031,7 @@ export const CATEGORIZED_VEHICLE_STYLES: StyleCategory[] = [
             { id: "art_splatter", name: "Paint Splatter", prompt: "White car with multi-colored chaotic paint splatter effects", tags: ["art"] },
             { id: "art_tron", name: "Tron Lines", prompt: "Matte black car with glowing neon blue edges and contour lines", tags: ["art", "scifi"] },
             { id: "wrap_outline", name: "Blueprint Outline", prompt: "A technical wireframe outline sketch of the car model applied as a wrap, white lines on dark background, blueprint aesthetic", tags: ["art", "sketch"] },
+            { id: "edu_mark_sketch", name: "Edu-Mark Sketch", prompt: "Create a full-vehicle car wrap design that makes the car look like a hand-drawn sketch. The wrap should visually mimic a pencil or marker sketch directly on the body of the car. Use rough sketch lines, bold outlines, shading strokes, and contour marks that follow the car’s curves, edges, and panels. The style should resemble an automotive designer’s concept sketch—minimal, artistic, monochrome (black on white or white on matte black), with subtle shading lines around the wheels, headlights, windows, and body contours. Include dynamic sketch strokes around wheel arches, vents, and doors to exaggerate the design. The wrap should look like the entire vehicle is a 2D drawing, even though it is 3D. Add perspective lines, cross-hatching, and intentional imperfections for authenticity. The final result should appear like a real car turned into a designer’s sketch—clean, modern, artistic, and visually striking", tags: ["art", "sketch", "monochrome"] },
         ]
     },
     {
@@ -578,6 +1040,11 @@ export const CATEGORIZED_VEHICLE_STYLES: StyleCategory[] = [
             { id: "cyber_distressed", name: "Distressed Future", prompt: "Dirty, worn sci-fi spacecraft look, industrial grey with caution stripes", tags: ["scifi"] },
             { id: "cyber_synthwave", name: "Synthwave Sunset", prompt: "Retro 80s synthwave sunset grid gradient, purple to orange", tags: ["scifi"] },
             { id: "cyber_circuit", name: "Circuit Board", prompt: "Green circuit board pattern on black background", tags: ["scifi"] },
+            { id: "tech_mainframe", name: "Mainframe Access", prompt: "Deep blue and black server rack aesthetic, glowing data streams, tech nodes, futuristic server room vibe wrap", tags: ["tech", "scifi"] },
+            { id: "tech_quantum", name: "Quantum Grid", prompt: "White and cyan quantum computing grid pattern, floating geometric cubes, clean laboratory aesthetic wrap", tags: ["tech", "clean"] },
+            { id: "tech_nanotech", name: "Nanotech Hive", prompt: "Hexagonal honeycomb nanotech armor pattern, metallic grey with glowing orange interstices, high-tech armor wrap", tags: ["tech", "armor"] },
+            { id: "tech_breach", name: "Data Breach", prompt: "Glitch art style, red and black corrupted data artifacts, pixel sorting effects, chaotic digital noise wrap", tags: ["tech", "glitch"] },
+            { id: "tech_hex", name: "Cyber Hex", prompt: "Matte black background with a glowing neon purple hexagonal mesh overlay, structured and futuristic wrap", tags: ["tech", "scifi"] },
         ]
     },
     {
@@ -905,7 +1372,7 @@ export const CATEGORIZED_VEHICLE_LIGHTING_GRILL: OptionGroup[] = [
             { id: 'tint_blue', name: 'Blue Mirror Tint', prompt: 'reflective blue mirror window tint', tags: [] },
             { id: 'tint_gold', name: 'Gold Mirror Tint', prompt: 'reflective gold mirror window tint', tags: [] },
             { id: 'chameleon_tint', name: 'Chameleon Windshield', prompt: 'iridescent chameleon purple-green window tint', tags: [] },
-        ]
+        ] 
     },
     {
         category: 'Underglow',

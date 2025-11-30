@@ -11,7 +11,10 @@ interface HeaderProps {
 
 const MENU_ITEMS = [
     { id: 'landing', label: 'Home' },
-    { id: 'home', label: 'Studio' },
+    { id: 'home', label: 'Apparel' },
+    { id: 'vehicle', label: 'Vehicle' },
+    { id: 'interior', label: 'Interior' },
+    { id: 'landscape', label: 'Garden' },
     { id: 'session', label: 'Session' },
     { id: 'campaign', label: 'Campaign' },
     { id: 'poster', label: 'Poster' },
@@ -98,13 +101,12 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                 <div className="flex items-center gap-4">
                     {/* Desktop Nav */}
                     <nav className="hidden lg:flex items-center gap-2 bg-white/50 dark:bg-zinc-900/50 p-1 rounded-full border border-zinc-200 dark:border-white/5 backdrop-blur-md z-50 shadow-sm dark:shadow-lg">
-                        <NavLink page="home" label="Studio" />
-                        <NavLink page="session" label="Session" />
+                        <NavLink page="home" label="Apparel" />
+                        <NavLink page="vehicle" label="Vehicle" />
+                        <NavLink page="interior" label="Interior" />
+                        <NavLink page="landscape" label="Garden" />
                         <NavLink page="campaign" label="Campaign" />
-                        <NavLink page="poster" label="Poster" />
                         <NavLink page="animate" label="Cinema" />
-                        <NavLink page="gallery" label="Gallery" />
-                        <NavLink page="quiz" label="Quiz" />
                     </nav>
 
                     {/* Theme Toggle */}
