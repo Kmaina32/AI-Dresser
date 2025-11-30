@@ -1,16 +1,4 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
-// import { 
-//     createUserWithEmailAndPassword, 
-//     signInWithEmailAndPassword, 
-//     signOut, 
-//     onAuthStateChanged,
-//     signInWithPopup,
-//     sendPasswordResetEmail,
-//     updateProfile as updateFirebaseProfile
-// } from 'firebase/auth';
-// import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
-// import { auth, db, googleProvider } from '../services/firebase.ts';
 
 export interface User {
   id: string;
@@ -38,39 +26,92 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Auth is disabled in this version for direct Landing -> Home access
+  // Restore session from local storage to persist login across refreshes
   useEffect(() => {
-     // Simulate a loaded state for a guest user if needed, or just leave as null
-     setIsLoading(false);
+      const storedUser = localStorage.getItem('geo_user');
+      if (storedUser) {
+          try {
+              setUser(JSON.parse(storedUser));
+          } catch (e) {
+              console.error("Failed to parse stored user", e);
+          }
+      }
   }, []);
 
   const login = async (email: string, password: string) => {
-    // No-op
-    return Promise.resolve();
+    setIsLoading(true);
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    const mockUser: User = {
+        id: 'u-' + Date.now(),
+        name: email.split('@')[0],
+        email: email,
+        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop',
+        isPro: true,
+        provider: 'email'
+    };
+    
+    setUser(mockUser);
+    localStorage.setItem('geo_user', JSON.stringify(mockUser));
+    setIsLoading(false);
   };
 
   const loginWithGoogle = async () => {
-    // No-op
-    return Promise.resolve();
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    const mockUser: User = {
+        id: 'g-' + Date.now(),
+        name: 'Demo User',
+        email: 'demo@gmail.com',
+        avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=200&auto=format&fit=crop',
+        isPro: true,
+        provider: 'google'
+    };
+    setUser(mockUser);
+    localStorage.setItem('geo_user', JSON.stringify(mockUser));
+    setIsLoading(false);
   };
 
   const signup = async (name: string, email: string, password: string) => {
-    // No-op
-    return Promise.resolve();
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    const mockUser: User = {
+        id: 'u-' + Date.now(),
+        name: name,
+        email: email,
+        avatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=200&auto=format&fit=crop',
+        isPro: false,
+        provider: 'email'
+    };
+    setUser(mockUser);
+    localStorage.setItem('geo_user', JSON.stringify(mockUser));
+    setIsLoading(false);
   };
 
   const resetPassword = async (email: string) => {
-      // No-op
-      return Promise.resolve();
+      setIsLoading(true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setIsLoading(false);
+      // In a real app, this would send an email
   };
 
   const logout = async () => {
-    // No-op
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setUser(null);
+    localStorage.removeItem('geo_user');
+    setIsLoading(false);
   };
 
   const updateProfile = async (data: Partial<User>) => {
-      // No-op
-      return Promise.resolve();
+      if (!user) return;
+      setIsLoading(true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const updatedUser = { ...user, ...data };
+      setUser(updatedUser);
+      localStorage.setItem('geo_user', JSON.stringify(updatedUser));
+      setIsLoading(false);
   };
 
   return (

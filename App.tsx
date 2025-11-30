@@ -1,21 +1,26 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import Header from './Header.tsx';
-import HomePage from './pages/HomePage.tsx';
-import VehiclePage from './pages/VehiclePage.tsx';
-import InteriorPage from './pages/InteriorPage.tsx';
-import LandscapePage from './pages/LandscapePage.tsx';
-import GalleryPage from './pages/GalleryPage.tsx';
-import AboutPage from './pages/AboutPage.tsx';
-import AnimatePage from './pages/AnimatePage.tsx';
-import StyleQuizPage from './pages/StyleQuizPage.tsx';
-import MusicPosterPage from './pages/MusicPosterPage.tsx';
-import StudioSessionPage from './pages/StudioSessionPage.tsx';
-import CampaignPage from './pages/CampaignPage.tsx';
-import LandingPage from './pages/LandingPage.tsx';
 import ChatWidget from './components/ChatWidget.tsx';
 import GlobalLoader from './components/GlobalLoader.tsx';
+import ErrorBoundary from './components/ErrorBoundary.tsx';
 import { RemixConfig } from './constants.ts';
+
+// Lazy Load Pages for Performance Code Splitting
+const HomePage = lazy(() => import('./pages/HomePage.tsx'));
+const VehiclePage = lazy(() => import('./pages/VehiclePage.tsx'));
+const InteriorPage = lazy(() => import('./pages/InteriorPage.tsx'));
+const LandscapePage = lazy(() => import('./pages/LandscapePage.tsx'));
+const GalleryPage = lazy(() => import('./pages/GalleryPage.tsx'));
+const AboutPage = lazy(() => import('./pages/AboutPage.tsx'));
+const AnimatePage = lazy(() => import('./pages/AnimatePage.tsx'));
+const StyleQuizPage = lazy(() => import('./pages/StyleQuizPage.tsx'));
+const MusicPosterPage = lazy(() => import('./pages/MusicPosterPage.tsx'));
+const StudioSessionPage = lazy(() => import('./pages/StudioSessionPage.tsx'));
+const CampaignPage = lazy(() => import('./pages/CampaignPage.tsx'));
+const LandingPage = lazy(() => import('./pages/LandingPage.tsx'));
+const LoginPage = lazy(() => import('./pages/LoginPage.tsx'));
+const SignupPage = lazy(() => import('./pages/SignupPage.tsx'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage.tsx'));
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState('landing');
@@ -27,17 +32,7 @@ const App: React.FC = () => {
     // Strip leading/trailing slashes
     const path = window.location.pathname.replace(/^\/|\/$/g, '');
     if (path && path !== '') {
-      // If path is login, signup or profile, redirect to landing since they are removed
-      if (['login', 'signup', 'profile'].includes(path)) {
-          setCurrentPage('landing');
-          try {
-            window.history.replaceState({ page: 'landing' }, '', '/');
-          } catch (e) {
-            console.warn("History update blocked by environment");
-          }
-      } else {
-          setCurrentPage(path);
-      }
+       setCurrentPage(path);
     }
   }, []);
 
@@ -46,8 +41,8 @@ const App: React.FC = () => {
     
     setIsGlobalLoading(true);
     
-    // Simulate a brief network/rendering delay for smoother UX feel
-    await new Promise(resolve => setTimeout(resolve, 600));
+    // Simulate a brief network/rendering delay for smoother UX feel during page transitions
+    await new Promise(resolve => setTimeout(resolve, 400));
 
     setCurrentPage(page);
     if (page !== 'home') setRemixConfig(null);
@@ -68,11 +63,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const onPopState = (event: PopStateEvent) => {
         const path = window.location.pathname.replace(/^\/|\/$/g, '');
-        if (['login', 'signup', 'profile'].includes(path)) {
-             setCurrentPage('landing');
-        } else {
-             setCurrentPage(path || 'landing');
-        }
+        setCurrentPage(path || 'landing');
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
@@ -97,32 +88,39 @@ const App: React.FC = () => {
       case 'gallery': return <GalleryPage onRemix={handleRemix} />;
       case 'quiz': return <StyleQuizPage onRemix={handleRemix} />;
       case 'about': return <AboutPage />;
+      case 'login': return <LoginPage onNavigate={handleNavigate} />;
+      case 'signup': return <SignupPage onNavigate={handleNavigate} />;
+      case 'profile': return <ProfilePage onNavigate={handleNavigate} />;
       default: return <LandingPage onNavigate={handleNavigate} />;
     }
   };
 
   return (
-    <div className="min-h-screen w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200 font-sans selection:bg-amber-500/30 selection:text-black dark:selection:text-white flex flex-col transition-colors duration-500">
-      {/* Global Loader Overlay */}
-      {isGlobalLoading && <GlobalLoader />}
+    <ErrorBoundary>
+      <div className="min-h-screen w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200 font-sans selection:bg-amber-500/30 selection:text-black dark:selection:text-white flex flex-col transition-colors duration-500">
+        {/* Global Loader Overlay */}
+        {isGlobalLoading && <GlobalLoader />}
 
-      {/* Global Background Pattern */}
-      <div className="fixed inset-0 pointer-events-none bg-grid-pattern opacity-30 z-0" />
-      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-white/50 via-white/10 to-transparent dark:from-transparent dark:via-zinc-950/50 dark:to-zinc-950 z-0" />
-      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.08),transparent_50%)] z-0" />
-      
-      <Header onNavigate={handleNavigate} />
-      
-      {/* Main Content Area */}
-      <main className={`flex-1 relative flex flex-col ${isGlobalLoading ? 'opacity-50 pointer-events-none filter blur-sm' : 'opacity-100'} transition-all duration-300`}>
-        <div className={`flex-1 w-full ${currentPage === 'landing' ? '' : 'mt-16'}`}>
-             {renderPage()}
-        </div>
-      </main>
-      
-      {/* AI Assistant */}
-      <ChatWidget />
-    </div>
+        {/* Global Background Pattern */}
+        <div className="fixed inset-0 pointer-events-none bg-grid-pattern opacity-30 z-0" />
+        <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-white/50 via-white/10 to-transparent dark:from-transparent dark:via-zinc-950/50 dark:to-zinc-950 z-0" />
+        <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.08),transparent_50%)] z-0" />
+        
+        <Header onNavigate={handleNavigate} />
+        
+        {/* Main Content Area */}
+        <main className={`flex-1 relative flex flex-col ${isGlobalLoading ? 'opacity-50 pointer-events-none filter blur-sm' : 'opacity-100'} transition-all duration-300`}>
+          <div className={`flex-1 w-full ${currentPage === 'landing' || currentPage === 'login' || currentPage === 'signup' ? '' : 'mt-16'}`}>
+              <Suspense fallback={<GlobalLoader />}>
+                  {renderPage()}
+              </Suspense>
+          </div>
+        </main>
+        
+        {/* AI Assistant */}
+        <ChatWidget />
+      </div>
+    </ErrorBoundary>
   );
 };
 
