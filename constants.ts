@@ -658,7 +658,7 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
       prompt: 'urban grey camouflage uniform for city operations', 
       tags: ['urban', 'camo', 'stealth'] }
   ]
-}
+},
 
   {
     category: 'Western Classics',

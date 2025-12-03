@@ -22,8 +22,14 @@ const LoginPage = lazy(() => import('./pages/LoginPage.tsx'));
 const SignupPage = lazy(() => import('./pages/SignupPage.tsx'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage.tsx'));
 
+const VALID_ROUTES = [
+    'landing', 'home', 'vehicle', 'interior', 'landscape', 
+    'session', 'campaign', 'poster', 'animate', 'gallery', 
+    'quiz', 'about', 'login', 'signup', 'profile'
+];
+
 const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState('landing');
+  const [currentPage, setCurrentPage] = useState<string>('landing');
   const [remixConfig, setRemixConfig] = useState<RemixConfig | null>(null);
   const [isGlobalLoading, setIsGlobalLoading] = useState(false);
 
@@ -31,8 +37,19 @@ const App: React.FC = () => {
   useEffect(() => {
     // Strip leading/trailing slashes
     const path = window.location.pathname.replace(/^\/|\/$/g, '');
-    if (path && path !== '') {
+    
+    if (path === '') {
+        setCurrentPage('landing');
+        return;
+    }
+
+    if (VALID_ROUTES.includes(path)) {
        setCurrentPage(path);
+    } else {
+       // Unknown route -> Default to landing
+       console.warn(`Unknown route: ${path}, redirecting to landing.`);
+       setCurrentPage('landing');
+       window.history.replaceState({ page: 'landing' }, '', '/');
     }
   }, []);
 
@@ -63,7 +80,13 @@ const App: React.FC = () => {
   useEffect(() => {
     const onPopState = (event: PopStateEvent) => {
         const path = window.location.pathname.replace(/^\/|\/$/g, '');
-        setCurrentPage(path || 'landing');
+        if (path === '') {
+            setCurrentPage('landing');
+        } else if (VALID_ROUTES.includes(path)) {
+            setCurrentPage(path);
+        } else {
+            setCurrentPage('landing');
+        }
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
@@ -95,6 +118,10 @@ const App: React.FC = () => {
     }
   };
 
+  // Determine if the global header should be shown.
+  // STRICTLY HIDDEN for landing, login, and signup pages to prevent double headers.
+  const showGlobalHeader = !['landing', 'login', 'signup'].includes(currentPage);
+
   return (
     <ErrorBoundary>
       <div className="min-h-screen w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-800 dark:text-zinc-200 font-sans selection:bg-amber-500/30 selection:text-black dark:selection:text-white flex flex-col transition-colors duration-500">
@@ -106,11 +133,12 @@ const App: React.FC = () => {
         <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-white/50 via-white/10 to-transparent dark:from-transparent dark:via-zinc-950/50 dark:to-zinc-950 z-0" />
         <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.08),transparent_50%)] z-0" />
         
-        <Header onNavigate={handleNavigate} />
+        {/* Conditionally Render Header */}
+        {showGlobalHeader && <Header onNavigate={handleNavigate} />}
         
         {/* Main Content Area */}
         <main className={`flex-1 relative flex flex-col ${isGlobalLoading ? 'opacity-50 pointer-events-none filter blur-sm' : 'opacity-100'} transition-all duration-300`}>
-          <div className={`flex-1 w-full ${currentPage === 'landing' || currentPage === 'login' || currentPage === 'signup' ? '' : 'mt-16'}`}>
+          <div className={`flex-1 w-full ${!showGlobalHeader ? '' : 'mt-16'}`}>
               <Suspense fallback={<GlobalLoader />}>
                   {renderPage()}
               </Suspense>
