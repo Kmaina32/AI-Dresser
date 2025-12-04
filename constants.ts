@@ -1,4 +1,3 @@
-
 export interface SimpleOption {
     name: string;
     prompt: string;
@@ -658,7 +657,7 @@ export const CATEGORIZED_SUIT_STYLES: StyleCategory[] = [
       prompt: 'urban grey camouflage uniform for city operations', 
       tags: ['urban', 'camo', 'stealth'] }
   ]
-},
+}
 
   {
     category: 'Western Classics',
@@ -1068,18 +1067,78 @@ export const CATEGORIZED_VEHICLE_STYLES: StyleCategory[] = [
 
 export const CATEGORIZED_INTERIOR_STYLES: StyleCategory[] = [
     {
-        category: "Residential",
+        category: "African Heritage",
         styles: [
-            { id: "scandi", name: "Scandinavian", prompt: "Minimalist Scandinavian design, light wood furniture, white walls, cozy textiles, bright and airy", tags: ["modern", "minimal"] },
-            { id: "industrial", name: "Industrial Loft", prompt: "Industrial loft style, exposed brick walls, metal accents, leather furniture, concrete floors", tags: ["urban", "modern"] },
-            { id: "mid_century", name: "Mid-Century Modern", prompt: "Mid-century modern aesthetic, teak furniture, retro color accents, organic shapes", tags: ["retro", "classic"] }
+            { id: "modern_afro_luxe", name: "Modern Afro-Luxe", prompt: "Sophisticated modern African luxury interior. Dark mahogany wood furniture, gold accents, geometric African prints on cushions, warm earth tone palette (ochre, terracotta, charcoal).", tags: ["luxury", "african", "modern"] },
+            { id: "moroccan_riad", name: "Moroccan Riad", prompt: "Moroccan Riad style interior. Intricate zellige tilework on walls/floors, carved plaster arches, low plush seating, ornate brass lanterns, rich jewel tones.", tags: ["african", "ornate", "cultural"] },
+            { id: "swahili_coast", name: "Swahili Coast", prompt: "Lamu Swahili coastal style. Whitewashed coral stone walls, carved heavy wooden doors, limestone floors, nidhas (wall niches), breezy white linens, turquoise accents.", tags: ["african", "coastal", "breezy"] },
+            { id: "safari_lodge", name: "Safari Lodge", prompt: "High-end African safari lodge aesthetic. Canvas textures, rough-hewn timber beams, leather armchairs, tribal artifacts, panoramic views, blending with nature.", tags: ["african", "rustic", "luxury"] },
+            { id: "west_african_vibrant", name: "West African Vibrant", prompt: "Contemporary West African style. Bold Ankara fabric upholstery, woven basketry wall art, bright primary colors (yellow, blue, red) against neutral walls.", tags: ["african", "colorful", "bold"] },
+            { id: "tribal_minimalist", name: "Tribal Minimalist", prompt: "Minimalist tribal design. Mud cloth textiles, organic shaped clay pottery, raffia rugs, monochromatic palette of creams, browns and blacks.", tags: ["african", "minimal", "organic"] },
+            { id: "egyptian_revival", name: "Egyptian Revival", prompt: "Modern Egyptian revival. Gold and black palette, lotus flower motifs, symmetry, sleek stone surfaces, papyrus textures.", tags: ["african", "classic", "gold"] },
+            { id: "cape_dutch", name: "Cape Dutch Modern", prompt: "Modern Cape Dutch farmhouse. Whitewashed walls, thatched roof influence (exposed reed ceilings), gabled details, dark wood antiques mixed with modern lines.", tags: ["african", "farmhouse", "classic"] },
+            { id: "ethiopian_traditional", name: "Ethiopian Coffee", prompt: "Ethiopian cultural interior. Low carved wooden stools (jebena), woven grass mats (mesob), vibrant patterned rugs, incense ambience.", tags: ["african", "cultural", "traditional"] },
+            { id: "zulu_contemporary", name: "Zulu Contemporary", prompt: "Contemporary design inspired by Zulu culture. Circular motifs, intricate beadwork accents on furniture, woven Ilala palm textures, earthy grasslands colors.", tags: ["african", "modern", "patterned"] }
         ]
     },
     {
-        category: "Commercial",
+        category: "Modern & Contemporary",
         styles: [
-            { id: "office_modern", name: "Modern Office", prompt: "Sleek modern office space, glass partitions, ergonomic chairs, clean desks, professional lighting", tags: ["business"] },
-            { id: "cafe_cozy", name: "Cozy Cafe", prompt: "Warm and inviting cafe interior, rustic wood tables, ambient lighting, plants", tags: ["hospitality"] }
+            { id: "scandi", name: "Scandinavian", prompt: "Minimalist Scandinavian design. Light blonde wood floors and furniture, white walls, functional layout, cozy wool textiles (hygge), natural light.", tags: ["modern", "minimal", "cozy"] },
+            { id: "japandi", name: "Japandi", prompt: "Japandi style (Japan x Scandi). Fusion of wabi-sabi rustic warmth and Scandinavian functionality. Low profile furniture, unfinished woods, cream and grey tones.", tags: ["modern", "minimal", "zen"] },
+            { id: "mid_century", name: "Mid-Century Modern", prompt: "1950s Mid-Century Modern. Teak sideboards, peg legs, Eames-style chairs, organic curves, olive green and mustard accents.", tags: ["retro", "classic", "modern"] },
+            { id: "industrial", name: "Industrial Loft", prompt: "Industrial loft aesthetic. Exposed brick walls, concrete floors, visible ductwork, black metal window frames, leather chesterfield sofa, raw wood.", tags: ["urban", "modern", "raw"] },
+            { id: "biophilic", name: "Biophilic Nature", prompt: "Biophilic design. Living green walls, abundant indoor plants, maximizing natural light, organic materials (bamboo, cork), blurring lines between indoors and out.", tags: ["modern", "eco", "green"] },
+            { id: "ultra_minimalist", name: "Ultra-Minimalist", prompt: "Ultra-minimalism. Stark white surfaces, concealed storage, zero clutter, sharp clean lines, monolithic furniture forms.", tags: ["modern", "clean", "stark"] },
+            { id: "maximalist_eclectic", name: "Eclectic Maximalist", prompt: "Maximalist eclectic decor. Pattern clashing, bold rich wall colors, gallery walls floor-to-ceiling, mix of vintage and modern furniture, velvet textures.", tags: ["artistic", "bold", "cluttered"] },
+            { id: "organic_modern", name: "Organic Modern", prompt: "Organic modern style. Curved sofas, soft rounded edges, natural materials like stone and linen, warm neutral palette (beige, cream, taupe).", tags: ["modern", "soft", "neutral"] },
+            { id: "bauhaus_modern", name: "Bauhaus", prompt: "Bauhaus inspired interior. Form follows function, tubular steel furniture, primary colors (red, yellow, blue), geometric shapes, open space.", tags: ["modern", "geometric", "artistic"] },
+            { id: "brutalist_interior", name: "Soft Brutalism", prompt: "Soft Brutalist interior. Raw concrete walls and ceilings, monumental furniture shapes, textured fabrics to soften the hardness, grey monochrome.", tags: ["modern", "raw", "architectural"] }
+        ]
+    },
+    {
+        category: "Classic & Traditional",
+        styles: [
+            { id: "french_provincial", name: "French Provincial", prompt: "French Provincial country style. Distressed carved wood furniture, cabriole legs, toile fabrics, soft pastel blues and creams, rustic elegance.", tags: ["classic", "elegant", "rustic"] },
+            { id: "art_deco", name: "Art Deco", prompt: "Art Deco glamour. Geometric wallpaper patterns, gold and brass metals, velvet upholstery, mirrored furniture, black lacquer, symmetrical layout.", tags: ["classic", "glamour", "vintage"] },
+            { id: "english_cottage_int", name: "English Cottage", prompt: "Cozy English Cottage. Floral chintz fabrics, overstuffed armchairs, fireplace, timber beams, bookshelves, warm and cluttered.", tags: ["classic", "cozy", "traditional"] },
+            { id: "mediterranean", name: "Mediterranean", prompt: "Mediterranean villa interior. Terracotta tiled floors, white plaster walls, arched doorways, exposed dark wood beams, wrought iron fixtures.", tags: ["classic", "rustic", "warm"] },
+            { id: "victorian_modern", name: "Modern Victorian", prompt: "Modern Victorian blend. High ceilings with ornate crown molding, dark moody wall colors, velvet furniture, mixing antique heirlooms with modern art.", tags: ["classic", "moody", "eclectic"] },
+            { id: "hamptons", name: "Hamptons Coastal", prompt: "Hamptons coastal style. Crisp white wood paneling, navy blue and white striped upholstery, sisal rugs, airy and sophisticated beach house vibe.", tags: ["classic", "cozy", "bright"] },
+            { id: "tuscan", name: "Tuscan", prompt: "Old world Tuscan style. Textured stone walls, rich tapestry fabrics, heavy dark wood furniture, iron chandeliers, warm golden light.", tags: ["classic", "rustic", "heavy"] },
+            { id: "neoclassical", name: "Neoclassical", prompt: "Neoclassical elegance. Greek/Roman columns, symmetry, pale colors, elegant drapery, marble floors, crystal chandeliers.", tags: ["classic", "formal", "luxury"] },
+            { id: "farmhouse_chic", name: "Farmhouse Chic", prompt: "Modern Farmhouse. Shiplap walls, sliding barn doors, metal industrial light fixtures, neutral palette, comfortable slipcovered furniture.", tags: ["classic", "rustic", "modern"] },
+            { id: "colonial", name: "British Colonial", prompt: "British Colonial style. Dark teak furniture, rattan and cane webbing, palm plants, ceiling fans, white linen fabrics, travel trunks.", tags: ["classic", "vintage", "tropical"] }
+        ]
+    },
+    {
+        category: "Commercial & Spaces",
+        styles: [
+            { id: "office_modern", name: "Tech Startup Office", prompt: "Modern tech startup office. Open plan, glass partitions, ergonomic mesh chairs, standing desks, bean bag breakout areas, plywood accents.", tags: ["business", "modern", "work"] },
+            { id: "cafe_cozy", name: "Artisan Cafe", prompt: "Cozy artisan coffee shop. Reclaimed wood counters, subway tile backsplash, pendant filament bulbs, mismatched vintage chairs, chalkboard menus.", tags: ["hospitality", "rustic", "cozy"] },
+            { id: "luxury_retail", name: "Luxury Boutique", prompt: "High-end fashion boutique. Minimalist racks, marble floors, soft spotlighting, large mirrors, velvet ottomans, sparse layout.", tags: ["business", "luxury", "minimal"] },
+            { id: "hotel_lobby", name: "5-Star Hotel Lobby", prompt: "Grand hotel lobby. Massive chandelier, polished stone floors, symmetry, large floral arrangement in center, reception desk, lounge seating.", tags: ["hospitality", "luxury", "grand"] },
+            { id: "speakeasy_bar", name: "Speakeasy Bar", prompt: "Dark speakeasy bar. Dim moody lighting, leather booths, dark wood paneling, brass bar rails, shelves of backlit bottles.", tags: ["hospitality", "moody", "vintage"] },
+            { id: "restaurant_fine", name: "Fine Dining", prompt: "Fine dining restaurant. White tablecloths, crystal glassware, soft acoustic environment, plush seating, elegant wall sconces.", tags: ["hospitality", "formal", "elegant"] },
+            { id: "library_classic", name: "Classic Library", prompt: "Old world library. Floor-to-ceiling wooden bookshelves, rolling ladder, leather wingback chair, green bankers lamp, persian rug.", tags: ["study", "classic", "cozy"] },
+            { id: "art_gallery_int", name: "Art Gallery", prompt: "Contemporary art gallery. Polished concrete floors, stark white walls, track lighting, minimal benches, spacious.", tags: ["public", "minimal", "modern"] },
+            { id: "wellness_spa", name: "Wellness Spa", prompt: "Zen wellness spa. Stone textures, bamboo accents, water feature, soft ambient lighting, clean lines, beige and sage colors.", tags: ["wellness", "zen", "relaxing"] },
+            { id: "co_working", name: "Co-Working Space", prompt: "Vibrant co-working space. Hot desks, pops of color, plants, industrial ceiling, neon signage, collaborative atmosphere.", tags: ["business", "modern", "fun"] }
+        ]
+    },
+    {
+        category: "Themed & Niche",
+        styles: [
+            { id: "cyberpunk_room", name: "Cyberpunk Room", prompt: "Cyberpunk futuristic room. Dark environment, neon blue and pink LED strips, computer screens, metallic surfaces, high-tech vibe.", tags: ["futuristic", "gamer", "neon"] },
+            { id: "steampunk_room", name: "Steampunk Study", prompt: "Steampunk aesthetic. Copper pipes, gears, leather, vintage scientific instruments, industrial brass fixtures, Victorian influence.", tags: ["retro", "fantasy", "industrial"] },
+            { id: "boho_chic", name: "Boho Chic", prompt: "Bohemian chic bedroom. Macrame wall hangings, layered persian rugs, floor cushions, hanging plants, rattan furniture, relaxed vibe.", tags: ["boho", "relaxed", "eclectic"] },
+            { id: "music_studio", name: "Home Studio", prompt: "Home music studio. Acoustic foam on walls, mixing desk, studio monitors, guitars on wall, mood lighting.", tags: ["creative", "tech", "music"] },
+            { id: "gamer_setup", name: "Ultimate Gamer", prompt: "Ultimate gaming setup. RGB lighting everywhere, ergonomic racing chair, multiple monitors, soundproofing panels, blackout curtains.", tags: ["gamer", "tech", "modern"] },
+            { id: "artist_loft", name: "Artist Atelier", prompt: "Artist's painting studio. Easels, paint splattered floor, large windows for north light, chaotic creativity, storage racks for canvases.", tags: ["creative", "messy", "artistic"] },
+            { id: "zen_sanctuary", name: "Zen Meditation", prompt: "Japanese Zen meditation room. Tatami mats, shoji screens, low altar, bonsai tree, neutral colors, empty space.", tags: ["zen", "minimal", "peaceful"] },
+            { id: "gothic_glam", name: "Gothic Glam", prompt: "Gothic glamour. Black walls, crystal chandeliers, silver accents, velvet purple furniture, dramatic and moody.", tags: ["moody", "dark", "luxury"] },
+            { id: "retro_70s", name: "70s Retro", prompt: "1970s retro revival. Shag carpet, sunken conversation pit, orange and brown palette, velvet corduroy, funk aesthetic.", tags: ["retro", "fun", "colorful"] },
+            { id: "sunroom", name: "Sunroom Conservatory", prompt: "Bright sunroom conservatory. Glass walls/ceiling, wicker furniture, abundant ferns and tropical plants, tile floor.", tags: ["bright", "nature", "relaxing"] }
         ]
     }
 ];
@@ -1167,16 +1226,178 @@ export const LANDSCAPE_LIGHTING: BackgroundOption[] = [
 
 
 // --- ACCESSORIES ---
-
 export const DEFAULT_SHOE_OPTION = { name: 'Keep Original', prompt: '' };
 export const CATEGORIZED_SHOE_STYLES: OptionGroup[] = [
-    { category: 'Formal', styles: [{ id: 'oxford', name: 'Black Oxfords', prompt: 'classic black leather oxford shoes', tags: [] }, { id: 'loafers', name: 'Penny Loafers', prompt: 'brown leather penny loafers', tags: [] }] },
-    { category: 'Casual', styles: [{ id: 'sneakers_white', name: 'White Sneakers', prompt: 'clean white minimalist leather sneakers', tags: [] }, { id: 'boots', name: 'Leather Boots', prompt: 'rugged brown leather boots', tags: [] }] }
+    {
+        category: 'Formal & Dress',
+        styles: [
+            { id: 'oxford_black_cap', name: 'Black Cap-Toe Oxford', prompt: 'classic black cap-toe oxford shoes with leather soles, highly polished', tags: ['formal', 'business', 'classic'] },
+            { id: 'oxford_brown_brogue', name: 'Brown Wingtip Brogues', prompt: 'rich brown leather wingtip brogue oxford shoes with detailed perforations', tags: ['formal', 'classic', 'detailed'] },
+            { id: 'double_monk_strap', name: 'Double Monk Strap', prompt: 'sleek black or brown leather double monk strap shoes with metal buckles', tags: ['formal', 'fashion', 'modern'] },
+            { id: 'wholecut_oxford', name: 'Wholecut Oxford', prompt: 'elegant wholecut oxford shoes made from a single piece of leather, minimal seams', tags: ['luxury', 'minimal', 'formal'] },
+            { id: 'opera_pump', name: 'Opera Pump', prompt: 'ultra-formal black patent leather opera pumps with grosgrain bow', tags: ['black-tie', 'evening', 'luxury'] },
+            { id: 'penny_loafer', name: 'Penny Loafers', prompt: 'classic brown leather penny loafers with horsebit detail', tags: ['business-casual', 'preppy', 'classic'] },
+            { id: 'tassel_loafer', name: 'Tassel Loafers', prompt: 'sophisticated leather tassel loafers in burgundy or black', tags: ['business-casual', 'dressy', 'classic'] },
+            { id: 'chelsea_boot_dress', name: 'Dress Chelsea Boots', prompt: 'sleek black leather chelsea boots with elastic sides, polished finish', tags: ['modern', 'formal', 'boots'] },
+            { id: 'balmoral_boot', name: 'Balmoral Boots', prompt: 'formal ankle-length balmoral boots with lacing up the front', tags: ['formal', 'boots', 'winter'] },
+            { id: 'gucci_jordaan', name: 'Gucci Jordaan Loafer', prompt: 'iconic Gucci horsebit leather loafers in black or brown', tags: ['luxury', 'designer', 'classic'] },
+        ]
+    },
+    {
+        category: 'Casual & Everyday',
+        styles: [
+            { id: 'white_minimal_sneaker', name: 'Minimal White Sneakers', prompt: 'clean, minimalist white leather sneakers with slim profile', tags: ['casual', 'modern', 'versatile'] },
+            { id: 'common_projects', name: 'Common Projects Achilles', prompt: 'premium white leather sneakers with gold serial number, minimalist design', tags: ['luxury', 'minimal', 'casual'] },
+            { id: 'canvas_converse', name: 'Chuck Taylor All-Stars', prompt: 'classic canvas Chuck Taylor high-tops or low-tops in various colors', tags: ['casual', 'vintage', 'iconic'] },
+            { id: 'vans_old_skool', name: 'Vans Old Skool', prompt: 'black and white skate shoes with iconic side stripe', tags: ['skate', 'streetwear', 'casual'] },
+            { id: 'new_balance_990', name: 'New Balance 990', prompt: 'grey made-in-USA New Balance 990 running shoes, dad shoe aesthetic', tags: ['comfort', 'casual', 'athleisure'] },
+            { id: 'air_jordan_1', name: 'Air Jordan 1', prompt: 'iconic Nike Air Jordan 1 basketball shoes in classic colorways', tags: ['sneakers', 'basketball', 'streetwear'] },
+            { id: 'stan_smith', name: 'Adidas Stan Smith', prompt: 'classic white leather tennis shoes with green heel tab', tags: ['casual', 'tennis', 'classic'] },
+            { id: 'derby_shoe_casual', name: 'Casual Derby Shoes', prompt: 'brown suede or grained leather derby shoes with rubber soles', tags: ['smart-casual', 'versatile', 'comfort'] },
+            { id: 'boat_shoes', name: 'Sperry Boat Shoes', prompt: 'classic leather boat shoes with siped rubber soles and leather laces', tags: ['preppy', 'summer', 'nautical'] },
+            { id: 'camp_moc', name: 'Camp Moccasins', prompt: 'handsewn camp moccasins with rawhide laces', tags: ['casual', 'preppy', 'summer'] },
+        ]
+    },
+    {
+        category: 'Boots & Outdoor',
+        styles: [
+            { id: 'red_wing_iron_ranger', name: 'Red Wing Iron Ranger', prompt: 'heritage-style 6-inch work boots in amber harness leather with cap toe', tags: ['workwear', 'heritage', 'durable'] },
+            { id: 'timberland_6inch', name: 'Timberland 6-Inch', prompt: 'classic wheat nubuck Timberland 6-inch waterproof boots', tags: ['workwear', 'outdoor', 'waterproof'] },
+            { id: 'combat_boots', name: 'Combat Boots', prompt: 'black leather combat boots with speed hooks and lug soles', tags: ['military', 'edgy', 'durable'] },
+            { id: 'chukka_boot', name: 'Desert Chukka Boots', prompt: 'suede or leather chukka boots with two or three eyelets', tags: ['casual', 'versatile', 'smart-casual'] },
+            { id: 'hiking_boots', name: 'Technical Hiking Boots', prompt: 'modern waterproof hiking boots with Vibram soles and ankle support', tags: ['outdoor', 'technical', 'adventure'] },
+            { id: 'engineer_boot', name: 'Engineer Boots', prompt: 'black harness leather engineer boots with buckle strap', tags: ['biker', 'heritage', 'edgy'] },
+            { id: 'chukka_suede', name: 'Suede Chukka Boots', prompt: 'soft suede chukka boots in sand or grey color', tags: ['casual', 'smart-casual', 'modern'] },
+            { id: 'bean_boots', name: 'LL Bean Duck Boots', prompt: 'classic leather and rubber duck boots for wet weather', tags: ['outdoor', 'rain', 'preppy'] },
+            { id: 'cowboy_boots', name: 'Western Cowboy Boots', prompt: 'traditional leather cowboy boots with decorative stitching', tags: ['western', 'heritage', 'statement'] },
+            { id: 'doc_martens', name: 'Dr. Martens 1460', prompt: 'iconic black leather Dr. Martens boots with yellow stitching', tags: ['punk', 'alternative', 'durable'] },
+        ]
+    },
+    {
+        category: 'Luxury & Designer',
+        styles: [
+            { id: 'gucci_princetown', name: 'Gucci Princetown Loafers', prompt: 'fur-lined Gucci leather horsebit loafers/mules', tags: ['luxury', 'designer', 'statement'] },
+            { id: 'louboutin_spikes', name: 'Christian Louboutin Spiked', prompt: 'black leather dress shoes with signature red sole and metal spikes', tags: ['luxury', 'edgy', 'fashion'] },
+            { id: 'prada_cloudbust', name: 'Prada Cloudbust Sneakers', prompt: 'futuristic Prada Cloudbust sneakers with technical design', tags: ['luxury', 'techwear', 'modern'] },
+            { id: 'balenciaga_triples', name: 'Balenciaga Triple S', prompt: 'oversized chunky "dad sneakers" with multi-layered soles', tags: ['luxury', 'streetwear', 'chunky'] },
+            { id: 'hermes_oran', name: 'Hermès Oran Sandals', prompt: 'leather H-shaped sandals with signature Hermès design', tags: ['luxury', 'summer', 'designer'] },
+            { id: 'yeezy_350', name: 'Yeezy Boost 350', prompt: 'Adidas Yeezy Boost 350 knit sneakers in earth tone colors', tags: ['luxury', 'streetwear', 'comfort'] },
+            { id: 'dior_b23', name: 'Dior B23 High-Top', prompt: 'Dior Oblique pattern high-top sneakers with transparent panels', tags: ['luxury', 'streetwear', 'transparent'] },
+            { id: 'valentino_rockrunner', name: 'Valentino Rockrunner', prompt: 'luxury high-top sneakers with studded rock details', tags: ['luxury', 'edgy', 'designer'] },
+            { id: 'tom_ford_suede', name: 'Tom Ford Suede Sneakers', prompt: 'luxury minimalist suede sneakers with discreet branding', tags: ['luxury', 'minimal', 'designer'] },
+            { id: 'louis_vuitton_trainer', name: 'Louis Vuitton Trainer', prompt: 'LV monogram pattern luxury basketball-style sneakers', tags: ['luxury', 'streetwear', 'designer'] },
+        ]
+    },
+    {
+        category: 'Athletic & Performance',
+        styles: [
+            { id: 'nike_air_max', name: 'Nike Air Max 97', prompt: 'silver bullet Nike Air Max 97 with visible air unit', tags: ['athletic', 'running', 'retro'] },
+            { id: 'adidas_ultraboost', name: 'Adidas Ultraboost', prompt: 'primeknit running shoes with Boost cushioning technology', tags: ['running', 'comfort', 'technical'] },
+            { id: 'hoka_clifton', name: 'Hoka Clifton', prompt: 'maximalist cushioning running shoes with oversized midsole', tags: ['running', 'comfort', 'maximalist'] },
+            { id: 'on_cloud', name: 'On Cloudswift', prompt: 'Swiss-engineered running shoes with CloudTec cushioning', tags: ['running', 'technical', 'modern'] },
+            { id: 'basketball_shoes', name: 'Performance Basketball', prompt: 'high-top basketball shoes with ankle support and court grip', tags: ['basketball', 'performance', 'athletic'] },
+            { id: 'cleats_football', name: 'Soccer Cleats', prompt: 'lightweight soccer cleats with stud configuration for turf', tags: ['soccer', 'athletic', 'lightweight'] },
+            { id: 'trail_running', name: 'Trail Running Shoes', prompt: 'aggressive lugged soles for off-road running with rock plate', tags: ['trail', 'outdoor', 'technical'] },
+            { id: 'cross_training', name: 'Cross-Training Shoes', prompt: 'versatile athletic shoes for gym workouts with lateral support', tags: ['gym', 'training', 'versatile'] },
+            { id: 'golf_shoes', name: 'Golf Shoes', prompt: 'spikeless leather golf shoes with waterproof construction', tags: ['golf', 'sport', 'waterproof'] },
+            { id: 'cycling_shoes', name: 'Road Cycling Shoes', prompt: 'stiff-soled cycling shoes with cleat compatibility', tags: ['cycling', 'performance', 'technical'] },
+        ]
+    },
+    {
+        category: 'Seasonal & Specialty',
+        styles: [
+            { id: 'espadrilles', name: 'Canvas Espadrilles', prompt: 'summer canvas espadrilles with rope soles', tags: ['summer', 'casual', 'beach'] },
+            { id: 'flip_flops', name: 'Leather Flip Flops', prompt: 'premium leather flip flops with arch support', tags: ['summer', 'beach', 'casual'] },
+            { id: 'slippers_velvet', name: 'Velvet Slippers', prompt: 'embroidered velvet smoking slippers for formal evening wear', tags: ['evening', 'luxury', 'home'] },
+            { id: 'ugg_classic', name: 'UGG Classic Boots', prompt: 'shearling-lined suede boots for cold weather comfort', tags: ['winter', 'comfort', 'casual'] },
+            { id: 'snow_boots', name: 'Insulated Snow Boots', prompt: 'waterproof insulated boots rated for extreme cold', tags: ['winter', 'snow', 'technical'] },
+            { id: 'mukluks', name: 'Shearling Mukluks', prompt: 'traditional soft-soled boots lined with sheepskin', tags: ['winter', 'heritage', 'comfort'] },
+            { id: 'dress_sandals', name: 'Leather Dress Sandals', prompt: 'elegant leather sandals with multiple straps', tags: ['summer', 'dressy', 'casual'] },
+            { id: 'clogs', name: 'Swedish Clogs', prompt: 'wooden-soled clogs with leather upper', tags: ['heritage', 'comfort', 'casual'] },
+            { id: 'house_slippers', name: 'Wool House Slippers', prompt: 'tweed or wool house slippers with leather soles', tags: ['home', 'comfort', 'casual'] },
+            { id: 'rain_boots', name: 'Classic Rain Boots', prompt: 'rubber rain boots in classic green or yellow', tags: ['rain', 'outdoor', 'practical'] },
+        ]
+    }
 ];
+
 export const CATEGORIZED_WOMENS_SHOE_STYLES: OptionGroup[] = [
-    { category: 'Heels', styles: [{ id: 'stilettos', name: 'Black Stilettos', prompt: 'classic black stiletto heels', tags: [] }, { id: 'pumps', name: 'Nude Pumps', prompt: 'nude patent leather pumps', tags: [] }] },
-    { category: 'Flats', styles: [{ id: 'ballet', name: 'Ballet Flats', prompt: 'chic black ballet flats', tags: [] }] }
+    {
+        category: 'Heels',
+        styles: [
+            { id: 'stiletto_pump', name: 'Classic Pumps', prompt: 'black leather pointed-toe pumps with 3-4 inch stiletto heel', tags: ['formal', 'office', 'classic'] },
+            { id: 'd_orsay_heel', name: "D'Orsay Heels", prompt: 'elegant cut-out sides heels showing the arch of the foot', tags: ['dressy', 'evening', 'elegant'] },
+            { id: 'platform_heels', name: 'Platform Pumps', prompt: 'black platform pumps with hidden platform and high heel', tags: ['fashion', 'disco', 'retro'] },
+            { id: 'ankle_strap', name: 'Ankle Strap Heels', prompt: 'nude leather heels with delicate ankle strap', tags: ['wedding', 'formal', 'feminine'] },
+            { id: 'mary_jane_heels', name: 'Mary Jane Heels', prompt: 'patent leather heels with strap across the instep', tags: ['retro', 'feminine', 'classic'] },
+            { id: 'kitten_heel', name: 'Kitten Heels', prompt: 'low, slender 2-inch heels with pointed toe', tags: ['office', 'comfort', 'classic'] },
+            { id: 'block_heel', name: 'Block Heel Sandals', prompt: 'strappy sandals with thick block heel for stability', tags: ['summer', 'comfort', 'modern'] },
+            { id: 'wedge_sandal', name: 'Wedge Espadrilles', prompt: 'canvas wedge espadrilles with rope-wrapped wedge', tags: ['summer', 'casual', 'beach'] },
+            { id: 'mule_heel', name: 'Backless Mule Heels', prompt: 'suede mules with medium block heel', tags: ['modern', 'office', 'trendy'] },
+            { id: 'slingback_heel', name: 'Slingback Pumps', prompt: 'classic slingback heels with strap around the heel', tags: ['formal', 'elegant', 'classic'] },
+        ]
+    },
+    {
+        category: 'Flats',
+        styles: [
+            { id: 'ballet_flat', name: 'Ballet Flats', prompt: 'classic leather ballet flats with bow detail', tags: ['casual', 'office', 'feminine'] },
+            { id: 'loafer_feminine', name: 'Women\'s Loafers', prompt: 'leather loafers with horsebit or tassel detail', tags: ['preppy', 'smart-casual', 'androgynous'] },
+            { id: 'oxford_femme', name: 'Feminine Oxfords', prompt: 'lace-up oxford shoes with slightly pointed toe', tags: ['smart-casual', 'academic', 'androgynous'] },
+            { id: 'smoking_slipper', name: 'Smoking Slippers', prompt: 'velvet embroidered smoking slippers for evening', tags: ['evening', 'luxury', 'dressy'] },
+            { id: 'espadrille_flat', name: 'Flat Espadrilles', prompt: 'canvas flat espadrilles with rope trim', tags: ['summer', 'casual', 'beach'] },
+            { id: 'moccasin', name: 'Driving Moccasins', prompt: 'soft leather driving shoes with rubber nubs on sole', tags: ['casual', 'comfort', 'preppy'] },
+            { id: 'mary_jane_flat', name: 'Mary Jane Flats', prompt: 'patent leather flats with strap across the instep', tags: ['feminine', 'classic', 'schoolgirl'] },
+            { id: 'glitter_flat', name: 'Glitter Flats', prompt: 'sparkling glitter ballet flats for parties', tags: ['party', 'festive', 'sparkly'] },
+            { id: 'pointed_flat', name: 'Pointed-Toe Flats', prompt: 'sharp pointed-toe flats that elongate the leg', tags: ['office', 'sleek', 'modern'] },
+            { id: 'd_orsay_flat', name: "D'Orsay Flats", prompt: 'cut-out flats showing the sides of the foot', tags: ['summer', 'elegant', 'dressy'] },
+        ]
+    },
+    {
+        category: 'Boots & Booties',
+        styles: [
+            { id: 'ankle_bootie', name: 'Ankle Booties', prompt: 'suede ankle booties with block heel', tags: ['fall', 'versatile', 'modern'] },
+            { id: 'knee_high_boot', name: 'Knee-High Boots', prompt: 'black leather knee-high boots with stiletto heel', tags: ['winter', 'dressy', 'sexy'] },
+            { id: 'over_the_knee', name: 'Over-the-Knee Boots', prompt: 'flat over-the-knee boots in suede or leather', tags: ['winter', 'fashion', 'statement'] },
+            { id: 'chelsea_boot_women', name: 'Women\'s Chelsea Boots', prompt: 'sleek leather chelsea boots with pointed toe', tags: ['versatile', 'modern', 'androgynous'] },
+            { id: 'combat_boot_women', name: 'Combat Boots', prompt: 'chunky lace-up combat boots with platform sole', tags: ['edgy', 'grunge', 'streetwear'] },
+            { id: 'western_boot_women', name: 'Cowgirl Boots', prompt: 'embroidered leather cowboy boots', tags: ['western', 'festival', 'statement'] },
+            { id: 'riding_boot', name: 'Equestrian Boots', prompt: 'classic leather riding boots with minimal detailing', tags: ['preppy', 'classic', 'equestrian'] },
+            { id: 'rain_boot_women', name: 'Fashion Rain Boots', prompt: 'patterned or colored waterproof rain boots', tags: ['rain', 'practical', 'fun'] },
+            { id: 'ugg_boot_women', name: 'UGG Boots', prompt: 'classic shearling-lined boots for ultimate comfort', tags: ['winter', 'comfort', 'casual'] },
+            { id: 'hiking_boot_women', name: 'Fashion Hiking Boots', prompt: 'stylish waterproof hiking-inspired boots', tags: ['outdoor', 'trekking', 'fashion'] },
+        ]
+    },
+    {
+        category: 'Sandals',
+        styles: [
+            { id: 'strappy_sandal', name: 'Strappy Sandals', prompt: 'delicate multiple-strap sandals with thin heel', tags: ['summer', 'evening', 'feminine'] },
+            { id: 'gladiator_sandal', name: 'Gladiator Sandals', prompt: 'multiple-strap sandals extending up the calf', tags: ['summer', 'boho', 'statement'] },
+            { id: 'slide_sandal', name: 'Leather Slides', prompt: 'minimal leather slide sandals with flat sole', tags: ['summer', 'casual', 'minimal'] },
+            { id: 'wedge_sandal', name: 'Wedge Sandals', prompt: 'strappy wedge sandals for height without discomfort', tags: ['summer', 'comfort', 'resort'] },
+            { id: 'birkenstock', name: 'Birkenstock Arizona', prompt: 'classic two-strap Birkenstock sandals with footbed', tags: ['comfort', 'casual', 'hippie'] },
+            { id: 'flip_flop_women', name: 'Designer Flip Flops', prompt: 'embellished or logo flip flops for poolside', tags: ['beach', 'pool', 'casual'] },
+            { id: 'jelly_sandal', name: 'Jelly Sandals', prompt: 'clear PVC jelly sandals with glitter or color', tags: ['90s', 'playful', 'summer'] },
+            { id: 't_strap_sandal', name: 'T-Strap Sandals', prompt: 'vintage-inspired T-strap sandals with low block heel', tags: ['retro', 'vintage', 'feminine'] },
+            { id: 'platform_sandal', name: 'Platform Sandals', prompt: 'chunky platform sandals with multiple straps', tags: ['90s', 'y2k', 'statement'] },
+            { id: 'hiking_sandal', name: 'Sport Sandals', prompt: 'technical hiking sandals with adjustable straps', tags: ['outdoor', 'hiking', 'functional'] },
+        ]
+    },
+    {
+        category: 'Sneakers',
+        styles: [
+            { id: 'white_sneaker_women', name: 'White Leather Sneakers', prompt: 'clean white leather sneakers for women', tags: ['casual', 'versatile', 'modern'] },
+            { id: 'fashion_sneaker', name: 'Fashion Sneakers', prompt: 'designer sneakers with unique details or patterns', tags: ['luxury', 'streetwear', 'fashion'] },
+            { id: 'platform_sneaker', name: 'Platform Sneakers', prompt: 'chunky platform sneakers with thick sole', tags: ['90s', 'y2k', 'statement'] },
+            { id: 'running_shoe_women', name: 'Running Shoes', prompt: 'performance running shoes in feminine colors', tags: ['athletic', 'gym', 'comfort'] },
+            { id: 'low_top_converse', name: 'Converse Low Tops', prompt: 'classic canvas Converse in various colors', tags: ['casual', 'iconic', 'unisex'] },
+            { id: 'vegan_sneaker', name: 'Sustainable Sneakers', prompt: 'vegan leather or recycled material sneakers', tags: ['eco-friendly', 'modern', 'conscious'] },
+            { id: 'retro_sneaker', name: 'Retro Sneakers', prompt: 'vintage-style sneakers from 80s or 90s', tags: ['retro', 'nostalgic', 'casual'] },
+            { id: 'slip_on_sneaker', name: 'Slip-On Sneakers', prompt: 'elastic-sided sneakers for easy wear', tags: ['convenient', 'casual', 'modern'] },
+            { id: 'velcro_sneaker', name: 'Velcro Strap Sneakers', prompt: 'sneakers with velcro straps instead of laces', tags: ['90s', 'playful', 'casual'] },
+            { id: 'embellished_sneaker', name: 'Embellished Sneakers', prompt: 'sneakers with crystals, pearls, or embroidery', tags: ['glam', 'evening', 'statement'] },
+        ]
+    }
 ];
+
 export const CATEGORIZED_KIDS_SHOE_STYLES: OptionGroup[] = [
     { category: 'Kids', styles: [{ id: 'kids_sneakers', name: 'Velcro Sneakers', prompt: 'colorful sneakers with velcro straps', tags: [] }] }
 ];
@@ -1382,7 +1603,7 @@ export const CATEGORIZED_VEHICLE_LIGHTING_GRILL: OptionGroup[] = [
             { id: 'neon_blue', name: 'Blue Underglow', prompt: 'cool blue neon underglow lighting', tags: [] },
             { id: 'neon_red', name: 'Red Underglow', prompt: 'aggressive red neon underglow lighting', tags: [] },
             { id: 'neon_white', name: 'White Underglow', prompt: 'bright white LED underglow lighting', tags: [] },
-        ]
+        ] 
     }
 ];
 

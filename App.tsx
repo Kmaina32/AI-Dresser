@@ -22,14 +22,8 @@ const LoginPage = lazy(() => import('./pages/LoginPage.tsx'));
 const SignupPage = lazy(() => import('./pages/SignupPage.tsx'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage.tsx'));
 
-const VALID_ROUTES = [
-    'landing', 'home', 'vehicle', 'interior', 'landscape', 
-    'session', 'campaign', 'poster', 'animate', 'gallery', 
-    'quiz', 'about', 'login', 'signup', 'profile'
-];
-
 const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<string>('landing');
+  const [currentPage, setCurrentPage] = useState('landing');
   const [remixConfig, setRemixConfig] = useState<RemixConfig | null>(null);
   const [isGlobalLoading, setIsGlobalLoading] = useState(false);
 
@@ -37,19 +31,8 @@ const App: React.FC = () => {
   useEffect(() => {
     // Strip leading/trailing slashes
     const path = window.location.pathname.replace(/^\/|\/$/g, '');
-    
-    if (path === '') {
-        setCurrentPage('landing');
-        return;
-    }
-
-    if (VALID_ROUTES.includes(path)) {
+    if (path && path !== '') {
        setCurrentPage(path);
-    } else {
-       // Unknown route -> Default to landing
-       console.warn(`Unknown route: ${path}, redirecting to landing.`);
-       setCurrentPage('landing');
-       window.history.replaceState({ page: 'landing' }, '', '/');
     }
   }, []);
 
@@ -80,13 +63,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const onPopState = (event: PopStateEvent) => {
         const path = window.location.pathname.replace(/^\/|\/$/g, '');
-        if (path === '') {
-            setCurrentPage('landing');
-        } else if (VALID_ROUTES.includes(path)) {
-            setCurrentPage(path);
-        } else {
-            setCurrentPage('landing');
-        }
+        setCurrentPage(path || 'landing');
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
@@ -118,8 +95,7 @@ const App: React.FC = () => {
     }
   };
 
-  // Determine if the global header should be shown.
-  // STRICTLY HIDDEN for landing, login, and signup pages to prevent double headers.
+  // Determine if the global header should be shown
   const showGlobalHeader = !['landing', 'login', 'signup'].includes(currentPage);
 
   return (

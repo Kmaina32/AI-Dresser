@@ -34,7 +34,7 @@ class ErrorBoundary extends Component<Props, State> {
             </p>
             <div className="bg-black/30 p-4 rounded-md border border-white/10 mb-8 text-left overflow-auto max-h-40">
                 <code className="text-xs font-mono text-red-400">
-                    {this.state.error?.message || 'Unknown Error'}
+                    {this.state.error?.message}
                 </code>
             </div>
             <button

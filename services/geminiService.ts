@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Modality } from "@google/genai";
 import { fileToBase64 } from "../utils/fileUtils.ts";
 import { PoliticalParty } from "../constants.ts";
@@ -67,6 +68,7 @@ export async function editImageWithGemini(
 
       if (shirtPrompt) promptParts.push(`- **Shirt:** ${targetPrefix}change their shirt to be ${shirtPrompt}.`);
       if (tiePrompt) promptParts.push(`- **Neckwear:** ${targetPrefix}have them wear ${tiePrompt}.`);
+      if (shoePrompt) promptParts.push(`- **Footwear:** ${targetPrefix}change their shoes to be ${shoePrompt}.`);
       if (handbagPrompt) promptParts.push(`- **Accessory:** ${targetPrefix}add a handbag: ${handbagPrompt}.`);
       if (eyewearPrompt) promptParts.push(`- **Eyewear:** ${targetPrefix}add eyewear: ${eyewearPrompt}.`);
       if (headwearPrompt) promptParts.push(`- **Headwear:** ${targetPrefix}add headwear: ${headwearPrompt}.`);
