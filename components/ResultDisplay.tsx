@@ -29,7 +29,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   shareTitle = "Geo Studio Style"
 }) => {
   const [showGenerated, setShowGenerated] = useState(true);
-  const [addLogo, setAddLogo] = useState(false);
+  const [addLogo, setAddLogo] = useState(true); // Default to true as requested
   const [isSharing, setIsSharing] = useState(false);
   const [downloadFormat, setDownloadFormat] = useState<'jpg' | 'png'>('jpg');
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -68,13 +68,13 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
               img.src = getLogoSvgDataUrl(mainImage.naturalWidth);
           });
           
-          const padding = mainImage.naturalWidth * 0.025;
+          const padding = mainImage.naturalWidth * 0.04; // Increased padding slightly for larger logo
           const logoWidth = logoImage.width;
           const logoHeight = logoImage.height;
           const x = mainImage.naturalWidth - logoWidth - padding;
           const y = mainImage.naturalHeight - logoHeight - padding;
 
-          ctx.globalAlpha = 0.85;
+          ctx.globalAlpha = 0.9; // Slightly higher opacity for visibility
           ctx.drawImage(logoImage, x, y, logoWidth, logoHeight);
           ctx.globalAlpha = 1.0;
       }
@@ -231,15 +231,15 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
                     </button>
                 </div>
 
-                <div className="flex items-center gap-2 bg-white/60 dark:bg-black/60 backdrop-blur-md rounded-full py-1.5 pl-3 pr-3 border border-zinc-200 dark:border-white/10 mt-1">
+                <div className="flex items-center gap-2 bg-amber-500/90 dark:bg-amber-500/90 text-black backdrop-blur-md rounded-full py-1.5 pl-3 pr-3 border border-amber-400/50 mt-1 shadow-lg group/watermark hover:bg-amber-400 transition-all">
                     <input 
                         type="checkbox" 
                         id="addLogoToggle" 
                         checked={addLogo} 
                         onChange={(e) => setAddLogo(e.target.checked)}
-                        className="h-3 w-3 rounded bg-zinc-100 dark:bg-zinc-800 border-zinc-400 dark:border-zinc-600 text-amber-500 focus:ring-amber-500 cursor-pointer accent-amber-500"
+                        className="h-3.5 w-3.5 rounded bg-white border-none text-amber-600 focus:ring-0 cursor-pointer accent-black"
                     />
-                    <label htmlFor="addLogoToggle" className="text-zinc-900 dark:text-white text-[9px] font-bold uppercase tracking-wider cursor-pointer select-none">Watermark</label>
+                    <label htmlFor="addLogoToggle" className="text-black text-[9px] font-black uppercase tracking-wider cursor-pointer select-none">Watermark</label>
                 </div>
             </div>
 

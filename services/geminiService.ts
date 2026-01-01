@@ -1,13 +1,21 @@
+
 import { GoogleGenAI, Modality } from "@google/genai";
 import { fileToBase64 } from "../utils/fileUtils.ts";
 import { PoliticalParty } from "../constants/campaign.ts";
 
-const handleGenAIError = (error: unknown, context: string) => {
+const handleGenAIError = (error: any, context: string) => {
     console.error(`Error in ${context}:`, error);
-    if (error instanceof Error) {
-        throw new Error(`${context} failed: ${error.message}`);
+    const message = error?.message || "";
+    if (message.includes("403") || message.includes("permission")) {
+        throw new Error("PERMISSION_DENIED: Your API key does not have access to this model. Please select a paid API key.");
     }
-    throw new Error(`${context} failed with an unknown error.`);
+    if (message.includes("429") || message.includes("quota")) {
+        throw new Error("RESOURCE_EXHAUSTED: Quota exceeded for this model. Please select a paid API key or try again later.");
+    }
+    if (message.includes("Requested entity was not found")) {
+        throw new Error("NOT_FOUND: Requested entity was not found. Please re-select your API key.");
+    }
+    throw new Error(`${context} failed: ${message || "Unknown error"}`);
 };
 
 function getWrapStyleDescription(style: string): string {
@@ -40,6 +48,7 @@ export async function editImageWithGemini(
     envImageFile?: File
 ): Promise<string> {
     try {
+        // Initialize AI client inside function to pick up latest API key
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
         const model = quality === 'high' ? 'gemini-3-pro-image-preview' : 'gemini-2.5-flash-image';
         

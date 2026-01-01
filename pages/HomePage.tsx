@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import CreatorDisplay from '../components/ImageUploader.tsx';
 import SimpleImageUploader from '../components/SimpleImageUploader.tsx';
@@ -148,6 +149,16 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
       return;
     }
     
+    // Check for API Key if using Pro features
+    if (selectedQuality === 'high' && window.aistudio) {
+        const hasKey = await window.aistudio.hasSelectedApiKey();
+        if (!hasKey) {
+            await window.aistudio.openSelectKey();
+            // Assume success and continue or return to let user trigger again
+            return;
+        }
+    }
+
     const allStyles = currentStylesSource.flatMap(c => c.styles);
     const activeStyles = allStyles.filter(s => selectedStyleIds.includes(s.id));
     
@@ -176,9 +187,14 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
         envImageFile || undefined 
       );
       setGeneratedImage(result);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      setError('Failed to generate image. Please try again.');
+      if (e.message.includes("PERMISSION_DENIED") || e.message.includes("RESOURCE_EXHAUSTED") || e.message.includes("NOT_FOUND")) {
+          setError("Pro Access Required. Please select a valid API key with billing enabled.");
+          if (window.aistudio) window.aistudio.openSelectKey();
+      } else {
+          setError(e.message || 'Failed to generate image. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }

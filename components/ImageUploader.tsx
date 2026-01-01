@@ -18,7 +18,7 @@ interface CreatorDisplayProps {
 const CreatorDisplay: React.FC<CreatorDisplayProps> = ({ originalImage, generatedImage, isLoading, onImageUpload }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showGenerated, setShowGenerated] = useState(true);
-  const [addLogo, setAddLogo] = useState(false);
+  const [addLogo, setAddLogo] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
@@ -87,12 +87,12 @@ const CreatorDisplay: React.FC<CreatorDisplayProps> = ({ originalImage, generate
             img.onerror = (err) => reject(err);
             img.src = getLogoSvgDataUrl(mainImage.naturalWidth);
         });
-        const padding = mainImage.naturalWidth * 0.025;
+        const padding = mainImage.naturalWidth * 0.04; // Consistent padding with ResultDisplay
         const logoWidth = logoImage.width;
         const logoHeight = logoImage.height;
         const x = mainImage.naturalWidth - logoWidth - padding;
         const y = mainImage.naturalHeight - logoHeight - padding;
-        ctx.globalAlpha = 0.85;
+        ctx.globalAlpha = 0.9;
         ctx.drawImage(logoImage, x, y, logoWidth, logoHeight);
         ctx.globalAlpha = 1.0;
         const dataUrlWithLogo = canvas.toDataURL(mimeType);
@@ -202,16 +202,16 @@ const CreatorDisplay: React.FC<CreatorDisplayProps> = ({ originalImage, generate
                         </button>
                     </div>
                     
-                    <div className="bg-white/70 dark:bg-black/70 backdrop-blur-md p-2 rounded-full border border-zinc-200 dark:border-white/10 flex items-center gap-2 px-3">
+                    <div className="bg-amber-500/90 dark:bg-amber-500/90 backdrop-blur-md p-2 rounded-full border border-amber-400/50 flex items-center gap-2 px-3 shadow-lg hover:bg-amber-400 transition-colors">
                         <input 
                             type="checkbox" 
                             id="addLogoToggle" 
                             checked={addLogo} 
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => setAddLogo(e.target.checked)}
-                            className="w-3 h-3 rounded border-zinc-400 dark:border-zinc-600 text-amber-500 bg-zinc-100 dark:bg-zinc-800 focus:ring-amber-500/50 cursor-pointer"
+                            className="w-3.5 h-3.5 rounded bg-white border-none text-amber-600 focus:ring-0 cursor-pointer accent-black"
                         />
-                        <label htmlFor="addLogoToggle" className="text-[9px] font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-300 cursor-pointer select-none">Watermark</label>
+                        <label htmlFor="addLogoToggle" className="text-[9px] font-black uppercase tracking-wider text-black cursor-pointer select-none">Watermark</label>
                     </div>
                 </div>
             )}
