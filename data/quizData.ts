@@ -65,8 +65,9 @@ export function getStyleRecommendations(
   }
 
   // Ensure variety and remove duplicates, then take the top 3
-  const uniqueStyles = [
-    ...new Map(filteredStyles.map((item) => [item.id, item])).values(),
+  // Fix: Explicitly type the Map to ensure .values() returns StyleOption[]
+  const uniqueStyles: StyleOption[] = [
+    ...new Map<string, StyleOption>(filteredStyles.map((item) => [item.id, item])).values(),
   ];
 
   // Shuffle to provide different results on subsequent tries with same answers

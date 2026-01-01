@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { MenuIcon } from './components/icons/MenuIcon.tsx';
 import { CloseIcon } from './components/icons/CloseIcon.tsx';
@@ -7,6 +6,7 @@ import ThemeToggle from './components/ThemeToggle.tsx';
 
 interface HeaderProps {
     onNavigate: (page: string) => void;
+    currentPage: string;
 }
 
 const MENU_ITEMS = [
@@ -14,6 +14,7 @@ const MENU_ITEMS = [
     { id: 'home', label: 'Apparel' },
     { id: 'vehicle', label: 'Vehicle' },
     { id: 'interior', label: 'Interior' },
+    { id: 'architect', label: 'Architect' },
     { id: 'landscape', label: 'Garden' },
     { id: 'session', label: 'Session' },
     { id: 'campaign', label: 'Campaign' },
@@ -24,7 +25,7 @@ const MENU_ITEMS = [
     { id: 'about', label: 'About' }
 ];
 
-const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
+const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [rotation, setRotation] = useState(0);
@@ -32,6 +33,8 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
     
     const touchStartY = useRef<number>(0);
     const currentRotation = useRef<number>(0);
+
+    const isLanding = currentPage === 'landing';
 
     useEffect(() => {
         const handleScroll = () => {
@@ -91,7 +94,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
 
     return (
         <>
-            <header className={`fixed top-0 left-0 right-0 z-40 h-16 flex items-center justify-between px-6 md:px-8 transition-all duration-500 ${isScrolled ? 'bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-200 dark:border-white/5 shadow-sm' : 'bg-transparent'}`}>
+            <header className={`fixed top-0 left-0 right-0 z-40 h-16 flex items-center justify-between px-6 md:px-8 transition-all duration-500 ${isScrolled || !isLanding ? 'bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-200 dark:border-white/5 shadow-sm' : 'bg-transparent'}`}>
                 <div onClick={() => handleNavClick('landing')} className="cursor-pointer flex items-center gap-3 opacity-90 hover:opacity-100 transition-opacity group z-50">
                     <div className="group-hover:scale-110 transition-transform duration-500">
                         <GeoLogo className="scale-90 origin-left" />
@@ -99,36 +102,60 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    {/* Desktop Nav */}
-                    <nav className="hidden lg:flex items-center gap-2 bg-white/50 dark:bg-zinc-900/50 p-1 rounded-full border border-zinc-200 dark:border-white/5 backdrop-blur-md z-50 shadow-sm dark:shadow-lg">
-                        <NavLink page="home" label="Apparel" />
-                        <NavLink page="vehicle" label="Vehicle" />
-                        <NavLink page="interior" label="Interior" />
-                        <NavLink page="landscape" label="Garden" />
-                        <NavLink page="campaign" label="Campaign" />
-                        <NavLink page="animate" label="Cinema" />
-                    </nav>
+                    {/* Desktop Nav - Only show on non-landing pages */}
+                    {!isLanding && (
+                        <nav className="hidden lg:flex items-center gap-2 bg-white/50 dark:bg-zinc-900/50 p-1 rounded-full border border-zinc-200 dark:border-white/5 backdrop-blur-md z-50 shadow-sm dark:shadow-lg">
+                            <NavLink page="home" label="Apparel" />
+                            <NavLink page="vehicle" label="Vehicle" />
+                            <NavLink page="interior" label="Interior" />
+                            <NavLink page="architect" label="Architect" />
+                            <NavLink page="campaign" label="Campaign" />
+                            <NavLink page="animate" label="Cinema" />
+                        </nav>
+                    )}
 
-                    {/* Theme Toggle */}
-                    <div className="z-50 hidden md:block">
-                        <ThemeToggle />
-                    </div>
+                    {/* Landing Page CTA - Only show on landing page */}
+                    {isLanding && (
+                        <div className="hidden sm:flex gap-4 z-50">
+                            <button 
+                                onClick={() => handleNavClick('login')} 
+                                className="px-6 py-2 text-xs font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+                            >
+                                Sign In
+                            </button>
+                            <button 
+                                onClick={() => handleNavClick('signup')} 
+                                className="px-6 py-2 bg-white text-black text-xs font-bold uppercase tracking-widest rounded-full hover:bg-amber-400 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                            >
+                                Get Started
+                            </button>
+                        </div>
+                    )}
 
-                    {/* Mobile Toggle */}
-                    <div className="lg:hidden z-50 flex items-center gap-2">
-                        <div className="md:hidden">
+                    {/* Theme Toggle - Hidden on Landing */}
+                    {!isLanding && (
+                        <div className="z-50 hidden md:block">
                             <ThemeToggle />
                         </div>
-                        <button 
-                            onClick={() => {
-                                setIsMenuOpen(true);
-                                setRotation(0);
-                            }} 
-                            className="text-zinc-600 dark:text-zinc-300 hover:text-amber-500 dark:hover:text-amber-400 transition-colors p-2 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-full border border-zinc-200 dark:border-white/5 shadow-sm"
-                        >
-                            <MenuIcon className="w-6 h-6" />
-                        </button>
-                    </div>
+                    )}
+
+                    {/* Mobile Toggle - Hide on Landing, Landing uses Get Started */}
+                    {!isLanding && (
+                        <div className="lg:hidden z-50 flex items-center gap-2">
+                            <div className="md:hidden">
+                                <ThemeToggle />
+                            </div>
+                            <button 
+                                onClick={() => {
+                                    setIsMenuOpen(true);
+                                    setRotation(0);
+                                }} 
+                                className="text-zinc-600 dark:text-zinc-300 hover:text-amber-500 dark:hover:text-amber-400 transition-colors p-2 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-full border border-zinc-200 dark:border-white/5 shadow-sm"
+                            >
+                                <MenuIcon className="w-6 h-6" />
+                            </button>
+                        </div>
+                    )}
                 </div>
             </header>
 

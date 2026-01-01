@@ -1,7 +1,10 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { UploadIcon } from './icons/UploadIcon.tsx';
 import { DownloadIcon } from './icons/DownloadIcon.tsx';
+import { ExpandIcon } from './icons/ExpandIcon.tsx';
+import { CloseIcon } from './icons/CloseIcon.tsx';
 import { GeoLogo, getLogoSvgDataUrl } from './logo.tsx';
 import { downloadResource } from '../utils/fileUtils.ts';
 
@@ -16,6 +19,7 @@ const CreatorDisplay: React.FC<CreatorDisplayProps> = ({ originalImage, generate
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showGenerated, setShowGenerated] = useState(true);
   const [addLogo, setAddLogo] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     if (generatedImage) {
@@ -176,16 +180,27 @@ const CreatorDisplay: React.FC<CreatorDisplayProps> = ({ originalImage, generate
                 </div>
             )}
 
-            {/* Download Actions */}
+            {/* Download & Expand Actions */}
             {generatedImage && !isLoading && (
                 <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-2">
-                    <button
-                        onClick={(e) => { e.stopPropagation(); handleDownload(); }}
-                        className="p-3 bg-amber-500 text-black rounded-full shadow-[0_0_20px_rgba(245,158,11,0.4)] hover:bg-amber-400 hover:scale-110 transition-all duration-300 btn-tech"
-                        title="Download"
-                    >
-                        <DownloadIcon className="w-5 h-5" />
-                    </button>
+                    <div className="flex gap-2">
+                        {/* Expand Button */}
+                        <button
+                            onClick={(e) => { e.stopPropagation(); setIsFullscreen(true); }}
+                            className="p-3 bg-white/80 dark:bg-black/80 backdrop-blur-md text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-white/10 rounded-full hover:bg-white dark:hover:bg-black transition-all duration-300 shadow-lg"
+                            title="Expand"
+                        >
+                            <ExpandIcon className="w-5 h-5" />
+                        </button>
+
+                        <button
+                            onClick={(e) => { e.stopPropagation(); handleDownload(); }}
+                            className="p-3 bg-amber-500 text-black rounded-full shadow-[0_0_20px_rgba(245,158,11,0.4)] hover:bg-amber-400 hover:scale-110 transition-all duration-300 btn-tech"
+                            title="Download"
+                        >
+                            <DownloadIcon className="w-5 h-5" />
+                        </button>
+                    </div>
                     
                     <div className="bg-white/70 dark:bg-black/70 backdrop-blur-md p-2 rounded-full border border-zinc-200 dark:border-white/10 flex items-center gap-2 px-3">
                         <input 
@@ -201,6 +216,30 @@ const CreatorDisplay: React.FC<CreatorDisplayProps> = ({ originalImage, generate
                 </div>
             )}
         </div>
+
+        {/* Fullscreen Modal Portal */}
+        {isFullscreen && createPortal(
+            <div 
+                className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-fade-in"
+                onClick={() => setIsFullscreen(false)}
+            >
+                <button 
+                    onClick={() => setIsFullscreen(false)}
+                    className="absolute top-6 right-6 p-4 text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-all"
+                >
+                    <CloseIcon className="w-8 h-8" />
+                </button>
+                
+                <div className="relative max-w-[95vw] max-h-[95vh] p-2 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                    <img 
+                        src={imageToShow || ''} 
+                        alt="Fullscreen view" 
+                        className="max-w-full max-h-[90vh] object-contain rounded-sm shadow-2xl"
+                    />
+                </div>
+            </div>,
+            document.body
+        )}
     </div>
   );
 };

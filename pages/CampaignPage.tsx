@@ -41,6 +41,7 @@ const CampaignPage: React.FC = () => {
     const [apiKeySelected, setApiKeySelected] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [mode, setMode] = useState<'poster' | 'vehicle' | 'manifesto'>('poster');
+    const [isGreetingMode, setIsGreetingMode] = useState(false);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     
@@ -55,10 +56,13 @@ const CampaignPage: React.FC = () => {
     const [selectedAspectRatio, setSelectedAspectRatio] = useState<string>(VALID_ASPECT_RATIOS[0].value); // Default 16:9
     const [manifestoPoints, setManifestoPoints] = useState<string>('');
     const [isGeneratingText, setIsGeneratingText] = useState(false);
+    const [customMessage, setCustomMessage] = useState<string>('');
     
     // Background Config
     const [backgroundColor, setBackgroundColor] = useState<string>(KENYAN_PARTIES[0].hexColor);
     const [backgroundOpacity, setBackgroundOpacity] = useState<number>(100);
+    const [customBackgroundFile, setCustomBackgroundFile] = useState<File | null>(null);
+    const [customBackgroundUrl, setCustomBackgroundUrl] = useState<string | null>(null);
 
     // Logo Upload
     const [partyLogoFile, setPartyLogoFile] = useState<File | null>(null);
@@ -105,6 +109,11 @@ const CampaignPage: React.FC = () => {
         setPartyLogoUrl(dataUrl);
     };
 
+    const handleCustomBackgroundUpload = (file: File, dataUrl: string) => {
+        setCustomBackgroundFile(file);
+        setCustomBackgroundUrl(dataUrl);
+    };
+
     const selectedParty = KENYAN_PARTIES.find(p => p.id === selectedPartyId) || KENYAN_PARTIES[0];
 
     // Auto-fill slogan and background color when party changes
@@ -144,7 +153,12 @@ const CampaignPage: React.FC = () => {
 
     const handleGenerate = useCallback(async () => {
         if (!imageFile) {
-            setError(`Please upload a ${mode === 'vehicle' ? 'vehicle' : 'candidate'} image.`);
+            setError(`Please upload a ${mode === 'vehicle' ? 'vehicle' : 'sender'} image.`);
+            return;
+        }
+
+        if (isGreetingMode && !customBackgroundFile) {
+            setError("Please upload the recipient photo in the Background Styling section.");
             return;
         }
 
@@ -176,7 +190,9 @@ const CampaignPage: React.FC = () => {
                 selectedQuality,
                 mode === 'manifesto' ? manifestoPoints : undefined,
                 mode === 'manifesto' ? selectedManifestoFormat : undefined,
-                selectedAspectRatio
+                selectedAspectRatio,
+                customBackgroundFile || undefined,
+                isGreetingMode ? (customMessage || "Congratulations!") : undefined
             );
             setGeneratedImage(result);
         } catch (e: unknown) {
@@ -190,7 +206,7 @@ const CampaignPage: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [imageFile, mode, selectedParty, position, slogan, wrapStyle, selectedCampaignMods, selectedTemplate, selectedManifestoTemplate, candidateName, location, partyLogoFile, backgroundColor, backgroundOpacity, selectedQuality, manifestoPoints, selectedManifestoFormat, selectedAspectRatio]);
+    }, [imageFile, mode, isGreetingMode, selectedParty, position, slogan, wrapStyle, selectedCampaignMods, selectedTemplate, selectedManifestoTemplate, candidateName, location, partyLogoFile, backgroundColor, backgroundOpacity, selectedQuality, manifestoPoints, selectedManifestoFormat, selectedAspectRatio, customBackgroundFile, customMessage]);
 
     const partyOptions = KENYAN_PARTIES.map(p => ({ label: p.name, value: p.id }));
     const positionOptions = CAMPAIGN_POSITIONS.map(p => ({ label: p.name, value: p.value }));
@@ -205,7 +221,7 @@ const CampaignPage: React.FC = () => {
         return (
             <main className="h-full flex items-center justify-center px-4 pt-20">
                 <div className="max-w-md w-full bg-white/50 dark:bg-zinc-900/30 backdrop-blur-xl p-8 rounded-sm border border-zinc-200 dark:border-white/10 text-center shadow-2xl">
-                    <h2 className="text-3xl font-bold mb-4 text-zinc-900 dark:text-white font-playfair">Professional Access</h2>
+                    <h2 className="text-3xl font-bold mb-4 text-zinc-900 dark:text-white font-playfair text-foreground">Professional Access</h2>
                     <p className="text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed font-light">
                         To access the high-fidelity typography engine (Gemini 3 Pro) for campaign materials, please verify your API key. This ensures specific text rendering accuracy.
                     </p>
@@ -290,8 +306,23 @@ const CampaignPage: React.FC = () => {
                     </div>
 
                     <div className="p-6 space-y-6">
+                         {mode === 'poster' && (
+                            <div className="flex items-center justify-between p-4 bg-amber-500/5 border border-amber-500/20 rounded-lg">
+                                <div className="flex flex-col">
+                                    <span className="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest">Greetings Mode</span>
+                                    <span className="text-[9px] text-zinc-500">Official congratulations & wishes</span>
+                                </div>
+                                <button 
+                                    onClick={() => setIsGreetingMode(!isGreetingMode)}
+                                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${isGreetingMode ? 'bg-amber-500' : 'bg-zinc-300 dark:bg-zinc-700'}`}
+                                >
+                                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isGreetingMode ? 'translate-x-6' : 'translate-x-1'}`} />
+                                </button>
+                            </div>
+                         )}
+
                          <SimpleImageUploader
-                            label={mode === 'vehicle' ? 'Vehicle Photo' : 'Candidate Photo'}
+                            label={mode === 'vehicle' ? 'Vehicle Photo' : (isGreetingMode ? 'Your Photo (Sender)' : 'Candidate Photo')}
                             imageUrl={imageUrl}
                             onImageUpload={handleImageUpload}
                         />
@@ -344,18 +375,20 @@ const CampaignPage: React.FC = () => {
                     <CollapsibleSection title="Campaign Details" isOpen={true}>
                         <div className="space-y-6">
                              <div>
-                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1 mb-2">Candidate Name</label>
+                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1 mb-2">
+                                    {isGreetingMode ? "Sender Name (You)" : "Candidate Name"}
+                                </label>
                                 <input 
                                     type="text" 
                                     value={candidateName} 
                                     onChange={(e) => setCandidateName(e.target.value)}
                                     className="w-full input-tech rounded-sm px-4 py-3 text-sm placeholder-zinc-500 dark:placeholder-zinc-600 bg-white dark:bg-black/40"
-                                    placeholder="e.g. Jane Doe (Full Name)"
+                                    placeholder="e.g. Jane Doe"
                                 />
                              </div>
 
                              <div>
-                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1 mb-2">County / Constituency</label>
+                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1 mb-2">Location</label>
                                 <input 
                                     type="text" 
                                     value={location} 
@@ -383,6 +416,20 @@ const CampaignPage: React.FC = () => {
                                     placeholder="Enter slogan..."
                                 />
                              </div>
+
+                             {isGreetingMode && (
+                                <div>
+                                    <label className="block text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest pl-1 mb-2">
+                                        Congratulations Message
+                                    </label>
+                                    <textarea
+                                        value={customMessage}
+                                        onChange={(e) => setCustomMessage(e.target.value)}
+                                        className="w-full input-tech rounded-sm px-4 py-3 text-sm placeholder-zinc-500 dark:placeholder-zinc-600 bg-white dark:bg-black/40 min-h-[100px] border-amber-500/30"
+                                        placeholder="e.g. Congratulations to Hon. John Smith on your landslide victory! The people have spoken."
+                                    />
+                                </div>
+                             )}
                         </div>
                     </CollapsibleSection>
 
@@ -446,45 +493,74 @@ const CampaignPage: React.FC = () => {
                     {(mode === 'poster' || mode === 'manifesto') && (
                         <CollapsibleSection title="Background Styling" isOpen={true}>
                             <div className="space-y-6">
+                                {/* Custom Background Uploader */}
                                 <div>
-                                    <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1 mb-2">Background Color</label>
-                                    <div className="flex items-center gap-3">
-                                        <div className="relative w-full">
-                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <div className="w-4 h-4 rounded-full border border-zinc-300 dark:border-white/20 shadow-sm" style={{ backgroundColor: backgroundColor }}></div>
-                                            </div>
-                                            <input 
-                                                type="text" 
-                                                value={backgroundColor} 
-                                                readOnly
-                                                className="w-full pl-10 pr-4 py-3 text-sm bg-white dark:bg-black/40 border border-zinc-200 dark:border-white/10 rounded-sm text-zinc-700 dark:text-zinc-300 font-mono"
-                                            />
-                                            <input 
-                                                type="color" 
-                                                value={backgroundColor} 
-                                                onChange={(e) => setBackgroundColor(e.target.value)}
-                                                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                                            />
-                                        </div>
-                                    </div>
+                                     <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1 mb-2">
+                                         {isGreetingMode ? "Recipient Photo (The Hero)" : "Custom Background Image"}
+                                     </label>
+                                     <SimpleImageUploader 
+                                        label={isGreetingMode ? "Upload Recipient" : "Upload Background"}
+                                        imageUrl={customBackgroundUrl}
+                                        onImageUpload={handleCustomBackgroundUpload}
+                                     />
+                                     <p className="text-[9px] text-zinc-400 mt-2 pl-1">
+                                        {isGreetingMode 
+                                            ? "Upload the photo of the person you are congratulating. They will be the main hero with NO transparency." 
+                                            : "Overrides solid color settings. Subject will be composited into this scene."}
+                                     </p>
                                 </div>
 
-                                <div>
-                                    <div className="flex justify-between items-center mb-2">
-                                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1">Opacity / Intensity</label>
-                                        <span className="text-[10px] font-mono text-amber-500">{backgroundOpacity}%</span>
+                                {/* Color and Opacity Controls - dimmed if custom background present */}
+                                <div className={`transition-opacity duration-300 ${customBackgroundUrl ? 'opacity-70' : 'opacity-100'}`}>
+                                    <div className="mb-6">
+                                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1 mb-2">
+                                            {customBackgroundUrl ? "Tint Color (Overlay)" : "Background Color"}
+                                        </label>
+                                        <div className="flex items-center gap-3">
+                                            <div className="relative w-full">
+                                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <div className="w-4 h-4 rounded-full border border-zinc-300 dark:border-white/20 shadow-sm" style={{ backgroundColor: backgroundColor }}></div>
+                                                </div>
+                                                <input 
+                                                    type="text" 
+                                                    value={backgroundColor} 
+                                                    readOnly
+                                                    className="w-full pl-10 pr-4 py-3 text-sm bg-white dark:bg-black/40 border border-zinc-200 dark:border-white/10 rounded-sm text-zinc-700 dark:text-zinc-300 font-mono"
+                                                />
+                                                <input 
+                                                    type="color" 
+                                                    value={backgroundColor} 
+                                                    onChange={(e) => setBackgroundColor(e.target.value)}
+                                                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <input 
-                                        type="range" 
-                                        min="0" 
-                                        max="100" 
-                                        value={backgroundOpacity} 
-                                        onChange={(e) => setBackgroundOpacity(parseInt(e.target.value))}
-                                        className="w-full h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
-                                    />
-                                    <p className="text-[9px] text-zinc-400 mt-2 pl-1">
-                                        {backgroundOpacity === 100 ? 'Solid color replacement.' : 'Semi-transparent overlay blend.'}
-                                    </p>
+
+                                    {!isGreetingMode && (
+                                        <div>
+                                            <div className="flex justify-between items-center mb-2">
+                                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1">
+                                                    {customBackgroundUrl ? "Tint Intensity" : "Opacity / Intensity"}
+                                                </label>
+                                                <span className="text-[10px] font-mono text-amber-500">{backgroundOpacity}%</span>
+                                            </div>
+                                            <input 
+                                                type="range" 
+                                                min="0" 
+                                                max="100" 
+                                                value={backgroundOpacity} 
+                                                onChange={(e) => setBackgroundOpacity(parseInt(e.target.value))}
+                                                className="w-full h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                                            />
+                                            <p className="text-[9px] text-zinc-400 mt-2 pl-1">
+                                                {customBackgroundUrl 
+                                                    ? `Apply ${backgroundOpacity}% color tint over your image.`
+                                                    : (backgroundOpacity === 100 ? 'Solid color replacement.' : 'Semi-transparent overlay blend.')
+                                                }
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </CollapsibleSection>
@@ -541,7 +617,7 @@ const CampaignPage: React.FC = () => {
                         disabled={!imageFile || isLoading}
                         className="w-full px-8 py-4 bg-amber-500 text-black font-bold text-xs tracking-[0.2em] uppercase rounded-sm shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] hover:bg-amber-400 disabled:bg-zinc-200 dark:disabled:bg-zinc-900 disabled:text-zinc-400 dark:disabled:text-zinc-700 disabled:shadow-none transition-all btn-tech"
                     >
-                        {isLoading ? 'Processing...' : (mode === 'poster' ? 'Generate Poster' : (mode === 'manifesto' ? 'Build Manifesto' : 'Generate Wrap'))}
+                        {isLoading ? 'Processing...' : (isGreetingMode ? 'Generate Greeting' : (mode === 'poster' ? 'Generate Poster' : (mode === 'manifesto' ? 'Build Manifesto' : 'Generate Wrap')))}
                     </button>
                     {error && <p className="text-red-500 dark:text-red-400 mt-3 text-center text-[10px] uppercase tracking-wide border border-red-500/20 bg-red-500/5 py-2 rounded-sm">{error}</p>}
                 </div>

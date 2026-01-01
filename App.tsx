@@ -17,6 +17,7 @@ const StyleQuizPage = lazy(() => import('./pages/StyleQuizPage.tsx'));
 const MusicPosterPage = lazy(() => import('./pages/MusicPosterPage.tsx'));
 const StudioSessionPage = lazy(() => import('./pages/StudioSessionPage.tsx'));
 const CampaignPage = lazy(() => import('./pages/CampaignPage.tsx'));
+const ArchitectPage = lazy(() => import('./pages/ArchitectPage.tsx'));
 const LandingPage = lazy(() => import('./pages/LandingPage.tsx'));
 const LoginPage = lazy(() => import('./pages/LoginPage.tsx'));
 const SignupPage = lazy(() => import('./pages/SignupPage.tsx'));
@@ -81,6 +82,7 @@ const App: React.FC = () => {
       case 'vehicle': return <VehiclePage />;
       case 'interior': return <InteriorPage />;
       case 'landscape': return <LandscapePage />;
+      case 'architect': return <ArchitectPage />;
       case 'session': return <StudioSessionPage />;
       case 'campaign': return <CampaignPage />;
       case 'poster': return <MusicPosterPage />;
@@ -96,7 +98,8 @@ const App: React.FC = () => {
   };
 
   // Determine if the global header should be shown
-  const showGlobalHeader = !['landing', 'login', 'signup'].includes(currentPage);
+  // Show header on landing page now to avoid double header issues, but hide on auth pages
+  const showGlobalHeader = !['login', 'signup'].includes(currentPage);
 
   return (
     <ErrorBoundary>
@@ -107,14 +110,14 @@ const App: React.FC = () => {
         {/* Global Background Pattern */}
         <div className="fixed inset-0 pointer-events-none bg-grid-pattern opacity-30 z-0" />
         <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-white/50 via-white/10 to-transparent dark:from-transparent dark:via-zinc-950/50 dark:to-zinc-950 z-0" />
-        <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.08),transparent_50%)] z-0" />
+        <div className="fixed inset-0 pointer-events-none bg--[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.08),transparent_50%)] z-0" />
         
         {/* Conditionally Render Header */}
-        {showGlobalHeader && <Header onNavigate={handleNavigate} />}
+        {showGlobalHeader && <Header onNavigate={handleNavigate} currentPage={currentPage} />}
         
         {/* Main Content Area */}
         <main className={`flex-1 relative flex flex-col ${isGlobalLoading ? 'opacity-50 pointer-events-none filter blur-sm' : 'opacity-100'} transition-all duration-300`}>
-          <div className={`flex-1 w-full ${!showGlobalHeader ? '' : 'mt-16'}`}>
+          <div className={`flex-1 w-full ${showGlobalHeader && currentPage !== 'landing' ? 'mt-16' : ''}`}>
               <Suspense fallback={<GlobalLoader />}>
                   {renderPage()}
               </Suspense>

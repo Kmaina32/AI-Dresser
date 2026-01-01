@@ -1,11 +1,13 @@
 
-
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { SparklesIcon } from './icons/SparklesIcon.tsx';
 import { DownloadIcon } from './icons/DownloadIcon.tsx';
 import { WhatsAppIcon } from './icons/WhatsAppIcon.tsx';
 import { InstagramIcon } from './icons/InstagramIcon.tsx';
 import { ShareIcon } from './icons/ShareIcon.tsx';
+import { ExpandIcon } from './icons/ExpandIcon.tsx';
+import { CloseIcon } from './icons/CloseIcon.tsx';
 import { getLogoSvgDataUrl } from './logo.tsx';
 import { downloadResource, dataUrlToFile } from '../utils/fileUtils.ts';
 
@@ -30,6 +32,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   const [addLogo, setAddLogo] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [downloadFormat, setDownloadFormat] = useState<'jpg' | 'png'>('jpg');
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     // When a new image is generated, always show it.
@@ -172,6 +175,17 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
           )
         )}
         
+        {/* Expand Button */}
+        {imageToShow && !isLoading && (
+            <button 
+                onClick={(e) => { e.stopPropagation(); setIsFullscreen(true); }}
+                className="absolute top-4 right-4 p-2 bg-black/40 hover:bg-black/70 text-white rounded-full backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 hover:scale-110"
+                title="Expand View"
+            >
+                <ExpandIcon className="w-5 h-5" />
+            </button>
+        )}
+        
         {showBeforeAfterToggle && hasBothImages && !isLoading && (
           <div className="absolute bottom-4 left-4 z-20">
             <div className="flex items-center bg-white/60 dark:bg-black/60 backdrop-blur-md rounded-full p-1 border border-zinc-200 dark:border-white/10 shadow-lg">
@@ -270,6 +284,30 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
           </div>
         )}
       </div>
+
+      {/* Fullscreen Modal Portal */}
+      {isFullscreen && createPortal(
+        <div 
+            className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-fade-in"
+            onClick={() => setIsFullscreen(false)}
+        >
+            <button 
+                onClick={() => setIsFullscreen(false)}
+                className="absolute top-6 right-6 p-4 text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-all"
+            >
+                <CloseIcon className="w-8 h-8" />
+            </button>
+            
+            <div className="relative max-w-[95vw] max-h-[95vh] p-2 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                <img 
+                    src={imageToShow || ''} 
+                    alt="Fullscreen view" 
+                    className="max-w-full max-h-[90vh] object-contain rounded-sm shadow-2xl"
+                />
+            </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };

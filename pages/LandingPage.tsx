@@ -14,8 +14,8 @@ const FEATURES = [
     id: 'apparel',
     title: "Apparel Studio",
     desc: "Neural Style Transfer",
-    // Fashion/Suit image
-    image: "https://images.unsplash.com/photo-1593030761757-71bd90d22559?q=80&w=1974&auto=format&fit=crop", 
+    // Fashion/Suit image - Updated reliable URL
+    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=2000&auto=format&fit=crop", 
     color: "from-amber-400 to-orange-500",
     page: 'home'
   },
@@ -29,11 +29,20 @@ const FEATURES = [
     page: 'vehicle'
   },
   {
+    id: 'architect',
+    title: "Blueprint Engine",
+    desc: "Architectural Visualization",
+    // Architecture image
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop",
+    color: "from-cyan-400 to-emerald-500",
+    page: 'architect'
+  },
+  {
     id: 'session',
     title: "Studio Sessions",
     desc: "Virtual Compositing",
-    // Couple/Studio image
-    image: "https://images.unsplash.com/photo-1621784562877-e95e34770ce9?q=80&w=1974&auto=format&fit=crop",
+    // Couple/Studio image - Updated reliable URL
+    image: "https://images.unsplash.com/photo-1556155092-490a1ba16284?q=80&w=2000&auto=format&fit=crop",
     color: "from-purple-400 to-pink-500",
     page: 'session'
   },
@@ -100,47 +109,28 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[800px] h-[800px] bg-blue-900/10 rounded-full blur-[150px] pointer-events-none"></div>
 
-        {/* Header/Nav */}
-        <nav className="absolute top-0 left-0 right-0 p-6 z-50 flex justify-between items-center max-w-7xl mx-auto w-full">
-            <div className="flex items-center gap-2">
-                <GeoLogo />
-            </div>
-            <div className="flex gap-4">
-                <button 
-                    onClick={() => onNavigate('login')} 
-                    className="px-6 py-2 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors hidden sm:block"
-                >
-                    Sign In
-                </button>
-                <button 
-                    onClick={() => onNavigate('signup')} 
-                    className="px-6 py-2 bg-white text-black text-xs font-bold uppercase tracking-widest rounded-full hover:bg-amber-400 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-                >
-                    Get Started
-                </button>
-            </div>
-        </nav>
+        {/* Note: Header is now handled by the global App Header component */}
 
         {/* Main Stage */}
         <div className="flex-grow flex flex-col items-center justify-center relative z-10 pt-20 pb-32">
             
             {/* Hero Text */}
-            <div className="text-center mb-16 relative z-20">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-6">
+            <div className="text-center mb-16 relative z-20 px-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-6 animate-fade-in">
                     <SparklesIcon className="w-3 h-3 text-amber-400" />
                     <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-300">Next-Gen Neural Engine</span>
                 </div>
-                <h1 className="text-5xl md:text-8xl font-bold font-playfair tracking-tighter mb-4 leading-[0.9] text-white">
+                <h1 className="text-5xl md:text-8xl font-bold font-playfair tracking-tighter mb-4 leading-[0.9] text-white animate-fade-in">
                     Design <br />
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-amber-200">Without Limits</span>
                 </h1>
-                <p className="text-zinc-400 text-sm md:text-lg max-w-lg mx-auto font-light leading-relaxed mt-6">
+                <p className="text-zinc-400 text-sm md:text-lg max-w-lg mx-auto font-light leading-relaxed mt-6 animate-fade-in">
                     The world's most advanced AI studio for Apparel, Automotive, and Cinematic visualization.
                 </p>
             </div>
 
             {/* 3D Carousel */}
-            <div className="relative w-full max-w-5xl h-[450px] flex items-center justify-center">
+            <div className="relative w-full max-w-5xl h-[450px] flex items-center justify-center animate-fade-in">
                 {FEATURES.map((feature, index) => (
                     <div
                         key={feature.id}
