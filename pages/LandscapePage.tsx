@@ -1,13 +1,14 @@
-
 import React, { useState, useCallback, useMemo } from 'react';
 import CreatorDisplay from '../components/ImageUploader.tsx';
 import { 
   CATEGORIZED_LANDSCAPE_STYLES,
   LANDSCAPE_BACKGROUNDS,
-  LANDSCAPE_LIGHTING,
+  LANDSCAPE_LIGHTING
+} from '../constants/landscape.ts';
+import { 
   QUALITY_OPTIONS,
   StyleOption
-} from '../constants.ts';
+} from '../constants/shared.ts';
 import { editImageWithGemini } from '../services/geminiService.ts';
 import { SparklesIcon } from '../components/icons/SparklesIcon.tsx';
 import FaceLockToggle from '../components/FaceLockToggle.tsx';
@@ -42,7 +43,6 @@ const LandscapePage: React.FC = () => {
   const currentBackgrounds = LANDSCAPE_BACKGROUNDS;
   const currentLighting = LANDSCAPE_LIGHTING;
 
-  // Initialize defaults
   useState(() => {
       if (selectedStyleIds.length === 0 && currentStylesSource[0]?.styles[0]) {
           setSelectedStyleIds([currentStylesSource[0].styles[0].id]);
@@ -54,7 +54,7 @@ const LandscapePage: React.FC = () => {
   const lastSelectedStyleId = selectedStyleIds[selectedStyleIds.length - 1];
   const selectedStyleObject: StyleOption | undefined = useMemo(() => 
       currentStylesSource.flatMap(c => c.styles).find(s => s.id === lastSelectedStyleId),
-      [lastSelectedStyleId, currentStylesSource]
+      [lastSelectedStyleId]
   );
 
   const handleStyleToggle = (id: string) => {
@@ -101,11 +101,11 @@ const LandscapePage: React.FC = () => {
       const result = await editImageWithGemini(
         originalImageFile, combinedStylePrompt, selectedColor,
         selectedBackground, selectedLighting, 
-        '', '', '', '', '', '', // Apparel prompts empty
-        '', '', // Target person / posture empty
+        '', '', '', '', '', '', 
+        '', '', 
         isLockEnabled, selectedQuality,
         'landscape', 
-        undefined, undefined, undefined, undefined // Vehicle params
+        undefined, undefined, undefined, undefined 
       );
       setGeneratedImage(result);
     } catch (e) {
@@ -124,7 +124,6 @@ const LandscapePage: React.FC = () => {
 
   return (
     <div className="flex flex-col lg:flex-row h-full lg:h-[calc(100vh-4rem)] relative overflow-hidden">
-        {/* Backdrop for mobile menu */}
         {isSidebarOpen && (
             <div 
                 onClick={() => setIsSidebarOpen(false)} 
@@ -132,7 +131,6 @@ const LandscapePage: React.FC = () => {
             />
         )}
 
-        {/* Sidebar */}
         <div className={`
             fixed inset-0 lg:relative lg:inset-auto
             w-full sm:w-[420px] lg:w-[420px]
@@ -141,7 +139,6 @@ const LandscapePage: React.FC = () => {
             ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 
             bg-white dark:bg-zinc-950 h-full overflow-hidden
         `}>
-            {/* Mobile Sidebar Header */}
             <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-zinc-50 dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
                 <div className="flex items-center gap-3">
                      <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
@@ -157,7 +154,6 @@ const LandscapePage: React.FC = () => {
                 </button>
             </div>
 
-            {/* Scrollable Controls */}
             <div className="flex-grow overflow-y-auto custom-scrollbar pb-32 lg:pb-0">
                 <CollapsibleSection title="Landscape Style" isOpen={true}>
                     <StyleSelector 
@@ -190,7 +186,6 @@ const LandscapePage: React.FC = () => {
                 </CollapsibleSection>
             </div>
             
-            {/* Desktop Generate Button Area */}
             <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-black/40 backdrop-blur-lg hidden lg:block shrink-0">
                  <button
                     onClick={handleGenerateClick}
@@ -212,9 +207,7 @@ const LandscapePage: React.FC = () => {
             </div>
         </div>
 
-        {/* Main Canvas Area */}
         <div className="flex-grow h-full relative overflow-y-auto custom-scrollbar flex flex-col items-center justify-center pt-12 pb-32 px-4 md:px-12 lg:py-12 z-0">
-             {/* Mobile Toggle Button */}
              <div className="lg:hidden absolute top-6 right-6 z-20">
                  <button onClick={() => setIsSidebarOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-black/60 backdrop-blur-xl text-zinc-900 dark:text-white rounded-full border border-zinc-200 dark:border-white/10 shadow-xl hover:border-amber-400/50 transition-all active:scale-95">
                      <SlidersIcon className="w-4 h-4 text-amber-500 dark:text-amber-400" />
@@ -232,7 +225,6 @@ const LandscapePage: React.FC = () => {
             </div>
         </div>
         
-        {/* Mobile Sticky Bottom Action Bar */}
         <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-200 dark:border-white/5 z-50">
              <button
                 onClick={handleGenerateClick}

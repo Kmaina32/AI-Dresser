@@ -1,9 +1,8 @@
-
 import React, { useState, useCallback } from 'react';
 import SimpleImageUploader from '../components/SimpleImageUploader.tsx';
 import ResultDisplay from '../components/ResultDisplay.tsx';
 import DropdownSelector from '../components/DropdownSelector.tsx';
-import { ARCHITECT_STYLES, ARCHITECT_VIEW_TYPES, ARCHITECT_SCALES } from '../constants.ts';
+import { ARCHITECT_STYLES, ARCHITECT_VIEW_TYPES, ARCHITECT_SCALES } from '../constants/architect.ts';
 import { generateArchitecturalDesign } from '../services/geminiService.ts';
 import { BuildingIcon } from '../components/icons/BuildingIcon.tsx';
 import { SlidersIcon } from '../components/icons/SlidersIcon.tsx';
@@ -20,7 +19,6 @@ declare global {
     }
 }
 
-// Interface for storing each generated image in the set
 interface GeneratedAsset {
     id: string;
     url: string;
@@ -30,27 +28,22 @@ interface GeneratedAsset {
 const ArchitectPage: React.FC = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     
-    // Project Specs
     const [landWidth, setLandWidth] = useState<string>('20');
     const [landLength, setLandLength] = useState<string>('30');
     const [sqm, setSqm] = useState<string>('250');
     const [floors, setFloors] = useState<string>('2');
     
-    // Style & View
     const [selectedStyle, setSelectedStyle] = useState<string>(ARCHITECT_STYLES[0].value);
     const [selectedView, setSelectedView] = useState<string>(ARCHITECT_VIEW_TYPES[0].value);
-    const [selectedScale, setSelectedScale] = useState<string>(ARCHITECT_SCALES[1].value); // Default 1:100
+    const [selectedScale, setSelectedScale] = useState<string>(ARCHITECT_SCALES[1].value); 
     const [requirements, setRequirements] = useState<string>('');
     
-    // Generation Mode Config
     const [generationMode, setGenerationMode] = useState<'single' | 'set'>('single');
     const [variations, setVariations] = useState<number>(1);
 
-    // Upload (Optional)
     const [sketchFile, setSketchFile] = useState<File | null>(null);
     const [sketchUrl, setSketchUrl] = useState<string | null>(null);
 
-    // Results Array
     const [generatedAssets, setGeneratedAssets] = useState<GeneratedAsset[]>([]);
     
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -73,7 +66,6 @@ const ArchitectPage: React.FC = () => {
         setGeneratedAssets([]);
         setIsSidebarOpen(false);
 
-        // Check for API Key if using text-to-image (Pro model)
         if (!sketchFile && window.aistudio && !(await window.aistudio.hasSelectedApiKey())) {
              await window.aistudio.openSelectKey();
         }
@@ -82,7 +74,6 @@ const ArchitectPage: React.FC = () => {
             const requests: Promise<{ url: string, label: string }>[] = [];
 
             if (generationMode === 'set') {
-                // Full Project Set: Front, Back, Left, Right, Top, Floor Plan
                 const viewsToGenerate = [
                     { label: 'Front Elevation', view: 'Front Elevation' },
                     { label: 'Back Elevation', view: 'Back Elevation' },
@@ -102,9 +93,7 @@ const ArchitectPage: React.FC = () => {
                 });
 
             } else {
-                // Single View (potentially with variations)
                 for (let i = 0; i < variations; i++) {
-                    // Just find the label for the selected view value
                     const viewLabel = ARCHITECT_VIEW_TYPES.find(v => v.value === selectedView)?.name || "View";
                     const label = variations > 1 ? `${viewLabel} (Option ${i+1})` : viewLabel;
                     
@@ -141,7 +130,6 @@ const ArchitectPage: React.FC = () => {
 
     return (
         <div className="flex flex-col lg:flex-row h-full lg:h-[calc(100vh-4rem)] relative overflow-hidden">
-             {/* Backdrop for mobile menu */}
              {isSidebarOpen && (
                 <div 
                     onClick={() => setIsSidebarOpen(false)} 
@@ -149,7 +137,6 @@ const ArchitectPage: React.FC = () => {
                 />
             )}
 
-            {/* Sidebar */}
             <div className={`
                 fixed inset-0 lg:relative lg:inset-auto
                 w-full sm:w-[420px] lg:w-[420px]
@@ -158,7 +145,6 @@ const ArchitectPage: React.FC = () => {
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 
                 bg-white dark:bg-zinc-950 h-full overflow-hidden
             `}>
-                 {/* Mobile Sidebar Header */}
                  <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-white dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
                     <div className="flex items-center gap-3">
                          <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
@@ -174,7 +160,6 @@ const ArchitectPage: React.FC = () => {
                     </button>
                 </div>
 
-                {/* Scrollable Controls */}
                 <div className="flex-grow overflow-y-auto custom-scrollbar pb-32 lg:pb-0">
                     <CollapsibleSection title="Land & Specs" isOpen={true}>
                         <div className="space-y-6">
@@ -203,7 +188,6 @@ const ArchitectPage: React.FC = () => {
 
                     <CollapsibleSection title="Design Mode" isOpen={true}>
                         <div className="space-y-6">
-                            {/* Mode Toggle */}
                             <div className="p-1 bg-zinc-100 dark:bg-black/40 rounded-lg border border-zinc-200 dark:border-white/5 flex">
                                 <button 
                                     onClick={() => setGenerationMode('single')}
@@ -219,7 +203,6 @@ const ArchitectPage: React.FC = () => {
                                 </button>
                             </div>
 
-                            {/* Conditional Inputs based on Mode */}
                             {generationMode === 'single' ? (
                                 <>
                                     <DropdownSelector label="View Type" options={viewOptions} selectedValue={selectedView} onSelect={setSelectedView} />
@@ -281,7 +264,6 @@ const ArchitectPage: React.FC = () => {
                     </CollapsibleSection>
                 </div>
                 
-                {/* Desktop Generate Button Area */}
                 <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-black/40 backdrop-blur-lg hidden lg:block shrink-0">
                      <button
                         onClick={handleGenerate}
@@ -294,9 +276,7 @@ const ArchitectPage: React.FC = () => {
                 </div>
             </div>
 
-             {/* Main Canvas Area */}
              <div className="flex-grow h-full relative overflow-y-auto custom-scrollbar flex flex-col items-center justify-start pt-12 pb-32 px-4 md:px-12 lg:py-12 z-0">
-                 {/* Mobile Toggle Button */}
                  <div className="lg:hidden absolute top-6 right-6 z-20">
                      <button onClick={() => setIsSidebarOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-black/60 backdrop-blur-xl text-zinc-900 dark:text-white rounded-full border border-zinc-200 dark:border-white/10 shadow-xl hover:border-amber-400/50 transition-all active:scale-95">
                          <SlidersIcon className="w-4 h-4 text-amber-500 dark:text-amber-400" />
@@ -344,7 +324,6 @@ const ArchitectPage: React.FC = () => {
                  </div>
             </div>
 
-             {/* Mobile Sticky Bottom Action Bar */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-200 dark:border-white/5 z-50">
                  <button
                     onClick={handleGenerate}

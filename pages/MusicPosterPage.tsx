@@ -1,9 +1,17 @@
-
 import React, { useState, useCallback } from 'react';
 import SimpleImageUploader from '../components/SimpleImageUploader.tsx';
 import ResultDisplay from '../components/ResultDisplay.tsx';
 import DropdownSelector from '../components/DropdownSelector.tsx';
-import { POSTER_POSES, POSTER_ASPECT_RATIOS, POSTER_BACKGROUND_OPTIONS, POSTER_LIGHTING_OPTIONS, POSTER_DISTANCE_OPTIONS, POSTER_INDIVIDUAL_POSTURES, POSTER_FONT_OPTIONS, POSTER_ICON_OPTIONS } from '../constants.ts';
+import { 
+  POSTER_POSES, 
+  POSTER_ASPECT_RATIOS, 
+  POSTER_BACKGROUND_OPTIONS, 
+  POSTER_LIGHTING_OPTIONS, 
+  POSTER_DISTANCE_OPTIONS, 
+  POSTER_INDIVIDUAL_POSTURES, 
+  POSTER_FONT_OPTIONS, 
+  POSTER_ICON_OPTIONS 
+} from '../constants/music.ts';
 import { generateMusicPoster } from '../services/geminiService.ts';
 import { LockClosedIcon } from '../components/icons/LockClosedIcon.tsx';
 import { SlidersIcon } from '../components/icons/SlidersIcon.tsx';
@@ -100,11 +108,10 @@ const MusicPosterPage: React.FC = () => {
     const fontOptions = POSTER_FONT_OPTIONS.map(f => ({ label: f.name, value: f.prompt }));
     const iconOptions = POSTER_ICON_OPTIONS.map(i => ({ label: i.name, value: i.prompt }));
 
-    const shareText = `New Single Alert: "${musicTitle}" by ${artistNames}. Check out the official art created with Lion's Apparel AI!`;
+    const shareText = `New Single Alert: "${musicTitle}" by ${artistNames}. Check out the official art!`;
 
     return (
         <div className="flex flex-col lg:flex-row h-full lg:h-[calc(100vh-4rem)] relative overflow-hidden">
-             {/* Backdrop for mobile menu */}
              {isSidebarOpen && (
                 <div 
                     onClick={() => setIsSidebarOpen(false)} 
@@ -112,7 +119,6 @@ const MusicPosterPage: React.FC = () => {
                 />
             )}
 
-            {/* Sidebar */}
             <div className={`
                 fixed inset-0 lg:relative lg:inset-auto
                 w-full sm:w-[420px] lg:w-[420px]
@@ -121,7 +127,6 @@ const MusicPosterPage: React.FC = () => {
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 
                 bg-white dark:bg-zinc-950 h-full overflow-hidden
             `}>
-                 {/* Mobile Sidebar Header */}
                  <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-white dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
                     <div className="flex items-center gap-3">
                          <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
@@ -137,7 +142,6 @@ const MusicPosterPage: React.FC = () => {
                     </button>
                 </div>
 
-                {/* Scrollable Controls */}
                 <div className="flex-grow overflow-y-auto custom-scrollbar pb-32 lg:pb-0">
                     <div className="p-6 space-y-6">
                         <div className="grid grid-cols-2 gap-4">
@@ -155,9 +159,7 @@ const MusicPosterPage: React.FC = () => {
                         
                         <div className="px-4 py-3 bg-amber-500/5 border border-amber-500/20 rounded-sm flex items-center gap-3 justify-center">
                             <LockClosedIcon className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                            <div>
-                                <h3 className="text-[10px] font-bold text-amber-400 uppercase tracking-[0.2em]">Identity Lock Active</h3>
-                            </div>
+                            <h3 className="text-[10px] font-bold text-amber-400 uppercase tracking-[0.2em]">Identity Lock Active</h3>
                         </div>
                     </div>
 
@@ -190,15 +192,6 @@ const MusicPosterPage: React.FC = () => {
                         <div className="space-y-6">
                             <DropdownSelector label="Background" options={backgroundOptions} selectedValue={selectedBackground} onSelect={setSelectedBackground} />
                             <DropdownSelector label="Lighting" options={lightingOptions} selectedValue={selectedLighting} onSelect={setSelectedLighting} />
-                             {selectedBackground.includes('hex color') && (
-                                <div>
-                                    <label className="block text-xs font-bold text-zinc-500 mb-3 uppercase tracking-wide">Studio Hex</label>
-                                    <div className="flex items-center gap-2">
-                                        <input type="color" value={studioBackgroundColor} onChange={(e) => setStudioBackgroundColor(e.target.value)} className="w-8 h-8 p-0 border-none bg-transparent cursor-pointer"/>
-                                        <span className="text-xs text-zinc-400 font-mono">{studioBackgroundColor}</span>
-                                    </div>
-                                </div>
-                            )}
                         </div>
                     </CollapsibleSection>
 
@@ -224,7 +217,6 @@ const MusicPosterPage: React.FC = () => {
                     </CollapsibleSection>
                 </div>
                 
-                {/* Desktop Generate Button Area */}
                 <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-black/40 backdrop-blur-lg hidden lg:block shrink-0">
                      <button
                         onClick={handleGenerate}
@@ -237,9 +229,7 @@ const MusicPosterPage: React.FC = () => {
                 </div>
             </div>
 
-             {/* Main Canvas Area */}
              <div className="flex-grow h-full relative overflow-y-auto custom-scrollbar flex flex-col items-center justify-center pt-12 pb-32 px-4 md:px-12 lg:py-12 z-0">
-                 {/* Mobile Toggle Button */}
                  <div className="lg:hidden absolute top-6 right-6 z-20">
                      <button onClick={() => setIsSidebarOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-black/60 backdrop-blur-xl text-zinc-900 dark:text-white rounded-full border border-zinc-200 dark:border-white/10 shadow-xl hover:border-amber-400/50 transition-all active:scale-95">
                          <SlidersIcon className="w-4 h-4 text-amber-500 dark:text-amber-400" />
@@ -253,7 +243,6 @@ const MusicPosterPage: React.FC = () => {
                         generatedImage={generatedImage}
                         isLoading={isLoading}
                         showBeforeAfterToggle={false}
-                        shareText={shareText}
                         shareTitle="New Music Poster"
                     />
                     {!generatedImage && !isLoading && (
@@ -265,7 +254,6 @@ const MusicPosterPage: React.FC = () => {
                  </div>
             </div>
 
-             {/* Mobile Sticky Bottom Action Bar */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-200 dark:border-white/5 z-50">
                  <button
                     onClick={handleGenerate}

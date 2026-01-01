@@ -3,7 +3,19 @@ import SimpleImageUploader from '../components/SimpleImageUploader.tsx';
 import ResultDisplay from '../components/ResultDisplay.tsx';
 import DropdownSelector from '../components/DropdownSelector.tsx';
 import QualitySelector from '../components/QualitySelector.tsx';
-import { KENYAN_PARTIES, CAMPAIGN_POSITIONS, CAMPAIGN_WRAP_STYLES, CAMPAIGN_MODS, CATEGORIZED_CAMPAIGN_TEMPLATES, CATEGORIZED_MANIFESTO_TEMPLATES, QUALITY_OPTIONS, MANIFESTO_FORMATS, VALID_ASPECT_RATIOS } from '../constants.ts';
+import { 
+  KENYAN_PARTIES, 
+  CAMPAIGN_POSITIONS, 
+  CAMPAIGN_WRAP_STYLES, 
+  CAMPAIGN_MODS, 
+  CATEGORIZED_CAMPAIGN_TEMPLATES, 
+  CATEGORIZED_MANIFESTO_TEMPLATES, 
+  MANIFESTO_FORMATS 
+} from '../constants/campaign.ts';
+import { 
+  QUALITY_OPTIONS, 
+  VALID_ASPECT_RATIOS 
+} from '../constants/shared.ts';
 import { generateCampaignMaterial, generateManifestoText } from '../services/geminiService.ts';
 import { CampaignIcon } from '../components/icons/CampaignIcon.tsx';
 import { SlidersIcon } from '../components/icons/SlidersIcon.tsx';
@@ -53,25 +65,22 @@ const CampaignPage: React.FC = () => {
     const [wrapStyle, setWrapStyle] = useState<string>(CAMPAIGN_WRAP_STYLES[0].value || 'full');
     const [selectedCampaignMods, setSelectedCampaignMods] = useState<string[]>([]);
     const [selectedQuality, setSelectedQuality] = useState<string>(QUALITY_OPTIONS[0].value);
-    const [selectedAspectRatio, setSelectedAspectRatio] = useState<string>(VALID_ASPECT_RATIOS[0].value); // Default 16:9
+    const [selectedAspectRatio, setSelectedAspectRatio] = useState<string>(VALID_ASPECT_RATIOS[0].value); 
     const [manifestoPoints, setManifestoPoints] = useState<string>('');
     const [isGeneratingText, setIsGeneratingText] = useState(false);
     const [customMessage, setCustomMessage] = useState<string>('');
     
-    // Background Config
     const [backgroundColor, setBackgroundColor] = useState<string>(KENYAN_PARTIES[0].hexColor);
     const [backgroundOpacity, setBackgroundOpacity] = useState<number>(100);
     const [customBackgroundFile, setCustomBackgroundFile] = useState<File | null>(null);
     const [customBackgroundUrl, setCustomBackgroundUrl] = useState<string | null>(null);
 
-    // Logo Upload
     const [partyLogoFile, setPartyLogoFile] = useState<File | null>(null);
     const [partyLogoUrl, setPartyLogoUrl] = useState<string | null>(null);
 
-    // Template Selection
     const [selectedTemplate, setSelectedTemplate] = useState<string>(CATEGORIZED_CAMPAIGN_TEMPLATES[0].styles[0].prompt);
     const [selectedManifestoTemplate, setSelectedManifestoTemplate] = useState<string>(CATEGORIZED_MANIFESTO_TEMPLATES[0].styles[0].prompt);
-    const [selectedManifestoFormat, setSelectedManifestoFormat] = useState<string>(MANIFESTO_FORMATS[2].prompt); // Default to A4
+    const [selectedManifestoFormat, setSelectedManifestoFormat] = useState<string>(MANIFESTO_FORMATS[2].prompt); 
 
     const [generatedImage, setGeneratedImage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -79,7 +88,6 @@ const CampaignPage: React.FC = () => {
 
     const SLOGAN_LIMIT = 50;
 
-    // --- API Key Logic ---
     const checkApiKey = useCallback(async () => {
         if (window.aistudio && (await window.aistudio.hasSelectedApiKey())) {
             setApiKeySelected(true);
@@ -96,7 +104,6 @@ const CampaignPage: React.FC = () => {
             setApiKeySelected(true);
         }
     };
-    // ---------------------
 
     const handleImageUpload = (file: File, dataUrl: string) => {
         setImageFile(file);
@@ -116,7 +123,6 @@ const CampaignPage: React.FC = () => {
 
     const selectedParty = KENYAN_PARTIES.find(p => p.id === selectedPartyId) || KENYAN_PARTIES[0];
 
-    // Auto-fill slogan and background color when party changes
     useEffect(() => {
         if (selectedParty.defaultSlogan) {
             setSlogan(selectedParty.defaultSlogan);
@@ -243,7 +249,6 @@ const CampaignPage: React.FC = () => {
 
     return (
         <div className="flex flex-col lg:flex-row h-full lg:h-[calc(100vh-4rem)] relative overflow-hidden">
-             {/* Backdrop for mobile menu */}
              {isSidebarOpen && (
                 <div 
                     onClick={() => setIsSidebarOpen(false)} 
@@ -251,7 +256,6 @@ const CampaignPage: React.FC = () => {
                 />
             )}
 
-            {/* Sidebar */}
             <div className={`
                 fixed inset-0 lg:relative lg:inset-auto
                 w-full sm:w-[420px] lg:w-[420px]
@@ -260,7 +264,6 @@ const CampaignPage: React.FC = () => {
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 
                 bg-white dark:bg-zinc-950 h-full overflow-hidden
             `}>
-                 {/* Mobile Sidebar Header */}
                  <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-white dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
                     <div className="flex items-center gap-3">
                          <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
@@ -276,9 +279,7 @@ const CampaignPage: React.FC = () => {
                     </button>
                 </div>
 
-                 {/* Scrollable Controls */}
                  <div className="flex-grow overflow-y-auto custom-scrollbar pb-32 lg:pb-0">
-                    {/* Mode Toggle */}
                     <div className="p-6 border-b border-zinc-200 dark:border-white/5">
                          <div className="grid grid-cols-3 gap-2 p-1 bg-zinc-100 dark:bg-black/40 rounded-lg border border-zinc-200 dark:border-white/5">
                             <button
@@ -330,7 +331,6 @@ const CampaignPage: React.FC = () => {
 
                     <CollapsibleSection title="Party Identity" isOpen={true}>
                         <div className="space-y-6">
-                            {/* Party Selector */}
                             <DropdownSelector 
                                 label="Political Party" 
                                 options={partyOptions} 
@@ -338,7 +338,6 @@ const CampaignPage: React.FC = () => {
                                 onSelect={setSelectedPartyId} 
                             />
                             
-                            {/* Dynamic Party Info Display */}
                             <div className="p-4 bg-zinc-100 dark:bg-black/40 rounded-sm border-l-4 border-amber-500 flex items-start gap-4 transition-all relative">
                                 <div className="flex-shrink-0 mt-1">
                                     {partyLogoUrl ? (
@@ -356,7 +355,6 @@ const CampaignPage: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Logo Uploader - Fixed Layout to prevent flex collapse */}
                             <div>
                                 <div className="mb-2">
                                     <SimpleImageUploader 
@@ -493,7 +491,6 @@ const CampaignPage: React.FC = () => {
                     {(mode === 'poster' || mode === 'manifesto') && (
                         <CollapsibleSection title="Background Styling" isOpen={true}>
                             <div className="space-y-6">
-                                {/* Custom Background Uploader */}
                                 <div>
                                      <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1 mb-2">
                                          {isGreetingMode ? "Recipient Photo (The Hero)" : "Custom Background Image"}
@@ -503,14 +500,8 @@ const CampaignPage: React.FC = () => {
                                         imageUrl={customBackgroundUrl}
                                         onImageUpload={handleCustomBackgroundUpload}
                                      />
-                                     <p className="text-[9px] text-zinc-400 mt-2 pl-1">
-                                        {isGreetingMode 
-                                            ? "Upload the photo of the person you are congratulating. They will be the main hero with NO transparency." 
-                                            : "Overrides solid color settings. Subject will be composited into this scene."}
-                                     </p>
                                 </div>
 
-                                {/* Color and Opacity Controls - dimmed if custom background present */}
                                 <div className={`transition-opacity duration-300 ${customBackgroundUrl ? 'opacity-70' : 'opacity-100'}`}>
                                     <div className="mb-6">
                                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1 mb-2">
@@ -553,12 +544,6 @@ const CampaignPage: React.FC = () => {
                                                 onChange={(e) => setBackgroundOpacity(parseInt(e.target.value))}
                                                 className="w-full h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
                                             />
-                                            <p className="text-[9px] text-zinc-400 mt-2 pl-1">
-                                                {customBackgroundUrl 
-                                                    ? `Apply ${backgroundOpacity}% color tint over your image.`
-                                                    : (backgroundOpacity === 100 ? 'Solid color replacement.' : 'Semi-transparent overlay blend.')
-                                                }
-                                            </p>
                                         </div>
                                     )}
                                 </div>
@@ -610,7 +595,6 @@ const CampaignPage: React.FC = () => {
                     </CollapsibleSection>
                  </div>
 
-                 {/* Desktop Generate Button Area */}
                 <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-black/40 backdrop-blur-lg hidden lg:block shrink-0">
                      <button
                         onClick={handleGenerate}
@@ -623,9 +607,7 @@ const CampaignPage: React.FC = () => {
                 </div>
             </div>
 
-            {/* Main Canvas Area */}
             <div className="flex-grow h-full relative overflow-y-auto custom-scrollbar flex flex-col items-center justify-center pt-12 pb-32 px-4 md:px-12 lg:py-12 z-0">
-                 {/* Mobile Toggle Button */}
                  <div className="lg:hidden absolute top-6 right-6 z-20">
                      <button onClick={() => setIsSidebarOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-black/60 backdrop-blur-xl text-zinc-900 dark:text-white rounded-full border border-zinc-200 dark:border-white/10 shadow-xl hover:border-amber-400/50 transition-all active:scale-95">
                          <SlidersIcon className="w-4 h-4 text-amber-500 dark:text-amber-400" />
@@ -651,7 +633,6 @@ const CampaignPage: React.FC = () => {
                 </div>
             </div>
 
-            {/* Mobile Sticky Bottom Action Bar */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-200 dark:border-white/5 z-50">
                  <button
                     onClick={handleGenerate}

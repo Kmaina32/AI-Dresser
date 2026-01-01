@@ -1,6 +1,6 @@
 import { GoogleGenAI, Modality } from "@google/genai";
 import { fileToBase64 } from "../utils/fileUtils.ts";
-import { PoliticalParty } from "../constants.ts";
+import { PoliticalParty } from "../constants/campaign.ts";
 
 const handleGenAIError = (error: unknown, context: string) => {
     console.error(`Error in ${context}:`, error);
@@ -347,7 +347,6 @@ export async function generateVideoWithVeo(
 ): Promise<string> {
     try {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-        // Use preview model
         const model = 'veo-3.1-generate-preview';
         
         let config: any = {
@@ -369,7 +368,7 @@ export async function generateVideoWithVeo(
                          imageBytes: await fileToBase64(ref),
                          mimeType: ref.type
                      },
-                     referenceType: 'ASSET' // Using string directly as types might vary in SDK versions
+                     referenceType: 'ASSET'
                  });
              }
              config.referenceImages = refPayload;
@@ -382,7 +381,6 @@ export async function generateVideoWithVeo(
             config: config
         });
 
-        // Polling loop
         while (!operation.done) {
             await new Promise(resolve => setTimeout(resolve, 10000));
             operation = await ai.operations.getVideosOperation({operation: operation});
@@ -421,14 +419,12 @@ export async function generateMusicPoster(
         Design a music album poster.
         Title: "${title}".
         Artist Names: "${names}".
-        
         Composition: Two artists posing together.
         Pose: ${pose} (${poseDetails}).
         Background: ${background}.
         Lighting: ${lighting}.
         Typography: ${fontStyle}.
         Icon: Include ${iconStyle}.
-        
         Use high quality photorealistic rendering.
         `;
 
@@ -478,7 +474,6 @@ export async function generateStudioSession(
         Background: ${background}.
         Lighting: ${lighting}.
         Details: ${extraDetails}.
-        
         Preserve facial features of both subjects.
         `;
 
@@ -548,7 +543,6 @@ export async function generateArchitecturalDesign(
         View: ${view}.
         Scale: ${scale}.
         Requirements: ${requirements}.
-        
         High quality, detailed blueprint or 3D render style as requested.
         `;
 

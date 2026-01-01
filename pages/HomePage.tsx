@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import CreatorDisplay from '../components/ImageUploader.tsx';
 import SimpleImageUploader from '../components/SimpleImageUploader.tsx';
@@ -12,7 +11,6 @@ import {
   CATEGORIZED_WOMENS_SHOE_STYLES,
   CATEGORIZED_KIDS_SHOE_STYLES,
   DEFAULT_SHOE_OPTION, 
-  QUALITY_OPTIONS, 
   SHIRT_OPTIONS,
   DEFAULT_SHIRT_OPTION,
   CATEGORIZED_TIE_STYLES,
@@ -24,10 +22,13 @@ import {
   DEFAULT_EYEWEAR_OPTION,
   CATEGORIZED_EYEWEAR_STYLES,
   DEFAULT_HEADWEAR_OPTION,
-  CATEGORIZED_HEADWEAR_STYLES,
+  CATEGORIZED_HEADWEAR_STYLES
+} from '../constants/apparel.ts';
+import { 
+  QUALITY_OPTIONS, 
   StyleOption,
   RemixConfig
-} from '../constants.ts';
+} from '../constants/shared.ts';
 import { editImageWithGemini } from '../services/geminiService.ts';
 import { SparklesIcon } from '../components/icons/SparklesIcon.tsx';
 import FaceLockToggle from '../components/FaceLockToggle.tsx';
@@ -61,14 +62,12 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
   const [selectedQuality, setSelectedQuality] = useState<string>(QUALITY_OPTIONS[0].value);
   const [isLockEnabled, setIsLockEnabled] = useState<boolean>(true);
 
-  // Custom Environment Image State
   const [envImageFile, setEnvImageFile] = useState<File | null>(null);
   const [envImageUrl, setEnvImageUrl] = useState<string | null>(null);
 
   const [targetPerson, setTargetPerson] = useState<string>('');
   const [selectedPosture, setSelectedPosture] = useState<string>(DEFAULT_POSTURE_OPTION.prompt);
   
-  // Apparel Accessories
   const [selectedShoe, setSelectedShoe] = useState<string>(DEFAULT_SHOE_OPTION.prompt);
   const [selectedShirt, setSelectedShirt] = useState<string>(DEFAULT_SHIRT_OPTION.prompt);
   const [selectedTie, setSelectedTie] = useState<string>(DEFAULT_TIE_OPTION.prompt);
@@ -87,10 +86,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
         return attireType === 'menswear' ? CATEGORIZED_SUIT_STYLES : CATEGORIZED_WOMENS_STYLES;
   }, [attireType]);
 
-  const currentBackgrounds = APPAREL_BACKGROUNDS;
-  const currentLighting = APPAREL_LIGHTING;
-
-  // Handle Remix Config
   useEffect(() => {
       if (initialRemixConfig) {
           setAttireType(initialRemixConfig.attireType as AttireType);
@@ -110,11 +105,11 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
       } else {
           if (selectedStyleIds.length === 0 && currentStylesSource[0]?.styles[0]) {
               setSelectedStyleIds([currentStylesSource[0].styles[0].id]);
-              setSelectedBackground(currentBackgrounds[0]?.prompt || '');
-              setSelectedLighting(currentLighting[0]?.prompt || '');
+              setSelectedBackground(APPAREL_BACKGROUNDS[0]?.prompt || '');
+              setSelectedLighting(APPAREL_LIGHTING[0]?.prompt || '');
           }
       }
-  }, [initialRemixConfig, currentStylesSource, currentBackgrounds, currentLighting, clearRemixConfig]);
+  }, [initialRemixConfig, currentStylesSource, clearRemixConfig]);
 
   const lastSelectedStyleId = selectedStyleIds[selectedStyleIds.length - 1];
   const selectedStyleObject: StyleOption | undefined = useMemo(() => 
@@ -144,7 +139,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
   const handleEnvImageUpload = (file: File, dataUrl: string) => {
       setEnvImageFile(file);
       setEnvImageUrl(dataUrl);
-      // Automatically clear background selection to indicate custom mode
       setSelectedBackground('');
   };
 
@@ -177,9 +171,9 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
         selectedBackground, selectedLighting, selectedShoe, selectedShirt,
         selectedTie, selectedHandbag, selectedEyewear, selectedHeadwear,
         effectiveTargetPerson, selectedPosture, isLockEnabled, selectedQuality,
-        'apparel', // Fixed mode
-        undefined, undefined, undefined, undefined, // Vehicle params
-        envImageFile || undefined // Pass the environment image if exists
+        'apparel', 
+        undefined, undefined, undefined, undefined, 
+        envImageFile || undefined 
       );
       setGeneratedImage(result);
     } catch (e) {
@@ -196,8 +190,8 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
     envImageFile
   ]);
 
-  const backgroundOptions = useMemo(() => currentBackgrounds.map(option => ({ label: option.name, value: option.prompt })), [currentBackgrounds]);
-  const lightingOptions = useMemo(() => currentLighting.map(option => ({ label: option.name, value: option.prompt })), [currentLighting]);
+  const backgroundOptions = useMemo(() => APPAREL_BACKGROUNDS.map(option => ({ label: option.name, value: option.prompt })), []);
+  const lightingOptions = useMemo(() => APPAREL_LIGHTING.map(option => ({ label: option.name, value: option.prompt })), []);
   
   const shoeOptions = [{ label: DEFAULT_SHOE_OPTION.name, value: DEFAULT_SHOE_OPTION.prompt }];
   const shirtOptionsList = [DEFAULT_SHIRT_OPTION, ...SHIRT_OPTIONS].map(o => ({ label: o.name, value: o.prompt }));
@@ -210,7 +204,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
 
   return (
     <div className="flex flex-col lg:flex-row h-full lg:h-[calc(100vh-4rem)] relative overflow-hidden">
-        {/* Backdrop for mobile menu */}
         {isSidebarOpen && (
             <div 
                 onClick={() => setIsSidebarOpen(false)} 
@@ -218,7 +211,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
             />
         )}
 
-        {/* Sidebar */}
         <div className={`
             fixed inset-0 lg:relative lg:inset-auto
             w-full sm:w-[420px] lg:w-[420px]
@@ -227,7 +219,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
             ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 flex-shrink-0 
             bg-white dark:bg-zinc-950 h-full overflow-hidden
         `}>
-            {/* Mobile Sidebar Header */}
             <div className="flex items-center justify-between p-5 border-b border-zinc-200 dark:border-white/5 lg:hidden bg-zinc-50 dark:bg-zinc-950/80 backdrop-blur-md relative z-20 shadow-2xl">
                 <div className="flex items-center gap-3">
                      <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
@@ -243,7 +234,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
                 </button>
             </div>
 
-            {/* Scrollable Controls */}
             <div className="flex-grow overflow-y-auto custom-scrollbar pb-32 lg:pb-0">
                 <div className="p-6 border-b border-zinc-200 dark:border-white/5">
                     <div className="grid grid-cols-3 gap-2 p-1 bg-zinc-100 dark:bg-black/40 rounded-lg border border-zinc-200 dark:border-white/5">
@@ -280,11 +270,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
                                 imageUrl={envImageUrl} 
                                 onImageUpload={handleEnvImageUpload} 
                             />
-                            {envImageUrl && (
-                                <p className="text-[10px] text-amber-500 mt-2 font-medium">
-                                    Using custom environment image. AI will place the subject into this scene.
-                                </p>
-                            )}
                         </div>
                         
                         {!envImageUrl && (
@@ -321,7 +306,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
                 </CollapsibleSection>
             </div>
             
-            {/* Desktop Generate Button Area */}
             <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-black/40 backdrop-blur-lg hidden lg:block shrink-0">
                  <button
                     onClick={handleGenerateClick}
@@ -343,9 +327,7 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
             </div>
         </div>
 
-        {/* Main Canvas Area */}
         <div className="flex-grow h-full relative overflow-y-auto custom-scrollbar flex flex-col items-center justify-center pt-12 pb-32 px-4 md:px-12 lg:py-12 z-0">
-             {/* Mobile Toggle Button */}
              <div className="lg:hidden absolute top-6 right-6 z-20">
                  <button onClick={() => setIsSidebarOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-black/60 backdrop-blur-xl text-zinc-900 dark:text-white rounded-full border border-zinc-200 dark:border-white/10 shadow-xl hover:border-amber-400/50 transition-all active:scale-95">
                      <SlidersIcon className="w-4 h-4 text-amber-500 dark:text-amber-400" />
@@ -363,7 +345,6 @@ const HomePage: React.FC<HomePageProps> = ({ initialRemixConfig, clearRemixConfi
             </div>
         </div>
         
-        {/* Mobile Sticky Bottom Action Bar */}
         <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-200 dark:border-white/5 z-50">
              <button
                 onClick={handleGenerateClick}
